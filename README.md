@@ -94,3 +94,6 @@ F -- Has/Had --> A
 #### Backlog
 - Jira
 
+
+#### TODO MODELO DO DOMINIO , ESQUEMA BD, ESQUEMA ARQUITETURA
+
