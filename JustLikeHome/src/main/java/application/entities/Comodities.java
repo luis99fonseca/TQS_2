@@ -1,4 +1,4 @@
-package entities;
+package application.entities;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,6 +15,10 @@ public class Comodities {
 
     @ManyToMany(mappedBy ="comodities")
     private Set<House> houseWithComodity =new HashSet<>();
+
+    public Comodities(){
+
+    }
 
     public Comodities(String type, String description) {
         this.type = type;

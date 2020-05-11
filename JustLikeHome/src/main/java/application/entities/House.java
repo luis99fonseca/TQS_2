@@ -1,4 +1,4 @@
-package entities;
+package application.entities;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,23 +16,27 @@ public class House {
     private int numberOfBeds;
     private int maxNumberOfUsers;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User owner;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "HouseComodities",
+            name = "House_Comodities",
             joinColumns = {@JoinColumn(name="house_id")},
             inverseJoinColumns = {@JoinColumn(name="comodities_id")}
     )
     private Set<Comodities> comodities = new HashSet<>();
 
-    @ManyToMany(mappedBy = "house")
+    @ManyToMany(mappedBy = "bookmarkedHouses")
     private Set<User> bookmarkedBy = new HashSet<>();
 
-    @OneToMany(targetEntity = Rent.class,mappedBy = "house",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "house")
     private Set<Rent> timesRented;
+
+    public House(){
+
+    }
 
     public House(String city, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers, User owner, Set<Comodities> comodities) {
         this.city = city;

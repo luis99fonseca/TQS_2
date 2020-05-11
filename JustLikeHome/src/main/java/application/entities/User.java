@@ -1,4 +1,4 @@
-package entities;
+package application.entities;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="user",uniqueConstraints={@UniqueConstraint(columnNames={"username"})})
+@Table(name="user")
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -18,19 +18,23 @@ public class User {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
-    @OneToMany(targetEntity = House.class,mappedBy = "user",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner")
     private Set<House> ownedHouses;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "BookmarkedHouses",
+            name = "Bookmarked_Houses",
             joinColumns = {@JoinColumn(name="user_id")},
             inverseJoinColumns = {@JoinColumn(name="house_id")}
     )
     private Set<House> bookmarkedHouses = new HashSet<>();
 
-    @OneToMany(targetEntity = Rent.class,mappedBy = "user",fetch = FetchType.LAZY)
-    private Set<Rent> purchasedRents;
+    @OneToMany(mappedBy = "user")
+    private Set<Rent> purchasedRents = new HashSet<>();
+
+    public User(){
+
+    }
 
     public User(String username, String firstName, String lastName, GregorianCalendar birthDate) {
         this.username = username;

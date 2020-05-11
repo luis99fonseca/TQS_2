@@ -1,4 +1,4 @@
-package entities;
+package application.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -18,4 +18,5 @@ public class Review {
 
     @Size(max=300)
     private String description;
+
 }

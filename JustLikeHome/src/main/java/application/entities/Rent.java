@@ -1,4 +1,4 @@
-package entities;
+package application.entities;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,11 +10,11 @@ public class Rent {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="house_id")
     private House house;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 
@@ -23,4 +23,16 @@ public class Rent {
 
     @Temporal(TemporalType.DATE)
     private Date rentEnd;
+
+    public Rent(){
+
+    }
+
+    public Rent(Long id, House house, User user, Date rentStart, Date rentEnd) {
+        this.id = id;
+        this.house = house;
+        this.user = user;
+        this.rentStart = rentStart;
+        this.rentEnd = rentEnd;
+    }
 }
