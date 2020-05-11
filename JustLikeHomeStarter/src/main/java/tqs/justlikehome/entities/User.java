@@ -1,4 +1,5 @@
-package application.entities;
+package tqs.justlikehome.entities;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -6,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="user")
+@Table(name="user",uniqueConstraints={@UniqueConstraint(columnNames={"username"})})
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -14,7 +15,6 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
-
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 

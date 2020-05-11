@@ -1,4 +1,4 @@
-package application.entities;
+package tqs.justlikehome.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -6,8 +6,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="review")
-public class Review {
+@Table(name="reviews")
+public class Reviews {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
@@ -18,5 +18,4 @@ public class Review {
 
     @Size(max=300)
     private String description;
-
 }
