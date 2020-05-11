@@ -6,8 +6,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="reviews")
-public class Reviews {
+@Table(name="review")
+public class Review {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;

@@ -20,9 +20,18 @@ public class House {
     @JoinColumn(name="user_id")
     private User owner;
 
-    @OneToMany(targetEntity = Comodities.class,mappedBy = "house",fetch = FetchType.LAZY)
-    private Set<Comodities> comodities;
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "HouseComodities",
+            joinColumns = {@JoinColumn(name="house_id")},
+            inverseJoinColumns = {@JoinColumn(name="comodities_id")}
+    )
+    private Set<Comodities> comodities = new HashSet<>();
 
     @ManyToMany(mappedBy = "house")
     private Set<User> bookmarkedBy = new HashSet<>();
+
+    @OneToMany(targetEntity = Rent.class,mappedBy = "house",fetch = FetchType.LAZY)
+    private Set<Rent> timesRented;
+
 }

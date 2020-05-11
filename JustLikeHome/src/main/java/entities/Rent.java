@@ -1,19 +1,21 @@
 package entities;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class Rent {
 
-    @OneToOne
-    @JoinColumn(name = "house_id",referencedColumnName = "id")
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name="house_id")
     private House house;
 
-    @OneToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name="user_id")
     private User user;
 
     @Temporal(TemporalType.DATE)

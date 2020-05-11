@@ -27,4 +27,7 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name="house_id")}
     )
     private Set<House> bookmarkedHouses = new HashSet<>();
+
+    @OneToMany(targetEntity = Rent.class,mappedBy = "user",fetch = FetchType.LAZY)
+    private Set<Rent> purchasedRents;
 }
