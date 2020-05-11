@@ -8,12 +8,14 @@ import java.util.Set;
 @Table(name="user",uniqueConstraints={@UniqueConstraint(columnNames={"username"})})
 public class User {
     @Id
+    // https://stackoverflow.com/questions/10041938/how-to-choose-the-id-generation-strategy-when-using-jpa-and-hibernate
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String firstName;
     private String lastName;
 
+    //https://stackoverflow.com/questions/25333711/what-is-the-use-of-the-temporal-annotation-in-hibernate
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
