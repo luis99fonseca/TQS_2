@@ -29,8 +29,11 @@ public class User {
     )
     private Set<House> bookmarkedHouses = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
     private Set<Rent> purchasedRents = new HashSet<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
+    private Set<UserReviews> userReviews = new HashSet<>();
 
     public User(){
 

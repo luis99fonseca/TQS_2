@@ -1,17 +1,20 @@
 package tqs.justlikehome.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(name="comodities")
 public class Comodities {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     private String type;
     private String description;
+
+    @ManyToMany(mappedBy = "comodities")
+    private Set<House> houses = new HashSet<>();
 
     public Comodities(){
 

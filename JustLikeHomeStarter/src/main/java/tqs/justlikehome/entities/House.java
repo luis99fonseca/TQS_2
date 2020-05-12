@@ -21,11 +21,19 @@ public class House {
     @JoinColumn(name="user_id")
     private User owner;
 
-    @OneToMany(mappedBy = "house")
+    @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
     private Set<Rent> timesRented;
 
     @ManyToMany(mappedBy = "bookmarkedHouses")
     private Set<User> bookmarkedBy = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name="house_comodities",
+            joinColumns = {@JoinColumn(name="house_id")},
+            inverseJoinColumns = {@JoinColumn(name="comodities_id")}
+    )
+    private Set<Comodities> comodities = new HashSet<>();
 
     public House(){
 
