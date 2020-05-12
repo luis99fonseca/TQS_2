@@ -1,6 +1,12 @@
 package tqs.justlikehome.entities;
 
+import tqs.justlikehome.DTOs.UserDTO;
+import tqs.justlikehome.exceptions.InvalidDateInputException;
+
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -39,6 +45,14 @@ public class User {
 
     }
 
+    public User(UserDTO userDTO){
+        DateTimeFormatter parser = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.username = userDTO.getUsername();
+        this.firstName = userDTO.getFirstName();
+        this.lastName = userDTO.getLastName();
+        this.birthDate = Date.from(LocalDate.parse(userDTO.getBirthDate(), parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
     public User(String username, String firstName, String lastName, GregorianCalendar birthDate) {
         this.username = username;
         this.firstName = firstName;
@@ -52,5 +66,17 @@ public class User {
 
     public void addHouse(House house){
         ownedHouses.add(house);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 }
