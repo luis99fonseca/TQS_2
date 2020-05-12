@@ -40,9 +40,9 @@ class HouseRepositoryTest {
                 3.0,
                 50.0,
                 2,
-                5,
-                user
+                5
         );
+        house.setOwner(user);
         testEntityManager.persistAndFlush(house);
     }
 
@@ -106,9 +106,9 @@ class HouseRepositoryTest {
                 4.0,
                 75.0,
                 2,
-                3,
-                user
+                3
         );
+        house2.setOwner(user);
         testEntityManager.persistAndFlush(house2);
         fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,1).toZonedDateTime().toInstant());
         toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,4).toZonedDateTime().toInstant());

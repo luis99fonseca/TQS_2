@@ -22,13 +22,12 @@ public class HouseControler {
         this.houseService=houseService;
     }
 
-    @GetMapping(value = "/houses/city=<city>&start=<start>&end=<end>&guests=<guests>")
+    @GetMapping(value = "/houses/city={city}&start={start}&end={end}&guests={guests}")
     @ResponseBody
-    public List<House> getCity(@PathVariable String name,
-                                               @PathVariable String start,
-                                               @PathVariable String end,
-                                               @PathVariable int guests) throws InvalidDateInputException {
-
-        return houseService.getHouse(name,start,end,guests);
+    public List<House> getHouse(@PathVariable String city,
+                                @PathVariable String start,
+                                @PathVariable String end,
+                                @PathVariable int guests) throws InvalidDateInputException {
+        return houseService.getHouse(city,start,end,guests);
     }
 }

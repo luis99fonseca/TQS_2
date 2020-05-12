@@ -39,14 +39,13 @@ public class House {
         return bookmarkedBy;
     }
 
-    public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers, User owner) {
+    public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers) {
         this.city = city;
         this.description = description;
         this.kmFromCityCenter = kmFromCityCenter;
         this.pricePerNight = pricePerNight;
         this.numberOfBeds = numberOfBeds;
         this.maxNumberOfUsers = maxNumberOfUsers;
-        this.owner = owner;
     }
 
     public String getDescription() {

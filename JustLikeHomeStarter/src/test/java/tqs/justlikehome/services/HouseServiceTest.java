@@ -41,9 +41,9 @@ class HouseServiceTest {
                 3.0,
                 50.0,
                 2,
-                5,
-                user
+                5
         );
+        house.setOwner(user);
         List<House> houses = new ArrayList<>();
         houses.add(house);
         Mockito.when(houseRepository.searchHouse(any(Integer.class),any(String.class),any(Date.class),any(Date.class))).thenReturn(houses);
