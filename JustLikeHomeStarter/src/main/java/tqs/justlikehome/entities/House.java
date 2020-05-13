@@ -1,5 +1,7 @@
 package tqs.justlikehome.entities;
 
+import tqs.justlikehome.DTOs.HouseDTO;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,12 +41,13 @@ public class House {
 
     }
 
-    public Set<Rent> getTimesRented() {
-        return timesRented;
-    }
-
-    public Set<User> getBookmarkedBy() {
-        return bookmarkedBy;
+    public House(HouseDTO house){
+        this.city=house.getCity();
+        this.description=house.getDescription();
+        this.kmFromCityCenter=house.getKmFromCityCenter();
+        this.pricePerNight=house.getPricePerNight();
+        this.numberOfBeds=house.getNumberOfBeds();
+        this.maxNumberOfUsers=house.getMaxNumberOfUsers();
     }
 
     public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers) {
@@ -54,6 +57,14 @@ public class House {
         this.pricePerNight = pricePerNight;
         this.numberOfBeds = numberOfBeds;
         this.maxNumberOfUsers = maxNumberOfUsers;
+    }
+
+    public Set<Rent> getTimesRented() {
+        return timesRented;
+    }
+
+    public Set<User> getBookmarkedBy() {
+        return bookmarkedBy;
     }
 
     public String getDescription() {
