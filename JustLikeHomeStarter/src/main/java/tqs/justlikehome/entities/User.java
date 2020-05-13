@@ -76,6 +76,10 @@ public class User {
         ownedHouses.add(house);
     }
 
+    public void addReview(UserReviews userReviews){
+        this.userReviews.add(userReviews);
+    }
+
     public String getUsername() {
         return username;
     }
