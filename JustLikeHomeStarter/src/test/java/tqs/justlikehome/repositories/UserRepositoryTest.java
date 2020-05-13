@@ -1,12 +1,10 @@
 package tqs.justlikehome.repositories;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.entities.UserReviews;
@@ -15,8 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Set;
 
 @DataJpaTest
 class UserRepositoryTest {
@@ -77,7 +74,7 @@ class UserRepositoryTest {
 
     @Test
     public void getUserWithNoReviewsAveragedRating(){
-        Double avg = userRepository.getUserRating(user.getId());
+        Double avg = userRepository.getUserAvgRating(user.getId());
         assertThat(avg).isNull();
     }
 
@@ -92,7 +89,30 @@ class UserRepositoryTest {
         user.addReview(uRev01);
         user.addReview(uRev02);
 
-        Double avg = userRepository.getUserRating(user.getId());
+        Double avg = userRepository.getUserAvgRating(user.getId());
         assertThat(avg).isEqualTo(4.5);
+    }
+
+    @Test
+    public void checkUserReviews_whenHasNone(){
+        Set<UserReviews> reviewsList = userRepository.getUserReviews(user.getId());
+        assertThat(reviewsList.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void checkUserReviews_whenHasReviews(){
+        User tempUser01 = new User("Motinhas","Migalhas","Motas",new GregorianCalendar(1980, Calendar.MARCH,20));
+        testEntityManager.persistAndFlush(tempUser01);
+
+        UserReviews uRev01 = new UserReviews(user, tempUser01, 4, "Bom Hospede");
+        UserReviews uRev02 = new UserReviews(user, tempUser01, 4, "Bom Hospede");
+
+        user.addReview(uRev01);
+        user.addReview(uRev02);
+        
+        Set<UserReviews> reviewsList = userRepository.getUserReviews(user.getId());
+        assertThat(reviewsList.size()).isEqualTo(2);
+        assertThat(reviewsList).contains(uRev01);
+
     }
 }
