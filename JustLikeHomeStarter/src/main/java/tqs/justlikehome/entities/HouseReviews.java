@@ -5,6 +5,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import tqs.justlikehome.dtos.HouseReviewDTO;
+
 @Entity
 @Table(name = "house_reviews")
 public class HouseReviews {
@@ -26,4 +28,17 @@ public class HouseReviews {
 
     @Size(max=300)
     private String description;
+
+    public HouseReviews(HouseReviewDTO houseReviewDTO){
+        this.rating = houseReviewDTO.getRating();
+        this.description = houseReviewDTO.getDescription();
+    }
+
+    public void setUser(User user){
+        this.user=user;
+    }
+
+    public void setHouse(House house){
+        this.house=house;
+    }
 }
