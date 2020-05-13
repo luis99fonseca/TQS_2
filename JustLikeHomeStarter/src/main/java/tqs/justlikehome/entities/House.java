@@ -27,6 +27,9 @@ public class House {
     @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
     private Set<Rent> timesRented = new HashSet<>();
 
+    @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
+    private Set<HouseReviews> houseReviews = new HashSet<>();
+
     @ManyToMany(mappedBy = "bookmarkedHouses")
     private Set<User> bookmarkedBy = new HashSet<>();
 
@@ -37,6 +40,8 @@ public class House {
             inverseJoinColumns = {@JoinColumn(name="comodities_id")}
     )
     private Set<Comodities> comodities = new HashSet<>();
+
+
 
     public House(){
 
@@ -82,5 +87,9 @@ public class House {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public void addReview(HouseReviews houseReviews) {
+        this.houseReviews.add(houseReviews);
     }
 }

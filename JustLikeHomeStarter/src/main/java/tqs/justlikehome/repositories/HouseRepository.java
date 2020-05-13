@@ -11,13 +11,16 @@ import java.util.List;
 
 @Repository
 public interface HouseRepository extends JpaRepository<House,Long> {
-    @Query("Select h from House h LEFT JOIN h.timesRented r "+
+    @Query("SELECT h FROM House h LEFT JOIN h.timesRented tr "+
             "WHERE h.maxNumberOfUsers >= :numberGuests and lower(h.city)=lower(:city) and " +
-            "(((r.rentStart not between :begin and :end) or r.rentStart is null) and ((r.rentEnd not between :begin and :end) or r.rentEnd is null))")
+            "(((tr.rentStart not between :begin and :end) or tr.rentStart is null) and ((tr.rentEnd not between :begin and :end) or tr.rentEnd is null))")
     List<House> searchHouse(@Param("numberGuests") Integer numberGuests,
                             @Param("city") String city,
                             @Param("begin") Date begin,
                             @Param("end") Date end);
     House findById(long userId);
 
+    @Query("SELECT AVG(hr.rating) FROM House h LEFT JOIN h.houseReviews hr " +
+            "WHERE h.id=:houseID")
+    Double getRating(@Param("houseID") long houseID);
 }
