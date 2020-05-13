@@ -2,12 +2,12 @@ package tqs.justlikehome.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tqs.justlikehome.DTOs.HouseDTO;
-import tqs.justlikehome.DTOs.UserDTO;
+import tqs.justlikehome.dtos.HouseDTO;
+import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
-import tqs.justlikehome.exceptions.InvalidOwnerIdException;
+import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.UserRepository;
 
 import javax.transaction.Transactional;
@@ -25,7 +25,7 @@ public class UserService {
     public House addHouseToUser(HouseDTO houseDTO){
         User owner = userRepository.findById(houseDTO.getUserId());
         if(owner==null){
-            throw new InvalidOwnerIdException();
+            throw new InvalidIdException();
         }
         House house = new House(houseDTO);
         owner.addHouse(house);
@@ -35,7 +35,7 @@ public class UserService {
     }
 
     // DTO for safety reasons , it is automatically created in the request then we need to map to the real object
-    public User createUser(UserDTO userDTO) throws InvalidDateInputException {
+    public User createUser(UserDTO userDTO) {
         try {
             User user = new User(userDTO);
             userRepository.save(user);

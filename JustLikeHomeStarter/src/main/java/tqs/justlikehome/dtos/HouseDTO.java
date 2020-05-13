@@ -1,4 +1,4 @@
-package tqs.justlikehome.DTOs;
+package tqs.justlikehome.dtos;
 
 public class HouseDTO {
     private String city;

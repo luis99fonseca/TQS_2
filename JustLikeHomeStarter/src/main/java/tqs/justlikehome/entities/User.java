@@ -1,8 +1,6 @@
 package tqs.justlikehome.entities;
 
-import tqs.justlikehome.DTOs.UserDTO;
-import tqs.justlikehome.exceptions.InvalidDateInputException;
-
+import tqs.justlikehome.dtos.UserDTO;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -38,14 +36,20 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
     private Set<Rent> purchasedRents = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.PERSIST)
     private Set<UserReviews> userReviews = new HashSet<>();
+
+    @OneToMany(mappedBy = "userReviewed",cascade = CascadeType.PERSIST)
+    private Set<UserReviews> userReviewed = new HashSet<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
+    private Set<HouseReviews> houseReviews = new HashSet<>();
 
     public User(){
 
     }
 
-    public User(UserDTO userDTO){
+    public User(UserDTO userDTO) {
         DateTimeFormatter parser = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         this.username = userDTO.getUsername();
         this.firstName = userDTO.getFirstName();
@@ -60,8 +64,12 @@ public class User {
         this.birthDate = Date.from(birthDate.toZonedDateTime().toInstant());
     }
 
+    public void addPurchasedRent(Rent rent){
+        this.purchasedRents.add(rent);
+    }
+
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void addHouse(House house){

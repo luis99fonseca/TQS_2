@@ -1,5 +1,7 @@
 package tqs.justlikehome.entities;
 
+import tqs.justlikehome.dtos.ComoditiesDTO;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +20,11 @@ public class Comodities {
 
     public Comodities(){
 
+    }
+
+    public Comodities(ComoditiesDTO comoditiesDTO){
+        this.type = comoditiesDTO.getType();
+        this.description = comoditiesDTO.getDescription();
     }
 
     public Comodities(String type, String description) {
