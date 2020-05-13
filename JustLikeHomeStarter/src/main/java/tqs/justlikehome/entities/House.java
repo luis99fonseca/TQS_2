@@ -1,5 +1,6 @@
 package tqs.justlikehome.entities;
 
+import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
 
 import javax.persistence.*;
@@ -24,7 +25,7 @@ public class House {
     private User owner;
 
     @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
-    private Set<Rent> timesRented;
+    private Set<Rent> timesRented = new HashSet<>();
 
     @ManyToMany(mappedBy = "bookmarkedHouses")
     private Set<User> bookmarkedBy = new HashSet<>();
@@ -59,56 +60,20 @@ public class House {
         this.maxNumberOfUsers = maxNumberOfUsers;
     }
 
-    public Set<Rent> getTimesRented() {
-        return timesRented;
+    public void addComoditieToHouse(Comodities comodities) {
+        this.comodities.add(comodities);
     }
 
-    public Set<User> getBookmarkedBy() {
-        return bookmarkedBy;
+    public void addRent(Rent rent){
+        this.timesRented.add(rent);
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public Set<Comodities> getComodities() {
+        return comodities;
     }
 
     public long getId() {
-        return id;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public double getKmFromCityCenter() {
-        return kmFromCityCenter;
-    }
-
-    public double getPricePerNight() {
-        return pricePerNight;
-    }
-
-    public void setPricePerNight(double pricePerNight) {
-        this.pricePerNight = pricePerNight;
-    }
-
-    public int getNumberOfBeds() {
-        return numberOfBeds;
-    }
-
-    public void setNumberOfBeds(int numberOfBeds) {
-        this.numberOfBeds = numberOfBeds;
-    }
-
-    public int getMaxNumberOfUsers() {
-        return maxNumberOfUsers;
-    }
-
-    public void setMaxNumberOfUsers(int maxNumberOfUsers) {
-        this.maxNumberOfUsers = maxNumberOfUsers;
+        return this.id;
     }
 
     public User getOwner() {

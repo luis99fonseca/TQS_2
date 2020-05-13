@@ -2,8 +2,11 @@ package tqs.justlikehome.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
+import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.HouseRepository;
 
 import javax.transaction.Transactional;
@@ -30,6 +33,19 @@ public class HouseService {
             return houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate);
         }catch(DateTimeParseException e){
             throw new InvalidDateInputException();
+        }
+    }
+
+    public House addComoditieToHouse(ComoditiesDTO comoditiesDTO){
+        try{
+            Comodities comoditie = new Comodities(comoditiesDTO);
+            House house = houseRepository.findById(comoditiesDTO.getHouse());
+            System.out.println(house);
+            house.addComoditieToHouse(comoditie);
+            houseRepository.save(house);
+            return house;
+        }catch(NullPointerException e){
+           throw new InvalidIdException();
         }
     }
 }

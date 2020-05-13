@@ -118,4 +118,16 @@ class HouseRepositoryTest {
         assertThat(houses.get(0)).isEqualToComparingFieldByField(house2);
         assertThat(houses.get(0).getOwner()).isEqualToComparingFieldByField(user);
     }
+
+    @Test
+    public void searchForHouseByValidID(){
+        House tempHouse = houseRepository.findById(house.getId());
+        assertThat(tempHouse).isEqualToComparingFieldByField(house);
+    }
+
+    @Test
+    public void searchForHouseByInvalidId(){
+        House tempHouse = houseRepository.findById(50);
+        assertThat(tempHouse).isNull();
+    }
 }

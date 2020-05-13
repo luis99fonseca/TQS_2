@@ -13,6 +13,10 @@ public class HouseReviews {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="house_id")
     private House house;
 

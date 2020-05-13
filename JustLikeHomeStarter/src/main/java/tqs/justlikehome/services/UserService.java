@@ -7,7 +7,7 @@ import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
-import tqs.justlikehome.exceptions.InvalidOwnerIdException;
+import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.UserRepository;
 
 import javax.transaction.Transactional;
@@ -25,7 +25,7 @@ public class UserService {
     public House addHouseToUser(HouseDTO houseDTO){
         User owner = userRepository.findById(houseDTO.getUserId());
         if(owner==null){
-            throw new InvalidOwnerIdException();
+            throw new InvalidIdException();
         }
         House house = new House(houseDTO);
         owner.addHouse(house);

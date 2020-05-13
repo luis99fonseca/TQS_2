@@ -13,8 +13,13 @@ public class UserReviews {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User user;
+    @JoinColumn(name="from_user_id")
+    private User userReviewing;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="to_user_id")
+    private User userReviewed;
+
 
     @Min(0)
     @Max(5)

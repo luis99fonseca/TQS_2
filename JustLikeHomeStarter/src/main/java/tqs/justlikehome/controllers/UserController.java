@@ -6,6 +6,7 @@ import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
+import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.UserService;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class UserController {
 
     @PostMapping(value="/newHouse")
     @ResponseBody
-    public House addHouseToUser(@RequestBody HouseDTO house){
+    public House addHouseToUser(@RequestBody HouseDTO house) throws InvalidIdException {
         return userService.addHouseToUser(house);
     }
 

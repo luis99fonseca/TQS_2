@@ -7,10 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
+import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.HouseRepository;
 import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,12 +30,12 @@ class HouseServiceTest {
     private HouseService houseService;
 
     private House house;
+    private Set<Comodities> comodities = new HashSet<>();
 
     @BeforeEach
     public void setup(){
         User user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         Comodities comoditie = new Comodities("fun","Pool with jacuzzi");
-        Set<Comodities> comodities = new HashSet<>();
         comodities.add(comoditie);
         house = new House(
                 "Aveiro",
@@ -47,6 +49,7 @@ class HouseServiceTest {
         List<House> houses = new ArrayList<>();
         houses.add(house);
         Mockito.when(houseRepository.searchHouse(any(Integer.class),any(String.class),any(Date.class),any(Date.class))).thenReturn(houses);
+        Mockito.when(houseRepository.findById(house.getId())).thenReturn(house);
     }
 
     @Test
@@ -66,5 +69,19 @@ class HouseServiceTest {
         List<House> houses = houseService.getHouse("Aveiro","11-02-2013","11-03-2014",3);
         assertThat(houses.size()).isEqualTo(1);
         assertThat(houses.get(0)).isEqualToComparingFieldByField(house);
+    }
+
+    @Test
+    public void addComoditieToRightID(){
+        ComoditiesDTO comoditiesDTO = new ComoditiesDTO("Pool","Pool 20m by 30m",house.getId());
+        House testHouse = houseService.addComoditieToHouse(comoditiesDTO);
+        assertThat(testHouse.getComodities().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void addComoditieToWrongID(){
+        ComoditiesDTO comoditiesDTO = new ComoditiesDTO("Pool","Pool 20m by 30m",10);
+        assertThrows(InvalidIdException.class,
+                ()->houseService.addComoditieToHouse(comoditiesDTO));
     }
 }
