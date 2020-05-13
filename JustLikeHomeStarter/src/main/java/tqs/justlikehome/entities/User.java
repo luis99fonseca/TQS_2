@@ -45,6 +45,7 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
+
     public User(){
 
     }
@@ -66,6 +67,18 @@ public class User {
 
     public void addPurchasedRent(Rent rent){
         this.purchasedRents.add(rent);
+    }
+
+    public void addMyReview(HouseReviews houseReview){
+        this.houseReviews.add(houseReview);
+    }
+
+    public void addMyReview(UserReviews userReview){
+        this.userReviews.add(userReview);
+    }
+
+    public void addReview(UserReviews userReview){
+        this.userReviewed.add(userReview);
     }
 
     public Long getId() {
