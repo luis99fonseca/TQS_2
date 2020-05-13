@@ -5,16 +5,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import tqs.justlikehome.entities.Comodities;
-import tqs.justlikehome.entities.House;
-import tqs.justlikehome.entities.Rent;
-import tqs.justlikehome.entities.User;
+import tqs.justlikehome.entities.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.*;
 
 
 @DataJpaTest
 class HouseRepositoryTest {
+
     @Autowired
     private TestEntityManager testEntityManager;
 
@@ -42,7 +41,11 @@ class HouseRepositoryTest {
                 2,
                 5
         );
+        HouseReviews review = new HouseReviews(user,house,5,"BERY GOOD HOUSE");
+        HouseReviews review2 = new HouseReviews(user,house,4,"BERY GOOD HOUSE");
         house.setOwner(user);
+        house.addReview(review);
+        house.addReview(review2);
         testEntityManager.persistAndFlush(house);
     }
 
@@ -129,5 +132,15 @@ class HouseRepositoryTest {
     public void searchForHouseByInvalidId(){
         House tempHouse = houseRepository.findById(50);
         assertThat(tempHouse).isNull();
+    }
+
+    @Test
+    public void searchForHouseRating(){
+        assertThat(houseRepository.getRating(house.getId())).isEqualTo(4.5);
+    }
+
+    @Test
+    public void searchForRatingWithHouseWithNoReviews(){
+        assertThat(houseRepository.getRating(50)).isNull();
     }
 }

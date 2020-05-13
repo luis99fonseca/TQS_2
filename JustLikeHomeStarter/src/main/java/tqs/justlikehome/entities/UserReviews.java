@@ -27,4 +27,11 @@ public class UserReviews {
 
     @Size(max=300)
     private String description;
+
+    public UserReviews(User userReviewing, User userReviewed, @Min(0) @Max(5) double rating, @Size(max = 300) String description) {
+        this.userReviewing = userReviewing;
+        this.userReviewed = userReviewed;
+        this.rating = rating;
+        this.description = description;
+    }
 }
