@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 
-import java.util.Date;
 import java.util.List;
 
 @Repository

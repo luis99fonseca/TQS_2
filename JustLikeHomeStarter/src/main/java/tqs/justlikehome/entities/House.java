@@ -1,6 +1,6 @@
 package tqs.justlikehome.entities;
 
-import tqs.justlikehome.DTOs.HouseDTO;
+import tqs.justlikehome.dtos.HouseDTO;
 
 import javax.persistence.*;
 import java.util.HashSet;

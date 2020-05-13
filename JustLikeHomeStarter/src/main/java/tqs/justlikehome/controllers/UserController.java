@@ -2,11 +2,10 @@ package tqs.justlikehome.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import tqs.justlikehome.DTOs.HouseDTO;
-import tqs.justlikehome.DTOs.UserDTO;
+import tqs.justlikehome.dtos.HouseDTO;
+import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
-import tqs.justlikehome.exceptions.InvalidOwnerIdException;
 import tqs.justlikehome.services.UserService;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class UserController {
 
     @PostMapping(value="/newHouse")
     @ResponseBody
-    public House addHouseToUser(@RequestBody HouseDTO house) throws InvalidOwnerIdException {
+    public House addHouseToUser(@RequestBody HouseDTO house){
         return userService.addHouseToUser(house);
     }
 

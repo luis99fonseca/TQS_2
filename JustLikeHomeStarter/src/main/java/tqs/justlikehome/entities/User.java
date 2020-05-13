@@ -1,8 +1,6 @@
 package tqs.justlikehome.entities;
 
-import tqs.justlikehome.DTOs.UserDTO;
-import tqs.justlikehome.exceptions.InvalidDateInputException;
-
+import tqs.justlikehome.dtos.UserDTO;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZoneId;

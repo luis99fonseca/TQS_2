@@ -1,8 +1,4 @@
-package tqs.justlikehome.DTOs;
-
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.util.Date;
+package tqs.justlikehome.dtos;
 
 public class UserDTO {
     private String username;

@@ -7,8 +7,6 @@ import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.repositories.HouseRepository;
 
 import javax.transaction.Transactional;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +23,7 @@ public class HouseService {
     @Autowired
     public HouseRepository houseRepository;
 
-    public List<House> getHouse(String cityName, String start, String end, int numberOfGuests) throws InvalidDateInputException {
+    public List<House> getHouse(String cityName, String start, String end, int numberOfGuests){
         try {
             Date startDate = Date.from(LocalDate.parse(start, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date endDate = Date.from(LocalDate.parse(end, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
