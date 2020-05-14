@@ -85,6 +85,42 @@ public class House {
         return owner;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getKmFromCityCenter() {
+        return kmFromCityCenter;
+    }
+
+    public double getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public int getNumberOfBeds() {
+        return numberOfBeds;
+    }
+
+    public int getMaxNumberOfUsers() {
+        return maxNumberOfUsers;
+    }
+
+    public Set<Rent> getTimesRented() {
+        return timesRented;
+    }
+
+    public Set<HouseReviews> getHouseReviews() {
+        return houseReviews;
+    }
+
+    public Set<User> getBookmarkedBy() {
+        return bookmarkedBy;
+    }
+
     public void setOwner(User owner) {
         this.owner = owner;
     }

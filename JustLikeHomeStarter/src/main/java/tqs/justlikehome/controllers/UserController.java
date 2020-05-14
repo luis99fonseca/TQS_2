@@ -33,9 +33,9 @@ public class UserController {
         return userService.createUser(userDTO);
     }
 
-    @GetMapping(value="/userHouses?user={userId}")
-    public List<House> getUserHouses(String userId){
-        return userService.getUserHouses(Long.parseLong(userId));
+    @GetMapping(value="/userHouses/user={userId}")
+    public List<House> getUserHouses(@PathVariable Long userId){
+        return userService.getUserHouses(userId);
     }
 
 }
