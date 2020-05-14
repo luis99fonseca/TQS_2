@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
             "WHERE u.id=:userId")
     List<House> getUserHouses(@Param("userId") long userId);
 
-    @Query("SELECT AVG(ur.rating) FROM User u LEFT JOIN u.userReviews ur WHERE u.id=:userId")
+    @Query("SELECT AVG(ur.rating) FROM User u LEFT JOIN u.userReviewed ur WHERE u.id=:userId")
     Double getUserAvgRating(@Param("userId") long userId);
 
     @Query("SELECT u.userReviews from User u WHERE u.id=:userId")
