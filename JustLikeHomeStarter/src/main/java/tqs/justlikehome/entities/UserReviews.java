@@ -39,6 +39,11 @@ public class UserReviews {
         this.userReviewing=user;
     }
 
+    public UserReviews(double rating, String description) {
+        this.rating = rating;
+        this.description = description;
+    }
+
     public void setUserReviewed(User user){
         this.userReviewed=user;
     }

@@ -34,6 +34,11 @@ public class HouseReviews {
         this.description = houseReviewDTO.getDescription();
     }
 
+    public HouseReviews(double rating, String description){
+        this.rating = rating;
+        this.description = description;
+    }
+
     public void setUser(User user){
         this.user=user;
     }
