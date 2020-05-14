@@ -42,4 +42,22 @@ public class UserReviews {
     public void setUserReviewed(User user){
         this.userReviewed=user;
     }
+
+
+    public User getUserReviewing() {
+        return this.userReviewing;
+    }
+
+    public User getUserReviewed() {
+        return this.userReviewed;
+    }
+
+    public double getRating() {
+        return this.rating;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
 }
