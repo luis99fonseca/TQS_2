@@ -24,10 +24,10 @@ public class House {
     @JoinColumn(name="user_id")
     private User owner;
 
-    @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
     private Set<Rent> timesRented = new HashSet<>();
 
-    @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
     @ManyToMany(mappedBy = "bookmarkedHouses")
