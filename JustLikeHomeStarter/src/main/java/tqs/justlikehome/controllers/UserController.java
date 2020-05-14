@@ -7,7 +7,6 @@ import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.services.UserService;
-
 import java.util.List;
 
 @RestController
@@ -36,5 +35,4 @@ public class UserController {
     public List<House> getUserHouses(String userId){
         return userService.getUserHouses(Long.parseLong(userId));
     }
-
 }
