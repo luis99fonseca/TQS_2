@@ -41,4 +41,22 @@ public class HouseReviews {
     public void setHouse(House house){
         this.house=house;
     }
+
+    public User getUser(){
+        return this.user;
+    }
+
+
+    public House getHouse() {
+        return this.house;
+    }
+
+    public double getRating() {
+        return this.rating;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+    
 }
