@@ -43,7 +43,7 @@ class RentServiceTest {
     private Rent rentPending;
     private Rent rentOnGoing;
     private Rent rentPending2;
-    
+
     @BeforeEach
     public void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));

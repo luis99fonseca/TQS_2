@@ -59,13 +59,11 @@ public class RentService {
     }
 
     public List<Rent> pendingRents(long userID){
-        List<Rent> pendingRents = rentRepository.findByIdAndPending(userID,true);
-        return pendingRents;
+        return rentRepository.findByIdAndPending(userID,true);
     }
 
     public List<Rent> onGoingRents(long userID){
-        List<Rent> pendingRents = rentRepository.findByIdAndPending(userID,false);
-        return pendingRents;
+        return rentRepository.findByIdAndPending(userID,false);
     }
 
 }

@@ -2,13 +2,9 @@ package tqs.justlikehome.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.RentDTO;
-import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.Rent;
-import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.RentService;
-import tqs.justlikehome.services.UserService;
 
 import java.util.List;
 import java.util.Map;

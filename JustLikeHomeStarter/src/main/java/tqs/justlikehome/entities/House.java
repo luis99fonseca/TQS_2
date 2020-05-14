@@ -1,6 +1,5 @@
 package tqs.justlikehome.entities;
 
-import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
 
 import javax.persistence.*;
