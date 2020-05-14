@@ -10,7 +10,11 @@ import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.repositories.HouseRepository;
+import tqs.justlikehome.repositories.HouseReviewRepository;
 import tqs.justlikehome.repositories.UserRepository;
+import tqs.justlikehome.repositories.UserReviewRepository;
+
+import java.util.List;
 
 import javax.transaction.Transactional;
 import tqs.justlikehome.exceptions.InvalidIdException;
@@ -23,17 +27,23 @@ public class ReviewService {
     public UserRepository userRepository;
     @Autowired
     public HouseRepository houseRepository;
+    @Autowired
+    public HouseReviewRepository houseReviewRepository;
+    @Autowired
+    public UserReviewRepository userReviewRepository;
 
     public HouseReviews addReview(HouseReviewDTO houseReviewDTO){
         House house = houseRepository.findById(houseReviewDTO.getHouseId());
         if(house==null){
             throw new InvalidIdException();
         }
-
+        
         User user = userRepository.findById(houseReviewDTO.getReviewerId());
         if (user==null){
             throw new InvalidIdException();
         }
+
+        //TODO check if rent user and house existed
 
         HouseReviews houseReview = new HouseReviews(houseReviewDTO);
         house.addReview(houseReview);
@@ -59,6 +69,8 @@ public class ReviewService {
             throw new InvalidIdException();
         }
 
+        //TODO check if rent user and house existed
+
         UserReviews userReview = new UserReviews(userReviewDTO);
         reviwedUser.addReview(userReview);
         reviwerUser.addMyReview(userReview);
@@ -70,6 +82,21 @@ public class ReviewService {
         userRepository.save(reviwerUser);
 
         return userReview;
+    }
+
+    public List<HouseReviews> getReviewsForHouse(long id){
+        House house = houseRepository.findById(id);
+        return houseReviewRepository.findByHouse(house);
+    }
+
+    public List<UserReviews> getReviewsForUser(long id){
+        User user = userRepository.findById(id);
+        return userReviewRepository.findByUserReviewed(user);
+    }
+
+    public List<UserReviews> getReviewsFromUser(long id){
+        User user = userRepository.findById(id);
+        return userReviewRepository.findByUserReviewing(user);
     }
 
 }
