@@ -1,6 +1,6 @@
 package tqs.justlikehome.entities;
 
-import tqs.justlikehome.dtos.ComoditiesDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import tqs.justlikehome.dtos.HouseDTO;
 
 import javax.persistence.*;
@@ -22,12 +22,15 @@ public class House {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id")
+    @JsonIgnore
     private User owner;
 
-    @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Rent> timesRented = new HashSet<>();
 
-    @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
     @ManyToMany(mappedBy = "bookmarkedHouses")
@@ -40,8 +43,6 @@ public class House {
             inverseJoinColumns = {@JoinColumn(name="comodities_id")}
     )
     private Set<Comodities> comodities = new HashSet<>();
-
-
 
     public House(){
 
@@ -69,6 +70,14 @@ public class House {
         this.comodities.add(comodities);
     }
 
+    public void addReview(HouseReviews houseReview){
+        this.houseReviews.add(houseReview);
+    }
+
+    public Set<HouseReviews> getHouseReviews() {
+        return houseReviews;
+    }
+
     public void addRent(Rent rent){
         this.timesRented.add(rent);
     }
@@ -81,15 +90,35 @@ public class House {
         return this.id;
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
     public void setOwner(User owner) {
         this.owner = owner;
     }
 
-    public void addReview(HouseReviews houseReviews) {
-        this.houseReviews.add(houseReviews);
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public double getKmFromCityCenter() {
+        return kmFromCityCenter;
+    }
+
+    public double getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public int getNumberOfBeds() {
+        return numberOfBeds;
+    }
+
+    public int getMaxNumberOfUsers() {
+        return maxNumberOfUsers;
+    }
+
+    public User getOwner() {
+        return owner;
     }
 }

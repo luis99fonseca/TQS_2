@@ -20,6 +20,7 @@ public interface HouseRepository extends JpaRepository<House,Long> {
                             @Param("end") Date end);
     House findById(long userId);
 
+    // FOR SOME REASON THIS DOESNT WORK WITH THE QUERY ABOVE
     @Query("SELECT AVG(hr.rating) FROM House h LEFT JOIN h.houseReviews hr " +
             "WHERE h.id=:houseID")
     Double getRating(@Param("houseID") long houseID);
