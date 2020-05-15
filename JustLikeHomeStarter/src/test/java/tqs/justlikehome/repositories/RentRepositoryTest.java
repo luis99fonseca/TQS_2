@@ -31,10 +31,13 @@ class RentRepositoryTest {
     Rent rent02;
     User user;
     House house;
+    User owner;
 
     @BeforeEach
     public void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        owner = new User("Owner","Luis","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
+
         testEntityManager.persistAndFlush(user);
         house = new House(
                 "Aveiro",
@@ -44,8 +47,11 @@ class RentRepositoryTest {
                 2,
                 5
         );
-        house.setOwner(user);
+        house.setOwner(owner);
+
+        testEntityManager.persistAndFlush(owner);
         testEntityManager.persistAndFlush(house);
+
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         rent01 = new Rent(house,user,start,end);
@@ -114,4 +120,22 @@ class RentRepositoryTest {
         List<Rent> rents = rentRepository.findByUserAndHouse(user2.getId(), house.getId());
         assertEquals(rents.size(), 0);
     }
+
+    
+    @Test
+    public void searchByUserAndOwnerShouldBeEmpty(){
+        User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
+        List<Rent> rents = rentRepository.findByUserAndOwner(user2.getId(), owner.getId());
+        assertEquals(rents.size(), 0);
+    }
+        
+    @Test
+    public void searchByUserAndOwner(){
+        List<Rent> rents = rentRepository.findByUserAndOwner(user.getId(), owner.getId());
+        assertEquals(rents.size(), 2);
+
+        assertThat(rents.contains(rent01));
+        assertThat(rents.contains(rent02));
+    }
+
 }
