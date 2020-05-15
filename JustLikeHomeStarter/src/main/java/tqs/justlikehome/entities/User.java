@@ -1,5 +1,6 @@
 package tqs.justlikehome.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import tqs.justlikehome.dtos.UserDTO;
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -22,7 +23,8 @@ public class User {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
-    @OneToMany(mappedBy = "owner",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "owner",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<House> ownedHouses = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.ALL})
@@ -33,16 +35,20 @@ public class User {
     )
     private Set<House> bookmarkedHouses = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Rent> purchasedRents = new HashSet<>();
 
-    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<UserReviews> userReviews = new HashSet<>();
 
-    @OneToMany(mappedBy = "userReviewed",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "userReviewed",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<UserReviews> userReviewed = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
 
@@ -64,6 +70,7 @@ public class User {
         this.lastName = lastName;
         this.birthDate = Date.from(birthDate.toZonedDateTime().toInstant());
     }
+
 
     public void addPurchasedRent(Rent rent){
         this.purchasedRents.add(rent);
@@ -89,12 +96,20 @@ public class User {
         ownedHouses.add(house);
     }
 
+    public Set<House> getOwnedHouses() {
+        return ownedHouses;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public Set<Rent> getPurchasedRents() {
+        return purchasedRents;
     }
 
     public String getLastName() {

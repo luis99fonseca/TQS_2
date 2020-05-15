@@ -15,7 +15,7 @@ public class HouseReviews {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name="user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,6 +29,12 @@ public class HouseReviews {
     @Size(max=300)
     private String description;
 
+    public HouseReviews(User user, House house, @Min(0) @Max(5) double rating, @Size(max = 300) String description) {
+        this.user = user;
+        this.house = house;
+        this.rating=rating;
+        this.description=description;
+    }
     public HouseReviews(HouseReviewDTO houseReviewDTO){
         this.rating = houseReviewDTO.getRating();
         this.description = houseReviewDTO.getDescription();

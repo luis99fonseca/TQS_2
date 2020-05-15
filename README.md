@@ -1,13 +1,29 @@
 # JustLikeHome
 
-## Transformacao Digital
+## Índice
+1. [Objectivos](#goals)
+2. [Casos de Uso](#usecases)
+3. [Modelo de domínio](#mdd)
+4. [Arquitetura](#arq)
+4. [Equipa](#roles)
 
-## Arquitetura Candidata
-- Backend : SpringBoot
-- Frontend : ReactJs/React Nativa
-- Database : SQL
+## Objectivos <div id="goals"></div>
 
-## Roles
+A plataforma JustLikeHome é um sistema para locotários arrendarem seus bens imóveis e para que clientes que estejam a procura de uma residência consigam alugar num determinado tempo, de forma fácil e eficaz. Um dos principais objectivos do sistema na medida de distinguir de outros sistemas dessa área, é que se seja possível realizar reviews não só às residências, mas também que seja possível que o locatário possa fazer review ao cliente.
+
+## Casos de uso <div id="usecases"></div>
+
+![UseCases](Diagrams/use-cases-diagram.png)
+
+## Modelo de domínio <div id="mdd"></div>
+
+![model](Diagrams/domain-model.png)
+
+## Arquitetura  <div id="arq"></div>
+
+![arquitetura](Diagrams/arq-techn.png)
+
+## Roles <div id="roles"></div>
 - *Product Owner* - Andre Baiao
 - *Team Manager* - Miguel Mota
 - *DevOps master* - Luis Fonseca e Joao Silva
@@ -93,7 +109,3 @@ F -- Has/Had --> A
 
 #### Backlog
 - Jira
-
-
-#### TODO MODELO DO DOMINIO , ESQUEMA BD, ESQUEMA ARQUITETURA
-
