@@ -90,10 +90,6 @@ public class House {
         this.owner = owner;
     }
 
-    public void addReview(HouseReviews houseReviews) {
-        this.houseReviews.add(houseReviews);
-    }
-
     public String getDescription() {
         return description;
     }
