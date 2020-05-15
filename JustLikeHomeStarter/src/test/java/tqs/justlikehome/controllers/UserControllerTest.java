@@ -49,7 +49,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void whenGetUserByNoExistentId_thenReturnUserHouses() throws Exception {
+    public void whenGetUserByNoExistentId_thenReturnEmptyUserHouses() throws Exception {
 
         given(userService.getUserHouses(anyLong())).willReturn(
                 Collections.emptyList()
