@@ -16,7 +16,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping(value = "/newHouse")
     @ResponseBody
     public House addHouseToUser(@RequestBody HouseDTO house) {
