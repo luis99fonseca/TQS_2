@@ -57,6 +57,34 @@ public class User {
         this.birthDate = Date.from(LocalDate.parse(userDTO.getBirthDate(), parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public Set<House> getOwnedHouses() {
+        return ownedHouses;
+    }
+
+    public Set<House> getBookmarkedHouses() {
+        return bookmarkedHouses;
+    }
+
+    public Set<Rent> getPurchasedRents() {
+        return purchasedRents;
+    }
+
+    public Set<UserReviews> getUserReviews() {
+        return userReviews;
+    }
+
+    public Set<UserReviews> getUserReviewed() {
+        return userReviewed;
+    }
+
+    public Set<HouseReviews> getHouseReviews() {
+        return houseReviews;
+    }
+
     public User(String username, String firstName, String lastName, GregorianCalendar birthDate) {
         this.username = username;
         this.firstName = firstName;

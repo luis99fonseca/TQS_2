@@ -30,7 +30,7 @@ public class UserService {
             house.setOwner(owner);
             userRepository.save(owner);
             return house;
-        }catch (NullPointerException e){
+        }catch (NullPointerException e) {
             throw new InvalidIdException();
         }
     }

@@ -1,6 +1,5 @@
 package tqs.justlikehome.controllers;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -9,14 +8,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
+import tqs.justlikehome.exceptions.InvalidDateInputException;
+import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.UserService;
+import tqs.justlikehome.utils.ObjectJsonHelper;
 
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
 
     @Autowired
-    MockMvc servlet;
+    MockMvc mockMvc;
 
     @MockBean
     UserService userService;
@@ -41,7 +46,7 @@ class UserControllerTest {
                 houseList
         );
 
-        servlet.perform(MockMvcRequestBuilders.get("/userHouses/user=" + "123")).
+        mockMvc.perform(MockMvcRequestBuilders.get("/userHouses/user=" + "123")).
                 andExpect(status().isOk()).
                 andExpect(jsonPath("$", hasSize(2))).
                 andExpect(jsonPath("$[0].city").value("aveiro")).
@@ -55,18 +60,67 @@ class UserControllerTest {
                 Collections.emptyList()
         );
 
-        servlet.perform(MockMvcRequestBuilders.get("/userHouses/user=" + "123")).
+        mockMvc.perform(MockMvcRequestBuilders.get("/userHouses/user=" + "123")).
                 andExpect(status().isOk()).
                 andExpect(jsonPath("$").isEmpty());
     }
 
     @Test
-    public void whenAddNewValidUser_thenReturnUser() {
-        UserDTO user = new UserDTO("joao123", "joao", "miguel", "20-12-1999");
+    public void whenAddNewValidUser_thenReturnUser() throws Exception {
+        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "20-12-1999");
 
-        given(userService.createUser(user)).willReturn(new User(user));
+        given(userService.createUser(any(UserDTO.class))).willReturn(new User(userDTO));
 
-//        servlet.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON));
+        mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value(userDTO.getUsername()))
+                .andExpect(jsonPath("$.houseReviews").isEmpty());
     }
 
+    @Test
+    public void whenAddNewUserWithInvalidDate_thenThrowException() throws Exception {
+        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "1999-12-12");
+
+        given(userService.createUser(any(UserDTO.class))).willThrow(InvalidDateInputException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test //TODO: can't import such Exception
+//    public void whenAddNewUserWithIUsername_thenThrowException() throws Exception {
+//        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "19-12-1999");
+//
+//        given(userService.createUser(any(UserDTO.class))).willThrow(DateTimeParseException.class);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
+//                .content(ObjectJsonHelper.objectToJson(userDTO)))
+//                .andExpect(status().is4xxClientError())
+//                .andDo(MockMvcResultHandlers.print());
+//    }
+
+    @Test
+    public void whenAddUserValidHouse_returnHouse() throws Exception {
+        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0);
+
+        given(userService.addHouseToUser(any(HouseDTO.class))).willReturn(new House(houseDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectJsonHelper.objectToJson(houseDTO)))
+        .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
+        .andExpect(jsonPath("$.description").value(houseDTO.getDescription()));
+    }
+
+    @Test
+    public void whenAddUserHouseWithInvalidParam_thenThrowException() throws Exception {
+        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0);
+
+        given(userService.addHouseToUser(any(HouseDTO.class))).willThrow(InvalidIdException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectJsonHelper.objectToJson(houseDTO)))
+                .andExpect(status().is4xxClientError());
+    }
 }

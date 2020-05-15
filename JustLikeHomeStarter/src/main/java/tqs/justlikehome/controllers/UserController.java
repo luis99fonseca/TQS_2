@@ -7,6 +7,7 @@ import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.services.UserService;
+
 import java.util.List;
 
 @RestController
@@ -15,24 +16,21 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    public UserController(UserService userService){
-        this.userService=userService;
-    }
 
-    @PostMapping(value="/newHouse")
+    @PostMapping(value = "/newHouse")
     @ResponseBody
     public House addHouseToUser(@RequestBody HouseDTO house) {
         return userService.addHouseToUser(house);
     }
 
-    @PostMapping(value="/createUser")
+    @PostMapping(value = "/createUser")
     @ResponseBody
-    public User createUser(@RequestBody UserDTO userDTO){
+    public User createUser(@RequestBody UserDTO userDTO) {
         return userService.createUser(userDTO);
     }
 
-    @GetMapping(value="/userHouses/user={userId}")
-    public List<House> getUserHouses(@PathVariable Long userId){
+    @GetMapping(value = "/userHouses/user={userId}")
+    public List<House> getUserHouses(@PathVariable Long userId) {
         return userService.getUserHouses(userId);
     }
 }
