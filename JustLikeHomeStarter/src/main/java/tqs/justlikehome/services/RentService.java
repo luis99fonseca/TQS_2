@@ -60,7 +60,6 @@ public class RentService {
         try {
             Rent rent = rentRepository.findById(rentID.get("rentID"));
             rent.setPending(false);
-            System.out.println(rent.getUser().getFirstName());
             rentRepository.save(rent);
             return rent;
         }catch (NullPointerException e){

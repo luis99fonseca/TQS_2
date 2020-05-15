@@ -32,6 +32,8 @@ public class HouseReviews {
     public HouseReviews(User user, House house, @Min(0) @Max(5) double rating, @Size(max = 300) String description) {
         this.user = user;
         this.house = house;
+        this.rating=rating;
+        this.description=description;
     }
     public HouseReviews(HouseReviewDTO houseReviewDTO){
         this.rating = houseReviewDTO.getRating();
@@ -42,7 +44,6 @@ public class HouseReviews {
         this.rating = rating;
         this.description = description;
     }
-
 
     public void setUser(User user){
         this.user=user;

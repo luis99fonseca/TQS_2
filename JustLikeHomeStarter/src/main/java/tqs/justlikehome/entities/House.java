@@ -74,6 +74,10 @@ public class House {
         this.houseReviews.add(houseReview);
     }
 
+    public Set<HouseReviews> getHouseReviews() {
+        return houseReviews;
+    }
+
     public void addRent(Rent rent){
         this.timesRented.add(rent);
     }
