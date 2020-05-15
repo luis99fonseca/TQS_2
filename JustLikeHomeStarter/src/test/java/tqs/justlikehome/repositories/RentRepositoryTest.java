@@ -31,7 +31,7 @@ class RentRepositoryTest {
     Rent rent02;
     User user;
     House house;
-
+    User owner;
     @BeforeEach
     public void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));

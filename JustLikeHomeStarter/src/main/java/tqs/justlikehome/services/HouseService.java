@@ -30,6 +30,7 @@ public class HouseService {
         try {
             Date startDate = Date.from(LocalDate.parse(start, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date endDate = Date.from(LocalDate.parse(end, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
+            System.out.println(houseRepository.findAll());
             return houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate);
         }catch(DateTimeParseException e){
             throw new InvalidDateInputException();

@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -44,7 +45,7 @@ class UserServiceTest {
         );
         Mockito.when(userRepository.findById((long) 0)).thenReturn(user);
         Mockito.when(userRepository.findById((long) 1)).thenThrow(InvalidDateInputException.class);
-        Mockito.when(userRepository.save(user)).thenReturn(user);
+        Mockito.when(userRepository.save(any(User.class))).thenReturn(user);
     }
 
     @Test
@@ -62,7 +63,7 @@ class UserServiceTest {
 
     @Test
     public void createUserValidDTO(){
-        UserDTO userDTO = new UserDTO("josi","Joao","Silva","02-10-2019");
+        UserDTO userDTO = new UserDTO("Fonsequini","Luis","Fonseca","20-06-1999");
         User newUser = userService.createUser(userDTO);
         // Not comparing birthday because if it fails it throws exception
         assertThat(newUser.getUsername()).isEqualTo(userDTO.getUsername());

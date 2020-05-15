@@ -10,7 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.CoreMatchers.is;
 import org.springframework.http.MediaType;
@@ -53,6 +55,7 @@ public class RentControllerIT {
 
     private User user;
     private House house;
+    private User owner;
 
     @BeforeEach
     private void setup(){
@@ -60,6 +63,7 @@ public class RentControllerIT {
         houseRepository.deleteAll();
         rentRepository.deleteAll();
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        owner = new User("Owner","Luis","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -68,14 +72,15 @@ public class RentControllerIT {
                 2,
                 5
         );
-        user.addHouse(house);
-        house.setOwner(user);
+        owner.addHouse(house);
+        house.setOwner(owner);
+        owner = userRepository.save(owner);
         user = userRepository.save(user);
     }
 
     @Test
     public void askToRentWithRightValues() throws Exception{
-        RentDTO rentDTO = new RentDTO(((House) user.getOwnedHouses().toArray()[0]).getId(),user.getId(),"10-10-2019","10-10-2019");
+        RentDTO rentDTO = new RentDTO(((House) owner.getOwnedHouses().toArray()[0]).getId(),user.getId(),"10-10-2019","10-10-2019");
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
@@ -87,10 +92,18 @@ public class RentControllerIT {
 
     @Test
     public void askToRentWithInvalidValues() throws Exception{
-        RentDTO rentDTO = new RentDTO(((House) user.getOwnedHouses().toArray()[0]).getId(),user.getId(),"2019-10-20","2019-10-21");
+        RentDTO rentDTO = new RentDTO(((House) owner.getOwnedHouses().toArray()[0]).getId(),user.getId(),"2019-10-20","2019-10-21");
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    public void ownerTriesToRentOwnHouseThenException() throws Exception{
+        RentDTO rentDTO = new RentDTO(((House) owner.getOwnedHouses().toArray()[0]).getId(),owner.getId(),"2019-10-20","2019-10-21");
+        mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
+                .andExpect(status().is4xxClientError());
+    }
+
 
     @Test
     public void askToRentWithInvalidID() throws Exception{
@@ -101,7 +114,7 @@ public class RentControllerIT {
 
     @Test
     public void acceptRentWithValidValues() throws Exception{
-        /*Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
+        Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         Rent rent = new Rent(house,user,start,end);
         user.addPurchasedRent(rent);
@@ -109,13 +122,13 @@ public class RentControllerIT {
         long idRent = ((Rent)user.getPurchasedRents().toArray()[0]).getId();
         Map<String,Long> rentID = new HashMap<>();
         rentID.put("rentID",idRent);
-        mvc.perform(put("/acceptRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)));
+        mvc.perform(put("/acceptRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
                 .andExpect(jsonPath("$.house.pricePerNight",is(50.0)))
                 .andExpect(jsonPath("$.house.numberOfBeds",is(2)))
                 .andExpect(jsonPath("$.user.username",is("Fonsequini")))
-                .andExpect(jsonPath("$.pending",is(false)));*/
+                .andExpect(jsonPath("$.pending",is(false)));
     }
 
     @Test
@@ -125,6 +138,52 @@ public class RentControllerIT {
         mvc.perform(put("/acceptRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)))
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    public void getPendingFromOwnerWithHouses() throws Exception{
+        Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
+        Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
+        Rent rent = new Rent(house,user,start,end);
+        owner.addPurchasedRent(rent);
+        userRepository.save(owner);
+        mvc.perform(get("/pendingRents/owner="+owner.getId()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(1)))
+                .andExpect(jsonPath("$[0].pending",is(true)))
+                .andExpect(jsonPath("$[0].user.username",is("Fonsequini")))
+        .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void getPendingFromOwnerWithoutHouses() throws Exception{
+        mvc.perform(get("/pendingRents/owner="+user.getId()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(0)));
+    }
+    
+    @Test
+    public void getOnGoingFromOwnerWithHouses() throws Exception{
+        Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
+        Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
+        Rent rent = new Rent(house,user,start,end);
+        rent.setPending(false);
+        owner.addPurchasedRent(rent);
+        userRepository.save(owner);
+        mvc.perform(get("/onGoingRents/owner="+owner.getId()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(1)))
+                .andExpect(jsonPath("$[0].pending",is(false)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$[0].user.username",is("Fonsequini")));
+    }
+
+    @Test
+    public void getOnGoingFromOwnerWithoutHouses() throws Exception{
+        mvc.perform(get("/onGoingRents/owner="+user.getId()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(0)));
+    }
+
 
     private String objectToJson(Object obj){
         try{

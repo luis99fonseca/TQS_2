@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.InvalidRentRequestException;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
@@ -39,6 +40,7 @@ class RentServiceTest {
     private RentService rentService;
 
     private User user;
+    private User owner;
     private House house;
     private Rent rentPending;
     private Rent rentOnGoing;
@@ -47,6 +49,7 @@ class RentServiceTest {
     @BeforeEach
     public void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        owner = new User("Owner","Luis","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -55,11 +58,12 @@ class RentServiceTest {
                 2,
                 5
         );
+        house.setOwner(owner);
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
-        rentPending = new Rent(house,user,start,end);
-        rentPending2 = new Rent(house,user,start,end);
-        rentOnGoing = new Rent(house,user,start,end);
+        rentPending = new Rent(house,owner,start,end);
+        rentPending2 = new Rent(house,owner,start,end);
+        rentOnGoing = new Rent(house,owner,start,end);
         rentOnGoing.setPending(false);
         List<Rent> rentList = new ArrayList<>();
         rentList.add(rentPending);
@@ -68,7 +72,8 @@ class RentServiceTest {
         rentListNotPending.add(rentOnGoing);
         Mockito.when(userRepository.findById((long) 50)).thenReturn(null);
         Mockito.when(houseRepository.findById((long) 50)).thenReturn(null);
-        Mockito.when(userRepository.findById((long) 0)).thenReturn(user);
+        Mockito.when(userRepository.findById((long) 0)).thenReturn(owner);
+        Mockito.when(userRepository.findById((long) 1)).thenReturn(user);
         Mockito.when(houseRepository.findById((long) 0)).thenReturn(house);
         Mockito.when(rentRepository.findById((long) 0)).thenReturn(rentPending);
         Mockito.when(rentRepository.findById((long) 50)).thenReturn(null);
@@ -78,11 +83,18 @@ class RentServiceTest {
 
     @Test
     public void addRentToValidHouseUser(){
-        RentDTO rentDTO = new RentDTO(0,0,"10-10-2019","11-10-2019");
+        RentDTO rentDTO = new RentDTO(0,1,"10-10-2019","11-10-2019");
         Rent newRent = rentService.askToRent(rentDTO);
         assertThat(newRent.getHouse().getId()).isEqualTo(rentDTO.getHouseID());
         assertThat(newRent.getHouse().getId()).isEqualTo(rentDTO.getHouseID());
         assertThat(newRent.getPending()).isEqualTo(true);
+    }
+
+    @Test
+    public void OwnerTriesToRentOwnHouseThenException(){
+        RentDTO rentDTO = new RentDTO(0,0,"10-10-2019","11-10-2019");
+        assertThrows(InvalidRentRequestException.class,
+                ()->rentService.askToRent(rentDTO));
     }
 
     @Test
@@ -94,7 +106,7 @@ class RentServiceTest {
 
     @Test
     public void addRentWithInvalidDate(){
-        RentDTO rentDTO = new RentDTO(50,50,"2019-10-20","2019-11-10");
+        RentDTO rentDTO = new RentDTO(0,1,"2019-10-20","2019-11-10");
         assertThrows(InvalidDateInputException.class,
                 ()->rentService.askToRent(rentDTO));
     }
@@ -117,9 +129,9 @@ class RentServiceTest {
 
     @Test
     public void whenSearchForPendingAndThereAreReturnPendingList(){
-        user = Mockito.spy(user);
-        Mockito.when(user.getId()).thenReturn((long) 0);
-        List<Rent> rents = rentService.pendingRents(user.getId());
+        owner = Mockito.spy(owner);
+        Mockito.when(owner.getId()).thenReturn((long) 0);
+        List<Rent> rents = rentService.pendingRents(owner.getId());
         assertThat(rents.size()).isEqualTo(2);
         assertThat(rents).contains(rentPending);
         assertThat(rents).contains(rentPending2);
@@ -127,9 +139,9 @@ class RentServiceTest {
 
     @Test
     public void whenSearchForPendingAndThereArentReturnEmptyList(){
-        user = Mockito.spy(user);
-        Mockito.when(user.getId()).thenReturn((long) 0);
-        List<Rent> rents = rentService.onGoingRents(user.getId());
+        owner = Mockito.spy(owner);
+        Mockito.when(owner.getId()).thenReturn((long) 0);
+        List<Rent> rents = rentService.onGoingRents(owner.getId());
         assertThat(rents.size()).isEqualTo(1);
         assertThat(rents.get(0)).isEqualToComparingFieldByField(rentOnGoing);
     }

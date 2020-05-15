@@ -66,7 +66,7 @@ public class House {
         this.maxNumberOfUsers = maxNumberOfUsers;
     }
 
-    public void addComoditieToHouse(Comodities comodities) {
+    public void addComoditieToHouse(Comodities comodities){
         this.comodities.add(comodities);
     }
 

@@ -28,6 +28,7 @@ public class UserController {
     @PostMapping(value="/createUser")
     @ResponseBody
     public User createUser(@RequestBody UserDTO userDTO){
+        System.out.println(userDTO);
         return userService.createUser(userDTO);
     }
 
