@@ -101,7 +101,7 @@ public class RentControllerIT {
 
     @Test
     public void acceptRentWithValidValues() throws Exception{
-        /*Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
+        Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         Rent rent = new Rent(house,user,start,end);
         user.addPurchasedRent(rent);
@@ -109,13 +109,13 @@ public class RentControllerIT {
         long idRent = ((Rent)user.getPurchasedRents().toArray()[0]).getId();
         Map<String,Long> rentID = new HashMap<>();
         rentID.put("rentID",idRent);
-        mvc.perform(put("/acceptRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)));
+        mvc.perform(put("/acceptRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
                 .andExpect(jsonPath("$.house.pricePerNight",is(50.0)))
                 .andExpect(jsonPath("$.house.numberOfBeds",is(2)))
                 .andExpect(jsonPath("$.user.username",is("Fonsequini")))
-                .andExpect(jsonPath("$.pending",is(false)));*/
+                .andExpect(jsonPath("$.pending",is(false)));
     }
 
     @Test
