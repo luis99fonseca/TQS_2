@@ -89,7 +89,7 @@ class UserControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test //TODO: can't import such Exception
+    //@Test //TODO: can't import such Exception
 //    public void whenAddNewUserWithIUsername_thenThrowException() throws Exception {
 //        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "19-12-1999");
 //
