@@ -41,6 +41,9 @@ public class House {
     private Set<Comodities> comodities = new HashSet<>();
 
 
+    @OneToMany(mappedBy = "house", cascade = CascadeType.PERSIST)
+    private Set<HouseReviews> houseReviews = new HashSet<>();
+
 
     public House(){
 
@@ -66,6 +69,10 @@ public class House {
 
     public void addComoditieToHouse(Comodities comodities) {
         this.comodities.add(comodities);
+    }
+
+    public void addReview(HouseReviews houseReview){
+        this.houseReviews.add(houseReview);
     }
 
     public void addRent(Rent rent){
