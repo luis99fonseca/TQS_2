@@ -40,11 +40,6 @@ public class House {
     )
     private Set<Comodities> comodities = new HashSet<>();
 
-
-    @OneToMany(mappedBy = "house", cascade = CascadeType.PERSIST)
-    private Set<HouseReviews> houseReviews = new HashSet<>();
-
-
     public House(){
 
     }
