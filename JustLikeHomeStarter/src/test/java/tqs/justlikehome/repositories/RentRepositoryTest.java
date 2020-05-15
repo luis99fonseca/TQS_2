@@ -1,5 +1,6 @@
 package tqs.justlikehome.repositories;
 
+import org.assertj.core.condition.AllOf;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,13 @@ class RentRepositoryTest {
     Rent rent01;
     Rent rent02;
     User user;
+    House house;
+
     @BeforeEach
     public void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         testEntityManager.persistAndFlush(user);
-        House house = new House(
+        house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
                 3.0,
@@ -95,4 +98,20 @@ class RentRepositoryTest {
         assertThat(rent.get(0)).isEqualToComparingFieldByField(rent01);
     }
 
+    @Test
+    public void searchByUserAndHouse(){
+        List<Rent> rents = rentRepository.findByUserAndHouse(user.getId(), house.getId());
+        assertEquals(rents.size(), 2);
+
+        assertThat(rents.contains(rent01));
+        assertThat(rents.contains(rent02));
+
+    }
+
+    @Test
+    public void searchByUserAndHouseShouldBeEmpty(){
+        User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
+        List<Rent> rents = rentRepository.findByUserAndHouse(user2.getId(), house.getId());
+        assertEquals(rents.size(), 0);
+    }
 }
