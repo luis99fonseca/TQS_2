@@ -16,5 +16,5 @@ public interface RentRepository extends JpaRepository<Rent,Integer>{
             "WHERE u.id=:userID and r.pending=:pending")
     List<Rent> findByIdAndPending(@Param("userID") long userID,
                                   @Param("pending") boolean pending);
-
+    List<Rent> findAll();
 }
