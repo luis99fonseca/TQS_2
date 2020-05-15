@@ -1,0 +1,64 @@
+{
+  "items": [
+    {
+      "imageURL": "demo/photos/apart_example.jpg",
+      "avatarURL": "demo/faces/male/41.jpg",
+      "fullName": "Nathan Guerrero",
+      "dateString": "12 days ago",
+      "totalWC": 1,
+      "price": 150,
+      "numberPersons": 2,
+      "totalRooms": 2
+    },
+    {
+      "imageURL": "demo/photos/apart_example.jpg",
+      "avatarURL": "demo/faces/female/1.jpg",
+      "fullName": "Alice Mason",
+      "dateString": "12 days ago",
+      "totalWC": 1,
+      "price": 250,
+      "numberPersons": 3,
+      "totalRooms": 2
+    },
+    {
+      "imageURL": "demo/photos/apart_example.jpg",
+      "avatarURL": "demo/faces/female/18.jpg",
+      "fullName": "Rose Bradley",
+      "dateString": "4 days ago",
+      "totalWC": 1,
+      "numberPersons": 2,
+      "price": 160,
+      "totalRooms": 1
+    },
+    {
+      "imageURL": "demo/photos/apart_example.jpg",
+      "avatarURL": "demo/faces/male/16.jpg",
+      "fullName": "Peter Richards",
+      "dateString": "18 days ago",
+      "totalWC": 2,
+      "price": 170,
+      "numberPersons": 1,
+      "totalRooms": 2
+    },
+    {
+      "imageURL": "demo/photos/apart_example.jpg",
+      "avatarURL": "demo/faces/male/26.jpg",
+      "fullName": "Wayne Holland",
+      "dateString": "16 days ago",
+      "totalWC": 2,
+      "price": 166,
+      "numberPersons": 1,
+      "totalRooms": 1
+    },
+    {
+      "imageURL": "demo/photos/apart_example.jpg",
+      "avatarURL": "demo/faces/female/7.jpg",
+      "fullName": "Michelle Ross",
+      "dateString": "4 days ago",
+      "totalWC": 2,
+      "numberPersons": 1,
+      "price": 180,
+      "totalRooms": 3
+    }
+  ]
+}
