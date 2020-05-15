@@ -100,10 +100,6 @@ public class User {
         return ownedHouses;
     }
 
-    public void addReview(UserReviews userReviews){
-        this.userReviews.add(userReviews);
-    }
-
     public String getUsername() {
         return username;
     }
