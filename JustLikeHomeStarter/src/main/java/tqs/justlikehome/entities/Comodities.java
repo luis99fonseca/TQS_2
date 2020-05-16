@@ -1,5 +1,6 @@
 package tqs.justlikehome.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class Comodities {
 
     @ManyToOne
     @JoinColumn(name="house_id")
+    @JsonIgnore
     private House house;
 
     public Comodities(){

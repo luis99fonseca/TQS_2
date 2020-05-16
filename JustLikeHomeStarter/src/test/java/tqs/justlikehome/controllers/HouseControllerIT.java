@@ -11,16 +11,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.JustlikehomeApplication;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
+import tqs.justlikehome.exceptions.InvalidDateInputException;
+import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,8 +52,6 @@ public class HouseControllerIT {
 
     @BeforeEach
     public void resetDb(){
-//        houseRepository.deleteAll();
-//        houseRepository.save(new House("aveiro", "boa casa", 2.0, 30.5, 4, 6, "Casa de Tabua"));;
         userRepository.deleteAll();
         houseRepository.deleteAll();
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
@@ -64,6 +71,7 @@ public class HouseControllerIT {
 
     @Test
     public void whenAddValidComoditiesToHouse_thenReturnHouse() throws Exception {
+        // TODO: check here, as ID starts at 1, which i'm not sure if its intended as its the first house saved ever
         ComoditiesDTO comoditiesDto = new ComoditiesDTO("pool", "pool to swim", 1);
 
         mockMvc.perform(post("/addComoditie").contentType(MediaType.APPLICATION_JSON)
@@ -73,6 +81,31 @@ public class HouseControllerIT {
                 .andExpect(jsonPath("$.comodities").isArray())
                 .andExpect(jsonPath("$.comodities[0].type").value("pool"));
     }
+
+    @Test
+    public void whenAddInvalidComoditiesToHouse_thenThrowException() throws Exception {
+        ComoditiesDTO comoditiesDto = new ComoditiesDTO("pool", "pool to swim", -1);
+
+        mockMvc.perform(post("/addComoditie").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(comoditiesDto)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void whenGetHouseByParameters_thenReturnOfMatchingHouses() throws Exception {
+
+        mockMvc.perform(get("/houses/city=AVEIro&start=12-10-1999&end=12-10-1999&guests=2").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].city").value("aveiro"))
+                .andExpect(jsonPath("$[0].ownerName").value("Fonsequini"));
+    }
+
+    @Test
+    public void whenGetHouseByInvalidDate_thenThrowException() throws Exception {
+        mockMvc.perform(get("/houses/city=aveiro&start=1999-10-19&end=12-10-1999&guests=4").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
+
 
     private String objectToJson(Object obj) {
         try {

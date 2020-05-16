@@ -38,7 +38,6 @@ public class House {
     private Set<User> bookmarkedBy = new HashSet<>();
 
     @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<Comodities> comodities = new HashSet<>();
 
     public House(){

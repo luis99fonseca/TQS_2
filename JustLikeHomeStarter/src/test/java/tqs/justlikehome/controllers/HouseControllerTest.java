@@ -85,7 +85,7 @@ public class HouseControllerTest {
     }
 
     @Test
-    public void whenGetHouseByInvalidParameters_thenThrowException() throws Exception {
+    public void whenGetHouseByInvalidDate_thenThrowException() throws Exception {
         List<HouseSearchDTO> searchDTOList = new ArrayList<>();
         searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5));
         given(houseService.getHouse("aveiro", "12-10-1999", "12-10-1999", 4))
