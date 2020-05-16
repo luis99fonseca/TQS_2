@@ -25,7 +25,7 @@ import ChartsPage from "./interface/ChartsPage.react";
 import GalleryPage from "./GalleryPage.react";
 import MapCardsPage from "./components/MapCardsPage.react";
 import BlogPage from "./components/BlogPage.react";
-import Property from "./Porperty"
+import Property from "./PorpertyInfo"
 
 import "tabler-react/dist/Tabler.css";
 

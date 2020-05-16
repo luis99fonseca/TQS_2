@@ -18,6 +18,7 @@ public class HouseControler {
     }
 
     @GetMapping(value = "/houses/city={city}&start={start}&end={end}&guests={guests}")
+    @CrossOrigin
     @ResponseBody
     public List<House> getHouse(@PathVariable String city,
                                 @PathVariable String start,

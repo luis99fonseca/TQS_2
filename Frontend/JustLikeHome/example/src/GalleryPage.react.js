@@ -20,7 +20,12 @@ export default class GalleryPage extends Component {
       super(props);
       this.state = {
         startDate : new Date(),
-        endDate : new Date()
+        endDate : new Date(),
+        houses : [
+          {id: -2,  city:"Aveiro", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:300.0, numberOfBeds: 1, maxNumberOfUsers:1, comodities: []},
+          {id: -3,  city:"Porto", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:200.0, numberOfBeds: 2, maxNumberOfUsers:1, comodities: []},
+          {id: -4,  city:"Lisboa", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:500.0, numberOfBeds: 3, maxNumberOfUsers:1, comodities: []}
+        ]
       }
       this.property_info = this.property_info.bind(this);
       this.query_searchProperty = this.query_searchProperty.bind(this);
@@ -39,7 +44,17 @@ export default class GalleryPage extends Component {
     let data = getDataForm(event.target);
     
     let response = await this.property_obj.get_searchProperty(data.city, data.inicio, data.fim, data.guests)
-    console.log(response)
+    let status = response[0]
+    let houses = response[1]
+    let state_houses = []
+    houses.map((home) => (
+      state_houses.push(home)
+      )
+    )
+
+    this.setState({
+      houses : state_houses
+    })
 
   }
 
@@ -104,27 +119,24 @@ export default class GalleryPage extends Component {
           />
   
           <Grid.Row className="row-cards">
-            {json.items.map((item, key) => (
-              <div class="col-lg-4" key={key} onClick={() => this.property_info()} >
+            {this.state.houses.map((house, key) => (
+              <div class="col-lg-4" key={house.id} onClick={() => this.property_info()} >
                 <GalleryCard >
                   <GalleryCard.Image
-                    src={item.imageURL}
-                    alt={`Photo by ${item.fullName}`}
+                    src={"demo/photos/apart_example.jpg"}
                     onClick={() => this.property_info()} 
                   />
                   <GalleryCard.Footer>
                     <GalleryCard.Details
-                      avatarURL={item.avatarURL}
-                      fullName={item.fullName}
-                      dateString={item.dateString}
+                      avatarURL={"demo/faces/female/1.jpg"}
+                      fullName={"João Artur"}
                     />
                     <GalleryCard.IconGroup>
-                      <Icon prefix="fa" name="male"  />  <span style={{padding : '5px'}}>{item.totalRooms}</span>
-                      <Icon prefix="fa" name="bed"  />  <span style={{padding : '5px'}}>{item.totalRooms}</span>
-                      <Icon prefix="fa" name="bath" />  <span style={{paddingLeft : '5px'}}>{item.totalWC}</span>
+                      <Icon prefix="fa" name="male"  />  <span style={{padding : '5px'}}>{house.maxNumberOfUsers}</span>
+                      <Icon prefix="fa" name="bed"  />  <span style={{padding : '5px'}}>{house.numberOfBeds}</span>
                     </GalleryCard.IconGroup>
                   </GalleryCard.Footer>
-                  <span style={{paddingLeft:"300px", fontSize:"25px" }}>{item.price}€</span>
+                  <span><span style={{paddingLeft:"220px", fontSize:"25px" }}>{house.pricePerNight}€</span> /por noite</span>
                 </GalleryCard>
               </div>
             ))}
