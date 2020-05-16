@@ -37,12 +37,8 @@ public class House {
     @ManyToMany(mappedBy = "bookmarkedHouses")
     private Set<User> bookmarkedBy = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name="house_comodities",
-            joinColumns = {@JoinColumn(name="house_id")},
-            inverseJoinColumns = {@JoinColumn(name="comodities_id")}
-    )
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Comodities> comodities = new HashSet<>();
 
     public House(){

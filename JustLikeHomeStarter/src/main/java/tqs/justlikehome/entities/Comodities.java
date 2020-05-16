@@ -15,8 +15,9 @@ public class Comodities {
     private String type;
     private String description;
 
-    @ManyToMany(mappedBy = "comodities")
-    private Set<House> houses = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name="house_id")
+    private House house;
 
     public Comodities(){
 
