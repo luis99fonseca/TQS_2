@@ -71,9 +71,7 @@ public class UserReviewRepositoryTest {
     @Test
     public void getUserReviewsForUserWithNoReviews(){
         List<UserReviews> userReviews = userReviewRepository.findByUserReviewed(user1);
-        
         assertEquals(userReviews.size(), 0);
-
     }
 
     @Test

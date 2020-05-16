@@ -3,6 +3,7 @@ package tqs.justlikehome.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,11 +28,15 @@ public class HouseService {
     @Autowired
     public HouseRepository houseRepository;
 
-    public List<House> getHouse(String cityName, String start, String end, int numberOfGuests){
+    public List<HouseSearchDTO> getHouse(String cityName, String start, String end, int numberOfGuests){
         try {
             Date startDate = Date.from(LocalDate.parse(start, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date endDate = Date.from(LocalDate.parse(end, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
-            return houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate);
+            List<HouseSearchDTO> houses = new ArrayList<>();
+            for(House house:houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate)){
+                houses.add(new HouseSearchDTO(house,house.getOwner(),houseRepository.getRating(house.getId())));
+            }
+            return houses;
         }catch(DateTimeParseException e){
             throw new InvalidDateInputException();
         }

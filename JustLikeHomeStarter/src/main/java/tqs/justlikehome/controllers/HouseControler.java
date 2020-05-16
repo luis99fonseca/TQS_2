@@ -3,6 +3,7 @@ package tqs.justlikehome.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.services.HouseService;
 
@@ -20,10 +21,10 @@ public class HouseControler {
     @GetMapping(value = "/houses/city={city}&start={start}&end={end}&guests={guests}")
     @CrossOrigin
     @ResponseBody
-    public List<House> getHouse(@PathVariable String city,
-                                @PathVariable String start,
-                                @PathVariable String end,
-                                @PathVariable int guests){
+    public List<HouseSearchDTO> getHouse(@PathVariable String city,
+                                         @PathVariable String start,
+                                         @PathVariable String end,
+                                         @PathVariable int guests){
         return houseService.getHouse(city,start,end,guests);
     }
 
