@@ -15,14 +15,14 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String username;
     private String firstName;
     private String lastName;
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
-    @OneToMany(mappedBy = "owner",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "owner",cascade = CascadeType.ALL)
     private Set<House> ownedHouses = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.ALL})
@@ -33,16 +33,16 @@ public class User {
     )
     private Set<House> bookmarkedHouses = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<Rent> purchasedRents = new HashSet<>();
 
-    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.ALL)
     private Set<UserReviews> userReviews = new HashSet<>();
 
-    @OneToMany(mappedBy = "userReviewed",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "userReviewed",cascade = CascadeType.ALL)
     private Set<UserReviews> userReviewed = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
     public User(){
@@ -55,6 +55,34 @@ public class User {
         this.firstName = userDTO.getFirstName();
         this.lastName = userDTO.getLastName();
         this.birthDate = Date.from(LocalDate.parse(userDTO.getBirthDate(), parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public Set<House> getOwnedHouses() {
+        return ownedHouses;
+    }
+
+    public Set<House> getBookmarkedHouses() {
+        return bookmarkedHouses;
+    }
+
+    public Set<Rent> getPurchasedRents() {
+        return purchasedRents;
+    }
+
+    public Set<UserReviews> getUserReviews() {
+        return userReviews;
+    }
+
+    public Set<UserReviews> getUserReviewed() {
+        return userReviewed;
+    }
+
+    public Set<HouseReviews> getHouseReviews() {
+        return houseReviews;
     }
 
     public User(String username, String firstName, String lastName, GregorianCalendar birthDate) {

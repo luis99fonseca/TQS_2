@@ -1,6 +1,5 @@
 package tqs.justlikehome.entities;
 
-import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
 
 import javax.persistence.*;
@@ -24,10 +23,10 @@ public class House {
     @JoinColumn(name="user_id")
     private User owner;
 
-    @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
     private Set<Rent> timesRented = new HashSet<>();
 
-    @OneToMany(mappedBy = "house",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
     @ManyToMany(mappedBy = "bookmarkedHouses")
@@ -83,6 +82,42 @@ public class House {
 
     public User getOwner() {
         return owner;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getKmFromCityCenter() {
+        return kmFromCityCenter;
+    }
+
+    public double getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public int getNumberOfBeds() {
+        return numberOfBeds;
+    }
+
+    public int getMaxNumberOfUsers() {
+        return maxNumberOfUsers;
+    }
+
+    public Set<Rent> getTimesRented() {
+        return timesRented;
+    }
+
+    public Set<HouseReviews> getHouseReviews() {
+        return houseReviews;
+    }
+
+    public Set<User> getBookmarkedBy() {
+        return bookmarkedBy;
     }
 
     public void setOwner(User owner) {

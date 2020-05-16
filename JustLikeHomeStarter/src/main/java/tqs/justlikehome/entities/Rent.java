@@ -14,7 +14,7 @@ public class Rent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "house_id")
@@ -57,6 +57,10 @@ public class Rent {
         this.pending = true;
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
     public House getHouse() {
         return house;
     }
@@ -67,6 +71,10 @@ public class Rent {
 
     public boolean getPending(){
         return this.pending;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
     }
 
     public Date getRentStart() {
