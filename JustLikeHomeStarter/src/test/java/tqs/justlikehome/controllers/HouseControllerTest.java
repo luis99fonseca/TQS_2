@@ -60,8 +60,6 @@ public class HouseControllerTest {
                 .andExpect(jsonPath("$.city").value("aveiro"))
                 .andExpect(jsonPath("$.comodities").isArray())
                 .andExpect(jsonPath("$.comodities[0].type").value("pool"));
-
-
     }
 
     @Test
