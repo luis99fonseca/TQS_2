@@ -40,7 +40,8 @@ class UserServiceTest {
                 50.0,
                 2,
                 5,
-                0 //We are testing so default value is always 0
+                0, //We are testing so default value is always 0
+                "house2"
         );
         Mockito.when(userRepository.findById((long) 0)).thenReturn(user);
         Mockito.when(userRepository.findById((long) 1)).thenThrow(InvalidDateInputException.class);

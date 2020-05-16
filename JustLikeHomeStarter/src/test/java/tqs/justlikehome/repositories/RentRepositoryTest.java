@@ -42,7 +42,8 @@ class RentRepositoryTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house03"
         );
         house.setOwner(user);
         testEntityManager.persistAndFlush(house);

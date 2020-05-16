@@ -66,7 +66,8 @@ public class RentControllerIT {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house2"
         );
         user.addHouse(house);
         house.setOwner(user);

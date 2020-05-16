@@ -8,8 +8,9 @@ public class HouseDTO {
     private int numberOfBeds;
     private int maxNumberOfUsers;
     private long userId;
+    private String houseName;
 
-    public HouseDTO(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,long userId) {
+    public HouseDTO(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,long userId,String houseName) {
         this.city = city;
         this.description = description;
         this.kmFromCityCenter = kmFromCityCenter;
@@ -17,6 +18,11 @@ public class HouseDTO {
         this.numberOfBeds = numberOfBeds;
         this.maxNumberOfUsers = maxNumberOfUsers;
         this.userId=userId;
+        this.houseName=houseName;
+    }
+
+    public String getHouseName() {
+        return houseName;
     }
 
     public String getCity() {

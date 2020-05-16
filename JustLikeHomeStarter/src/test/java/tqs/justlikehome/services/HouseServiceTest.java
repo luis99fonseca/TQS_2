@@ -44,7 +44,8 @@ class HouseServiceTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house3"
         );
         house.setOwner(user);
         List<House> houses = new ArrayList<>();
