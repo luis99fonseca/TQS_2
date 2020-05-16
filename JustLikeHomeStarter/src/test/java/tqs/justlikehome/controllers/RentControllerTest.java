@@ -57,7 +57,8 @@ class RentControllerTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house3"
         );
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());

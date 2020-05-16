@@ -41,7 +41,8 @@ public class HouseReviewRepositoryTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house3"
         );
 
         house.setOwner(user1);
@@ -77,7 +78,8 @@ public class HouseReviewRepositoryTest {
             3.0,
             50.0,
             2,
-            5
+            5,
+                "house3"
         );
         
         testEntityManager.persist(house2);
