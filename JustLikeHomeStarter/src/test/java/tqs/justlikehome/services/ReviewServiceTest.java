@@ -14,13 +14,26 @@ import tqs.justlikehome.dtos.UserReviewDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.User;
+import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.NoPermitionException;
 import tqs.justlikehome.repositories.HouseRepository;
+import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.AdditionalMatchers.eq;
+import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +45,9 @@ public class ReviewServiceTest {
     @Mock(lenient = true)
     private HouseRepository houseRepository;
 
+    @Mock(lenient = true)
+    private RentRepository rentRepository;
+
     @InjectMocks
     private ReviewService reviewService;
 
@@ -42,6 +58,9 @@ public class ReviewServiceTest {
     private User user2; //will be client
 
     @Spy
+    private User user3; //will be client
+
+    @Spy
     private House house;
 
 
@@ -50,15 +69,30 @@ public class ReviewServiceTest {
 
         Mockito.when(user1.getId()).thenReturn((long)0);
         Mockito.when(user2.getId()).thenReturn((long)1);
+        Mockito.when(user3.getId()).thenReturn((long)2);
         Mockito.when(house.getId()).thenReturn((long)0);
 
         Mockito.when(userRepository.findById(user1.getId())).thenReturn(user1);
         Mockito.when(userRepository.findById(user2.getId())).thenReturn(user2);
-        Mockito.when(userRepository.findById((long) 2)).thenThrow(InvalidIdException.class);
+        Mockito.when(userRepository.findById(user3.getId())).thenReturn(user3);
+        Mockito.when(userRepository.findById((long) 3)).thenThrow(InvalidIdException.class);
 
         Mockito.when(userRepository.save(user1)).thenReturn(user1);
         Mockito.when(userRepository.save(user2)).thenReturn(user2);
+        Mockito.when(userRepository.save(user2)).thenReturn(user3);
         Mockito.when(houseRepository.save(house)).thenReturn(house);
+
+        List<Rent> emptyRents= new ArrayList<>();
+        Mockito.when(rentRepository.findByUserAndHouse(anyLong(), anyLong())).thenReturn(emptyRents);
+        Mockito.when(rentRepository.findByUserAndOwner(anyLong(), anyLong())).thenReturn(emptyRents);
+
+        Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
+        Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
+        Rent r = new Rent(house, user2, start, end);
+        List<Rent> rents= new ArrayList<>();
+        rents.add(r);
+        Mockito.when(rentRepository.findByUserAndHouse(user2.getId(), house.getId())).thenReturn(rents);
+        Mockito.when(rentRepository.findByUserAndOwner(user2.getId(), user1.getId())).thenReturn(rents);
 
         Mockito.when(houseRepository.findById(house.getId())).thenReturn(house);
         house.setOwner(user1);
@@ -94,7 +128,7 @@ public class ReviewServiceTest {
     @Test
     public void addReviewToNonExistingUser(){
 
-        UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), 2, 5,"topp");
+        UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), 3, 5,"topp");
 
         assertThrows(InvalidIdException.class,
                 ()->reviewService.addReview(userReviewDTO));
@@ -114,7 +148,7 @@ public class ReviewServiceTest {
     @Test
     public void addHouseReviewfromNonExistingUser(){
 
-        HouseReviewDTO houseReviewDTO = new HouseReviewDTO(2, this.house.getId(), 5,"topp");
+        HouseReviewDTO houseReviewDTO = new HouseReviewDTO(3, this.house.getId(), 5,"topp");
 
         assertThrows(InvalidIdException.class,
                 ()->reviewService.addReview(houseReviewDTO));
@@ -124,11 +158,29 @@ public class ReviewServiceTest {
     @Test
     public void addUserReviewfromNonExistingUser(){
 
-        UserReviewDTO userReviewDTO = new UserReviewDTO(2, this.user2.getId(), 5,"topp");
+        UserReviewDTO userReviewDTO = new UserReviewDTO(3, this.user2.getId(), 5,"topp");
 
         assertThrows(InvalidIdException.class,
                 ()->reviewService.addReview(userReviewDTO));
 
+    }
+
+    @Test
+    public void addReviewToNonRentedHouse(){
+
+        HouseReviewDTO houseReviewDTO = new HouseReviewDTO(this.user3.getId(), this.house.getId(), 5, "topp");
+
+        assertThrows(NoPermitionException.class,
+                ()->reviewService.addReview(houseReviewDTO));
+    }
+
+    @Test
+    public void addReviewToUserThatDidntRent(){
+
+        UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), this.user3.getId(), 5, "topp");
+
+        assertThrows(NoPermitionException.class,
+                ()->reviewService.addReview(userReviewDTO));
     }
 
 }

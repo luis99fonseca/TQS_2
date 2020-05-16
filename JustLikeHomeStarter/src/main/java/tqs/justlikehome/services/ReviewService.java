@@ -7,10 +7,12 @@ import tqs.justlikehome.dtos.HouseReviewDTO;
 import tqs.justlikehome.dtos.UserReviewDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.HouseReviews;
+import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.HouseReviewRepository;
+import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
 import tqs.justlikehome.repositories.UserReviewRepository;
 
@@ -18,6 +20,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.NoPermitionException;
+
 
 @Service
 @Transactional
@@ -31,6 +35,8 @@ public class ReviewService {
     public HouseReviewRepository houseReviewRepository;
     @Autowired
     public UserReviewRepository userReviewRepository;
+    @Autowired
+    public RentRepository rentRepository;
 
     public HouseReviews addReview(HouseReviewDTO houseReviewDTO){
         House house = houseRepository.findById(houseReviewDTO.getHouseId());
@@ -43,7 +49,11 @@ public class ReviewService {
             throw new InvalidIdException();
         }
 
-        //TODO check if rent user and house existed
+        List<Rent> rent = rentRepository.findByUserAndHouse(houseReviewDTO.getReviewerId(), houseReviewDTO.getHouseId());   //user was in house
+
+        if (rent.isEmpty()){
+            throw new NoPermitionException();
+        }
 
         HouseReviews houseReview = new HouseReviews(houseReviewDTO);
         house.addReview(houseReview);
@@ -69,7 +79,11 @@ public class ReviewService {
             throw new InvalidIdException();
         }
 
-        //TODO check if rent user and house existed
+        List<Rent> rent = rentRepository.findByUserAndOwner(userReviewDTO.getReviewedId(), userReviewDTO.getReviewerId()); //owner had user as client
+
+        if (rent.isEmpty()){
+            throw new NoPermitionException();
+        }
 
         UserReviews userReview = new UserReviews(userReviewDTO);
         reviwedUser.addReview(userReview);
