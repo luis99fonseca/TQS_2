@@ -9,6 +9,7 @@ import tqs.justlikehome.services.HouseService;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class HouseControler {
     @Autowired
     private HouseService houseService;
