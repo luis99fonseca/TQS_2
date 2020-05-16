@@ -29,12 +29,13 @@ public class HouseService {
     public HouseRepository houseRepository;
 
     public List<HouseSearchDTO> getHouse(String cityName, String start, String end, int numberOfGuests){
-        try {
+        try{
             Date startDate = Date.from(LocalDate.parse(start, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date endDate = Date.from(LocalDate.parse(end, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             List<HouseSearchDTO> houses = new ArrayList<>();
             for(House house:houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate)){
-                houses.add(new HouseSearchDTO(house,house.getOwner(),houseRepository.getRating(house.getId())));
+                Double rating = houseRepository.getRating(house.getId());
+                houses.add(new HouseSearchDTO(house,house.getOwner(),rating==null?0:rating));
             }
             return houses;
         }catch(DateTimeParseException e){

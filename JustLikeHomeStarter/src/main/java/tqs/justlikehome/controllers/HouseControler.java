@@ -10,6 +10,7 @@ import tqs.justlikehome.services.HouseService;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class HouseControler {
     @Autowired
     private HouseService houseService;
@@ -19,7 +20,6 @@ public class HouseControler {
     }
 
     @GetMapping(value = "/houses/city={city}&start={start}&end={end}&guests={guests}")
-    @CrossOrigin
     @ResponseBody
     public List<HouseSearchDTO> getHouse(@PathVariable String city,
                                          @PathVariable String start,

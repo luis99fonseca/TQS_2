@@ -10,6 +10,7 @@ import tqs.justlikehome.services.UserService;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -31,8 +32,8 @@ public class UserController {
         return userService.createUser(userDTO);
     }
 
-    @GetMapping(value="/userHouses?user={userId}")
-    public List<House> getUserHouses(String userId){
-        return userService.getUserHouses(Long.parseLong(userId));
+    @GetMapping(value="/userHouses/user={userId}")
+    public List<House> getUserHouses(@PathVariable long userId){
+        return userService.getUserHouses(userId);
     }
 }
