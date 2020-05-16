@@ -8,7 +8,6 @@ import SiteWrapper from "./SiteWrapper.react";
 import getDataForm from "./Rest/getDataForm";
 import Property from "./Rest/Property";
 
-import json from "./data/Gallery.Items";
 import DatePicker from "react-datepicker";
  
 import "react-datepicker/dist/react-datepicker.css";
@@ -22,9 +21,9 @@ export default class GalleryPage extends Component {
         startDate : new Date(),
         endDate : new Date(),
         houses : [
-          {id: -2,  city:"Aveiro", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:300.0, numberOfBeds: 1, maxNumberOfUsers:1, comodities: []},
-          {id: -3,  city:"Porto", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:200.0, numberOfBeds: 2, maxNumberOfUsers:1, comodities: []},
-          {id: -4,  city:"Lisboa", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:500.0, numberOfBeds: 3, maxNumberOfUsers:1, comodities: []}
+          {id: -2,  rating:5 ,ownerName:"jbtavares" ,city:"Aveiro", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:300.0, numberOfBeds: 1, maxNumberOfUsers:1, comodities: []},
+          {id: -3,  rating:5 ,ownerName:"ricardoTeves" , city:"Porto", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:200.0, numberOfBeds: 2, maxNumberOfUsers:1, comodities: []},
+          {id: -4,  rating:5 ,ownerName:"arturmns" , city:"Lisboa", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:500.0, numberOfBeds: 3, maxNumberOfUsers:1, comodities: []}
         ]
       }
       this.property_info = this.property_info.bind(this);
@@ -129,11 +128,13 @@ export default class GalleryPage extends Component {
                   <GalleryCard.Footer>
                     <GalleryCard.Details
                       avatarURL={"demo/faces/female/1.jpg"}
-                      fullName={"João Artur"}
+                      fullName={house.city}
+                      dateString={house.ownerName}
                     />
                     <GalleryCard.IconGroup>
                       <Icon prefix="fa" name="male"  />  <span style={{padding : '5px'}}>{house.maxNumberOfUsers}</span>
                       <Icon prefix="fa" name="bed"  />  <span style={{padding : '5px'}}>{house.numberOfBeds}</span>
+                      <Icon prefix="fa" name="star"  />  <span style={{padding : '5px'}}>{house.rating}</span>
                     </GalleryCard.IconGroup>
                   </GalleryCard.Footer>
                   <span><span style={{paddingLeft:"220px", fontSize:"25px" }}>{house.pricePerNight}€</span> /por noite</span>
