@@ -1,20 +1,30 @@
 // @flow
 
-import React, { Component, useCallback } from "react";
+import React, { Component } from "react";
 import { Page, Grid, GalleryCard, Form, Button} from "tabler-react";
 import Icon from "./components/Icon";
 import "tabler-react/dist/Tabler.css";
 import SiteWrapper from "./SiteWrapper.react";
+import getDataForm from "./Rest/getDataForm";
+import Property from "./Rest/Property";
 
 import json from "./data/Gallery.Items";
+import DatePicker from "react-datepicker";
+ 
+import "react-datepicker/dist/react-datepicker.css";
 
 
 export default class GalleryPage extends Component {
 
   constructor(props) {
       super(props);
-
+      this.state = {
+        startDate : new Date(),
+        endDate : new Date()
+      }
       this.property_info = this.property_info.bind(this);
+      this.query_searchProperty = this.query_searchProperty.bind(this);
+      this.property_obj = new Property();
   }
 
   property_info() {
@@ -24,73 +34,63 @@ export default class GalleryPage extends Component {
     return true;
   }
 
+  async query_searchProperty(event){
+    event.preventDefault();
+    let data = getDataForm(event.target);
+    
+    let response = await this.property_obj.get_searchProperty(data.city, data.inicio, data.fim, data.guests)
+    console.log(response)
+
+  }
+
+  handleChange(date, name){
+    this.setState({
+      [name]: date
+    })
+
+  };
+
+ 
+
+
+
 
   render(){
     const options = (
       <React.Fragment>
-        <Form>
+        <Form onSubmit={this.query_searchProperty}>
           <div class="row">
             <div class="col-lg-4">
-            <form class="group" >
-              <input  placeholder="Insira localização" style={{marginBottom:"30px", marginTop:"30px"}} required/>
-              <input type="number"  min="0" placeholder="Número de pessoas" required/>
-            </form>
+            
+              <input name="city" placeholder="Insira localização" style={{marginBottom:"30px", marginTop:"30px"}} required/>
+              <input type="number" name="guests" min="0" placeholder="Número de pessoas" required/>
+           
             </div>
           
             <Form.Group>
               <Form.Label>Data de Início:</Form.Label>
   
-              <Form.DatePicker
-                   defaultDate={new Date("2020-05-13T16:06:07.669Z")}
-                   format="mm/dd/yyyy"
-                   required
-                   maxYear={2030}
-                   minYear={2020}
-                   monthLabels={[
-                     'Janeiro',
-                     'Fevereiro',
-                     'Março',
-                     'Abril',
-                     'Maio',
-                     'Junho',
-                     'Julho',
-                     'Agosto',
-                     'Setembro',
-                     'Outubro',
-                     'Novembro',
-                     'Dezembro'
-                   ]}
+              <DatePicker
+                  name="inicio"
+                   selected={this.state.startDate}
+                   dateFormat="dd-MM-yyyy"
+                   onChange={(date) => this.handleChange(date, "startDate")}
                  />
                  <Form.Label>Data de Fim:</Form.Label>
-                 <Form.DatePicker
-                    defaultDate={new Date("2020-05-13T16:06:07.669Z")}
-                    format="mm/dd/yyyy"
-                    required
-                    maxYear={2030}
-                    minYear={2020}
-                    monthLabels={[
-                      'Janeiro',
-                      'Fevereiro',
-                      'Março',
-                      'Abril',
-                      'Maio',
-                      'Junho',
-                      'Julho',
-                      'Agosto',
-                      'Setembro',
-                      'Outubro',
-                      'Novembro',
-                      'Dezembro'
-                    ]}
+                 <DatePicker
+                    name="fim"
+                    selected={this.state.endDate}
+                    dateFormat="dd-MM-yyyy"
+                    onChange={(date) => this.handleChange(date, "endDate")}
                   />
-          </Form.Group>
-          <div class="col-lg-2" style={{marginTop:"92px"}}>
-          <Button 
+            </Form.Group>
+            <div class="col-lg-2" style={{marginTop:"92px"}}>
+            <Button 
                   type="submit"
                   color="secondary"
                   icon="search"
                 />
-          </div>
+            </div>
           </div>
           </Form>
       </React.Fragment>

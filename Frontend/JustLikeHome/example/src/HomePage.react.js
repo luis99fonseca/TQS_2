@@ -24,7 +24,7 @@ function Home() {
                     {"O que é o Just Like Home?"}
                   </h3>
                   <div className="text-muted" style={{ "fontSize":"20px"}}>
-                    {"O Just Like Home conecta pessoas com lugares para ficar. A comunidade é alimentada por anfitriões, que arrendam os seus bens imóveis, para que outras pessoas possam encontrá-los mais facilmente, simplificando o processo."}
+                    {"O Just Like Home conecta pessoas com lugares para ficar. A comunidade é alimentada por anfitriões, que arrendam os seus bens imóveis, para que outras pessoas possam encontrá-los mais facilmente, simplificando o processo de alugar."}
                   </div> 
             </div>
             <div class={"col-lg-5 offset-lg-2"}>
