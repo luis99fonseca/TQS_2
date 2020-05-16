@@ -48,7 +48,7 @@ public class House {
 
     }
 
-    public House(HouseDTO house){
+    public House(HouseDTO house) {
         this.city=house.getCity();
         this.description=house.getDescription();
         this.kmFromCityCenter=house.getKmFromCityCenter();
