@@ -33,8 +33,6 @@ public class UserService {
             house.setOwner(owner);
             User user = userRepository.save(owner);
             // stupid but spring doesn't update the house id :'(
-            System.out.println(Arrays.toString(user.getOwnedHouses().toArray()));
-            System.out.println(house.getId());
             // I Call this the fuck you programmer I will not update the value of the house id while cascading
             // because i'm a framework of a framework and i do whatever I want and you have to find a way don't you
             // because you need this don't you, go ahead and ruin the performance of your database
