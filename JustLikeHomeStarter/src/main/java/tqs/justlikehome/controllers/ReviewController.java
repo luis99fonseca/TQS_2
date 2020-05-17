@@ -3,9 +3,10 @@ package tqs.justlikehome.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,19 +35,27 @@ public class ReviewController {
         return reviewService.addReview(userReviewDTO);
     }
 
-    @PostMapping(value = "/houseReviews")
-    public List<HouseReviews> getHouseReviews(@RequestParam Long id){
-        return reviewService.getReviewsForHouse(id);
+    @GetMapping(value = "/houseReviews/house={houseID}")
+    @ResponseBody
+    public List<HouseReviews> getHouseReviews(@PathVariable long houseID){
+        return reviewService.getReviewsForHouse(houseID);
     }
 
-    @PostMapping(value = "/userReviewedReviews")
-    public List<UserReviews> getuserReviewedReviews(@RequestParam Long id){
-        return reviewService.getReviewsForUser(id);
+    @GetMapping(value = "/userReviews/user={userID}")
+    @ResponseBody
+    public List<UserReviews> getuserReviewedReviews(@PathVariable long userID){
+        return reviewService.getReviewsForUser(userID);
     }
 
-    @PostMapping(value = "/useruserReviewerReviews")
-    public List<UserReviews> getuserReviewerReviews(@RequestParam Long id){
-        return reviewService.getReviewsFromUser(id);
+    @GetMapping(value = "/UserReviewsFromUser/user={userID}")
+    @ResponseBody
+    public List<UserReviews> getuserAsReviewerUserReviews(@PathVariable long userID){
+        return reviewService.getUserReviewsFromUser(userID);
     }
     
+    @GetMapping(value = "/HouseReviewsFromUser/user={userID}")
+    @ResponseBody
+    public List<HouseReviews> getuserAsReviewerHouseReviews(@PathVariable long userID){
+        return reviewService.getHouseReviewsFromUser(userID);
+    }
 }
