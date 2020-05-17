@@ -72,7 +72,8 @@ public class HouseControllerIT {
     @Test
     public void whenAddValidComoditiesToHouse_thenReturnHouse() throws Exception {
         // TODO: check here, as ID starts at 1, which i'm not sure if its intended as its the first house saved ever
-        ComoditiesDTO comoditiesDto = new ComoditiesDTO("pool", "pool to swim", 1);
+        // the way to make the ID dinamic was getting it directly, which i'm not sure if its good practice
+        ComoditiesDTO comoditiesDto = new ComoditiesDTO("pool", "pool to swim", houseRepository.findAll().get(0).getId());
 
         mockMvc.perform(post("/addComoditie").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(comoditiesDto)))

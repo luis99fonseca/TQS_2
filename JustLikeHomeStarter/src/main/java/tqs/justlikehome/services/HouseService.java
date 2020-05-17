@@ -47,6 +47,7 @@ public class HouseService {
         try{
             Comodities comoditie = new Comodities(comoditiesDTO);
             House house = houseRepository.findById(comoditiesDTO.getHouse());
+            System.out.println("house " + houseRepository.findAll().get(0).getId());
             house.addComoditieToHouse(comoditie);
             houseRepository.save(house);
             return house;
