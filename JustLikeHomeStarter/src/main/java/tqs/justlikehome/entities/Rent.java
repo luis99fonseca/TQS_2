@@ -1,5 +1,9 @@
 package tqs.justlikehome.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeId;
 import tqs.justlikehome.dtos.RentDTO;
 
 import javax.persistence.*;
@@ -16,11 +20,11 @@ public class Rent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "house_id")
     private House house;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -83,5 +87,9 @@ public class Rent {
 
     public Date getRentEnd() {
         return rentEnd;
+    }
+
+    public boolean isPending() {
+        return pending;
     }
 }

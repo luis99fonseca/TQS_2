@@ -1,5 +1,7 @@
 package tqs.justlikehome.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -38,12 +40,19 @@ public class RentService {
             user.addPurchasedRent(newRent);
             house.addRent(newRent);
             userRepository.save(user);
-            houseRepository.save(house);
             return newRent;
         }catch(NullPointerException e){
             throw new InvalidIdException();
         }catch(DateTimeParseException e){
             throw new InvalidDateInputException();
+        }
+    }
+
+    private String objectToJson(Object obj){
+        try{
+            return new ObjectMapper().writeValueAsString(obj);
+        }catch (JsonProcessingException e){
+            throw new RuntimeException();
         }
     }
 

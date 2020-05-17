@@ -27,6 +27,7 @@ import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.RentService;
 import tqs.justlikehome.utils.ObjectJsonHelper;
 
+
 import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
@@ -58,7 +59,8 @@ class RentControllerTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house3"
         );
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
@@ -112,7 +114,7 @@ class RentControllerTest {
         rentId.put("rentID",(long) 0);
         rent.setPending(false);
         given(rentService.acceptRent(rentId)).willReturn(rent);
-        mockMvc.perform(put("/acceptRent").content(ObjectJsonHelper.objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        mockMvc.perform(put("/acceptRent").content(objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(jsonPath("$.user.username",is("Fonsequini")))
                 .andExpect(jsonPath("$.user.firstName",is("Luis")))
@@ -125,7 +127,7 @@ class RentControllerTest {
         rentId.put("rentID",(long) 200);
         given(rentService.acceptRent(rentId)).willThrow(InvalidIdException.class);
         mockMvc.perform(put("/acceptRent").content(ObjectJsonHelper.objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
+        .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -144,6 +146,7 @@ class RentControllerTest {
         RentDTO rentDTO = new RentDTO(0,0,"2019-10-10","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidDateInputException.class);
         mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(ObjectJsonHelper.objectToJson(rentDTO)))
+
                 .andExpect(status().is4xxClientError());
     }
 
@@ -151,8 +154,17 @@ class RentControllerTest {
     public void addRentWithInvalidIDDTO() throws Exception{
         RentDTO rentDTO = new RentDTO(500,500,"10-10-2019","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidIdException.class);
-        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(ObjectJsonHelper.objectToJson(rentDTO)))
+        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().is4xxClientError());
     }
+
+    private String objectToJson(Object obj){
+        try{
+            return new ObjectMapper().writeValueAsString(obj);
+        }catch (JsonProcessingException e){
+            throw new RuntimeException();
+        }
+    }
+
 
 }

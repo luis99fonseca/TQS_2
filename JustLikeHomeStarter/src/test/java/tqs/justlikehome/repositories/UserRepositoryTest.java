@@ -36,7 +36,8 @@ class UserRepositoryTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house03"
         );
         house.setOwner(user);
         user.addHouse(house);
@@ -63,7 +64,8 @@ class UserRepositoryTest {
                 4.0,
                 75.0,
                 2,
-                3
+                3,
+                "house03"
         );
         house2.setOwner(user);
         user.addHouse(house2);

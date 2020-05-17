@@ -1,5 +1,6 @@
 package tqs.justlikehome.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import tqs.justlikehome.dtos.HouseDTO;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ public class House {
     private long id;
     private String city;
     private String description;
+    private String houseName;
     private double kmFromCityCenter;
     private double pricePerNight;
     private int numberOfBeds;
@@ -21,51 +23,62 @@ public class House {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id")
+    @JsonIgnore
     private User owner;
 
     @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Rent> timesRented = new HashSet<>();
 
     @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
     @ManyToMany(mappedBy = "bookmarkedHouses")
     private Set<User> bookmarkedBy = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name="house_comodities",
-            joinColumns = {@JoinColumn(name="house_id")},
-            inverseJoinColumns = {@JoinColumn(name="comodities_id")}
-    )
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
     private Set<Comodities> comodities = new HashSet<>();
-
-
 
     public House(){
 
     }
 
-    public House(HouseDTO house){
+    public House(HouseDTO house) {
         this.city=house.getCity();
+        this.houseName=house.getHouseName();
         this.description=house.getDescription();
         this.kmFromCityCenter=house.getKmFromCityCenter();
         this.pricePerNight=house.getPricePerNight();
+        this.houseName=house.getHouseName();
         this.numberOfBeds=house.getNumberOfBeds();
         this.maxNumberOfUsers=house.getMaxNumberOfUsers();
     }
 
-    public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers) {
+    public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,String houseName) {
         this.city = city;
         this.description = description;
         this.kmFromCityCenter = kmFromCityCenter;
         this.pricePerNight = pricePerNight;
         this.numberOfBeds = numberOfBeds;
         this.maxNumberOfUsers = maxNumberOfUsers;
+        this.houseName=houseName;
     }
 
     public void addComoditieToHouse(Comodities comodities) {
         this.comodities.add(comodities);
+    }
+
+    public void addReview(HouseReviews houseReview){
+        this.houseReviews.add(houseReview);
+    }
+
+    public Set<HouseReviews> getHouseReviews() {
+        return houseReviews;
+    }
+
+    public String getHouseName() {
+        return houseName;
     }
 
     public void addRent(Rent rent){
@@ -80,16 +93,16 @@ public class House {
         return this.id;
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
-    public String getCity() {
-        return city;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public double getKmFromCityCenter() {
@@ -108,23 +121,7 @@ public class House {
         return maxNumberOfUsers;
     }
 
-    public Set<Rent> getTimesRented() {
-        return timesRented;
-    }
-
-    public Set<HouseReviews> getHouseReviews() {
-        return houseReviews;
-    }
-
-    public Set<User> getBookmarkedBy() {
-        return bookmarkedBy;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public void addReview(HouseReviews houseReviews) {
-        this.houseReviews.add(houseReviews);
+    public User getOwner() {
+        return owner;
     }
 }
