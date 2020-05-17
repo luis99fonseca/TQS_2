@@ -26,7 +26,7 @@ public class HouseSearchDTO {
         this.maxNumberOfUsers = house.getMaxNumberOfUsers();
         this.userId=owner.getId();
         this.rating=rating;
-        this.ownerName=owner.getUsername();
+        this.ownerName =owner.getUsername();
     }
 
     public double getUserRating() {

@@ -62,7 +62,6 @@ public class HouseService {
 
     public HouseSearchDTO getSpecificHouse(long houseID){
         House house = houseRepository.findById(houseID);
-        System.out.println(house);
         User owner = house.getOwner();
         Double ratingHouse = houseRepository.getRating(houseID);
         HouseSearchDTO houseSearch = new HouseSearchDTO(house,owner,ratingHouse==null?0:ratingHouse);
