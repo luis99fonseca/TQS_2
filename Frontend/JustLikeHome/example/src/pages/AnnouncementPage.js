@@ -54,7 +54,7 @@ export default class AnnoucementPage extends Component{
           }   
         }
         data["userId"] = 1 // DEFAULT, DPS E PRECISO IR BUSCAR A CACHE O ID DO USER LOGADO
-        console.log(data)
+        // console.log(data)
         let response = await this.house_obj.post_house(data)
         let status = response[0]
         let houses = response[1]
