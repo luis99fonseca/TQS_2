@@ -124,9 +124,6 @@ public class User {
         ownedHouses.add(house);
     }
 
-    public Set<House> getOwnedHouses() {
-        return ownedHouses;
-    }
 
     public String getUsername() {
         return username;
@@ -134,10 +131,6 @@ public class User {
 
     public String getFirstName() {
         return firstName;
-    }
-
-    public Set<Rent> getPurchasedRents() {
-        return purchasedRents;
     }
 
     public String getLastName() {
