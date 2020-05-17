@@ -12,6 +12,9 @@ import tqs.justlikehome.repositories.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -28,8 +31,16 @@ public class UserService {
             House house = new House(houseDTO);
             owner.addHouse(house);
             house.setOwner(owner);
-            userRepository.save(owner);
-            return house;
+            User user = userRepository.save(owner);
+            // stupid but spring doesn't update the house id :'(
+            System.out.println(Arrays.toString(user.getOwnedHouses().toArray()));
+            System.out.println(house.getId());
+            // I Call this the fuck you programmer I will not update the value of the house id while cascading
+            // because i'm a framework of a framework and i do whatever I want and you have to find a way don't you
+            // because you need this don't you, go ahead and ruin the performance of your database
+            List list = Arrays.asList(user.getOwnedHouses().toArray());
+            list.sort((o1, o2)-> (int) (((House) o2).getId()-((House) o1).getId()));
+            return (House) list.get(0);
         }catch (NullPointerException e){
             throw new InvalidIdException();
         }
