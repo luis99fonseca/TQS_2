@@ -77,6 +77,7 @@ public class ReviewControllerIT {
 
         owner = userRepository.save(owner);
         user = userRepository.save(user);
+        house = houseRepository.save(house);
     }
     
     @Test
