@@ -19,8 +19,10 @@ import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.exceptions.NoPermitionException;
 import tqs.justlikehome.repositories.HouseRepository;
+import tqs.justlikehome.repositories.HouseReviewRepository;
 import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
+import tqs.justlikehome.repositories.UserReviewRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,6 +50,12 @@ public class ReviewServiceTest {
     @Mock(lenient = true)
     private RentRepository rentRepository;
 
+    @Mock(lenient = true)
+    private HouseReviewRepository houseReviewRepository;
+    
+    @Mock(lenient = true)
+    private UserReviewRepository userReviewRepository;
+    
     @InjectMocks
     private ReviewService reviewService;
 
@@ -58,7 +66,7 @@ public class ReviewServiceTest {
     private User user2; //will be client
 
     @Spy
-    private User user3; //will be client
+    private User user3;
 
     @Spy
     private House house;
@@ -182,5 +190,46 @@ public class ReviewServiceTest {
         assertThrows(NoPermitionException.class,
                 ()->reviewService.addReview(userReviewDTO));
     }
+
+    @Test
+    public void getReviewsForHouse(){
+        HouseReviews hr = new HouseReviews(user2,house,4.5,"topp");
+        List<HouseReviews> hrs = new ArrayList<>();
+        hrs.add(hr);
+        Mockito.when(houseReviewRepository.findByHouse(house)).thenReturn(hrs);
+
+        assertEquals(reviewService.getReviewsForHouse((long)0), hrs);
+    } 
+    
+    
+    @Test
+    public void getUserReviewsFromUser(){
+        UserReviews ur = new UserReviews(user1,user2,4.5,"topp");
+        List<UserReviews> urs = new ArrayList<>();
+        urs.add(ur);
+        Mockito.when(userReviewRepository.findByUserReviewing(user1)).thenReturn(urs);
+
+        assertEquals(reviewService.getUserReviewsFromUser((long)0), urs);
+    }   
+
+    @Test
+    public void getReviewsForUser(){
+        UserReviews ur = new UserReviews(user1,user2,4.5,"topp");
+        List<UserReviews> urs = new ArrayList<>();
+        urs.add(ur);
+        Mockito.when(userReviewRepository.findByUserReviewed(user2)).thenReturn(urs);
+
+        assertEquals(reviewService.getReviewsForUser((long)1), urs);
+    }   
+
+    @Test
+    public void getHouseReviewsFromUser(){
+        HouseReviews hr = new HouseReviews(user2,house,4.5,"topp");
+        List<HouseReviews> hrs = new ArrayList<>();
+        hrs.add(hr);
+        Mockito.when(houseReviewRepository.findByUser(user2)).thenReturn(hrs);
+
+        assertEquals(reviewService.getHouseReviewsFromUser((long)1), hrs);
+    }   
 
 }

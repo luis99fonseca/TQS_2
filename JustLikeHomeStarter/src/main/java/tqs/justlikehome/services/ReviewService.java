@@ -108,9 +108,14 @@ public class ReviewService {
         return userReviewRepository.findByUserReviewed(user);
     }
 
-    public List<UserReviews> getReviewsFromUser(long id){
+    public List<UserReviews> getUserReviewsFromUser(long id){
         User user = userRepository.findById(id);
         return userReviewRepository.findByUserReviewing(user);
+    }
+
+    public List<HouseReviews> getHouseReviewsFromUser(long id){
+        User user = userRepository.findById(id);
+        return houseReviewRepository.findByUser(user);
     }
 
 }
