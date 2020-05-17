@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.HouseReviews;
+import tqs.justlikehome.entities.User;
 
 @Repository
 public interface HouseReviewRepository extends JpaRepository<HouseReviews,Integer>{
@@ -14,4 +15,7 @@ public interface HouseReviewRepository extends JpaRepository<HouseReviews,Intege
     HouseReviews findById(long review);
 
     List<HouseReviews> findByHouse(House house);
+
+    List<HouseReviews> findByUser(User user);
+
 }

@@ -61,7 +61,7 @@ public class HouseReviewRepositoryTest {
     }
 
     @Test
-    public void getHouseReviews(){
+    public void getHouseReviewsByHouse(){
         List<HouseReviews> houseReviews = houseReviewRepository.findByHouse(house);
         
         assertEquals(houseReviews.size(), 1);
@@ -69,7 +69,24 @@ public class HouseReviewRepositoryTest {
     }
 
     @Test
+    public void getHouseReviewsByUser(){
+        List<HouseReviews> houseReviews = houseReviewRepository.findByUser(user2);
+        
+        assertEquals(houseReviews.size(), 1);
+        assertEquals(houseReviews.get(0), houseReview);
+    }
+
+    @Test
     public void getHouseReviewsForHouseWithNoReviews(){
+
+        List<HouseReviews> houseReviews = houseReviewRepository.findByUser(user1);
+        
+        assertEquals(houseReviews.size(), 0);
+
+    }
+
+    @Test
+    public void getHouseReviewsForUserWithNoReviews(){
 
         House house2 = new House(
             "Aveiro2",
