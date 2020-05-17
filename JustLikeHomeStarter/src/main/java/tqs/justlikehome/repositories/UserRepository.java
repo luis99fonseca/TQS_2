@@ -15,6 +15,8 @@ import java.util.Set;
 public interface UserRepository extends JpaRepository<User,Integer> {
     User findById(long id);
 
+    User findByUsername(String username);
+
     @Query("SELECT u.ownedHouses FROM User u " +
             "WHERE u.id=:userId")
     List<House> getUserHouses(@Param("userId") long userId);
@@ -24,4 +26,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     @Query("SELECT u.userReviews from User u WHERE u.id=:userId")
     Set<UserReviews> getUserReviews(@Param("userId") long userId);
+
+    List<User> findAll();
 }

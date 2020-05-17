@@ -26,7 +26,6 @@ public class RentController {
     @PutMapping(value="/acceptRent")
     @ResponseBody
     public Rent acceptRent(@RequestBody Map<String,Long> rentID){
-        System.out.println(rentService.acceptRent(rentID).toString());
         return rentService.acceptRent(rentID);
     }
 

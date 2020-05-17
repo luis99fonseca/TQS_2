@@ -38,6 +38,9 @@ public class UserService {
     // DTO for safety reasons , it is automatically created in the request then we need to map to the real object
     public User createUser(UserDTO userDTO) {
         try {
+            if (userRepository.findByUsername(userDTO.getUsername()) != null){
+                throw new InvalidIdException();
+            }
             User user = new User(userDTO);
             userRepository.save(user);
             return user;
