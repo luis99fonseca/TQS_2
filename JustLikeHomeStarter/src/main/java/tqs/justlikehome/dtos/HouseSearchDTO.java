@@ -36,6 +36,10 @@ public class HouseSearchDTO {
         return description;
     }
 
+    public String getHouseName() {
+        return houseName;
+    }
+
     public double getKmFromCityCenter() {
         return kmFromCityCenter;
     }

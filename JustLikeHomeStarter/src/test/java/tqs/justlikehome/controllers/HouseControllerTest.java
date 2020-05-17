@@ -9,21 +9,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
-import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.HouseService;
-
 import java.util.*;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

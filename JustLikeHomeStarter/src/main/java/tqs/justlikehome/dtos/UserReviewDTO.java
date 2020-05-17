@@ -2,24 +2,24 @@ package tqs.justlikehome.dtos;
 
 public class UserReviewDTO {
 
-    private long ReviewerId;
-    private long ReviewedId;
+    private long reviewerId;
+    private long reviewedId;
     private double rating;
     private String description;
 
-    public UserReviewDTO(long ReviewerId, long ReviewedId, double rating, String description) {
-        this.ReviewerId = ReviewerId;
-        this.ReviewedId = ReviewedId;
+    public UserReviewDTO(long reviewerId, long reviewedId, double rating, String description) {
+        this.reviewerId = reviewerId;
+        this.reviewedId = reviewedId;
         this.rating = rating;
         this.description = description;
     }
 
     public long getReviewerId() {
-        return this.ReviewerId;
+        return this.reviewerId;
     }
 
     public long getReviewedId() {
-        return this.ReviewedId;
+        return this.reviewedId;
     }
 
     public double getRating() {

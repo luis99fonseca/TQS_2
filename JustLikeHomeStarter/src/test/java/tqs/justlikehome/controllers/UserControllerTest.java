@@ -7,7 +7,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
@@ -16,10 +15,7 @@ import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.UserService;
 import tqs.justlikehome.utils.ObjectJsonHelper;
-
-import java.time.format.DateTimeParseException;
 import java.util.*;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
