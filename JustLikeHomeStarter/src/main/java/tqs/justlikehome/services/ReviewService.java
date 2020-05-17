@@ -39,13 +39,12 @@ public class ReviewService {
     public RentRepository rentRepository;
 
     public HouseReviews addReview(HouseReviewDTO houseReviewDTO){
-        House house = houseRepository.findById(houseReviewDTO.getHouseId());
-        if(house==null){
-            throw new InvalidIdException();
-        }
-        
-        User user = userRepository.findById(houseReviewDTO.getReviewerId());
-        if (user==null){
+        House house;
+        User user;
+        try{
+            house = houseRepository.findById(houseReviewDTO.getHouseId());
+            user = userRepository.findById(houseReviewDTO.getReviewerId());
+        }catch(Exception e){
             throw new InvalidIdException();
         }
 
@@ -69,13 +68,14 @@ public class ReviewService {
     }
 
     public UserReviews addReview(UserReviewDTO userReviewDTO){
-        User reviwedUser = userRepository.findById(userReviewDTO.getReviewedId());
-        if(reviwedUser==null){
-            throw new InvalidIdException();
-        }
 
-        User reviwerUser = userRepository.findById(userReviewDTO.getReviewerId());
-        if (reviwerUser==null){
+        User reviwedUser;
+        User reviwerUser;
+
+        try{
+            reviwedUser = userRepository.findById(userReviewDTO.getReviewedId());
+            reviwerUser = userRepository.findById(userReviewDTO.getReviewerId());
+        }catch(Exception e){
             throw new InvalidIdException();
         }
 

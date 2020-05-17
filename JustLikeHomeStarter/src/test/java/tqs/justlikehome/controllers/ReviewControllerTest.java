@@ -60,6 +60,7 @@ public class ReviewControllerTest {
                 2,
                 5
         );
+        owner.addHouse(house);
         house.setOwner(owner);
 
         houseReview = new HouseReviews(user, house, 5, "topp");
