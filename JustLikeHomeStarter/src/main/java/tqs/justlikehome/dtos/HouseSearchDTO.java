@@ -4,6 +4,7 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 
 public class HouseSearchDTO {
+    private long houseId;
     private String city;
     private String description;
     private String houseName;
@@ -17,6 +18,7 @@ public class HouseSearchDTO {
     private String ownerName;
 
     public HouseSearchDTO(House house, User owner,double rating) {
+        this.houseId=house.getId();
         this.city = house.getCity();
         this.description = house.getDescription();
         this.kmFromCityCenter = house.getKmFromCityCenter();
@@ -26,7 +28,8 @@ public class HouseSearchDTO {
         this.maxNumberOfUsers = house.getMaxNumberOfUsers();
         this.userId=owner.getId();
         this.rating=rating;
-        this.ownerName =owner.getUsername();
+        this.ownerName=owner.getUsername();
+        this.houseName=house.getHouseName();
     }
 
     public double getUserRating() {
