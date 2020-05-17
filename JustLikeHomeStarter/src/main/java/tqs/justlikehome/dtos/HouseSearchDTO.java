@@ -12,6 +12,7 @@ public class HouseSearchDTO {
     private int numberOfBeds;
     private int maxNumberOfUsers;
     private double rating;
+    private double userRating;
     private long userId;
     private String ownerName;
 
@@ -26,6 +27,14 @@ public class HouseSearchDTO {
         this.userId=owner.getId();
         this.rating=rating;
         this.ownerName=owner.getUsername();
+    }
+
+    public double getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(double userRating) {
+        this.userRating = userRating;
     }
 
     public String getCity() {

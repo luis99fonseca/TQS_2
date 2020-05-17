@@ -16,19 +16,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    public UserController(UserService userService){
-        this.userService=userService;
-    }
-
-    @PostMapping(value="/newHouse")
+    @PostMapping(value = "/newHouse")
     @ResponseBody
     public House addHouseToUser(@RequestBody HouseDTO house) {
         return userService.addHouseToUser(house);
     }
 
-    @PostMapping(value="/createUser")
+    @PostMapping(value = "/createUser")
     @ResponseBody
-    public User createUser(@RequestBody UserDTO userDTO){
+    public User createUser(@RequestBody UserDTO userDTO) {
         return userService.createUser(userDTO);
     }
 

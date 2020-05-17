@@ -11,11 +11,11 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-public class HouseControler {
+public class HouseController {
     @Autowired
     private HouseService houseService;
 
-    public HouseControler(HouseService houseService){
+    public HouseController(HouseService houseService){
         this.houseService=houseService;
     }
 
@@ -32,5 +32,10 @@ public class HouseControler {
     @ResponseBody
     public House addComoditieToHouse(@RequestBody ComoditiesDTO comoditiesDTO){
         return houseService.addComoditieToHouse(comoditiesDTO);
+    }
+
+    @GetMapping(value="specificHouse/houseId={houseId}")
+    public HouseSearchDTO getSpecificHouse(@PathVariable long houseId){
+        return houseService.getSpecificHouse(houseId);
     }
 }
