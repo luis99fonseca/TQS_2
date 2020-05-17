@@ -55,7 +55,7 @@ public class RentControllerIT {
     private House house;
 
     @BeforeEach
-    private void setup(){
+    public void setup(){
         userRepository.deleteAll();
         houseRepository.deleteAll();
         rentRepository.deleteAll();

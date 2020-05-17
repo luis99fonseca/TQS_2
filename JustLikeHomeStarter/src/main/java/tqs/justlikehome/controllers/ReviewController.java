@@ -25,13 +25,15 @@ public class ReviewController {
 
     @PostMapping(value = "/newHouseReview")
     @ResponseBody
-    public HouseReviews newHouseReview(@RequestBody HouseReviewDTO houseReviewDTO) throws InvalidIdException{
+    public HouseReviews newHouseReview(@RequestBody HouseReviewDTO houseReviewDTO){
+        System.out.println(houseReviewDTO.getHouseId());
+        System.out.println(houseReviewDTO.getReviewerId());
         return reviewService.addReview(houseReviewDTO);
     }
 
     @PostMapping(value = "/newUserReview")
     @ResponseBody
-    public UserReviews newUserReview(@RequestBody UserReviewDTO userReviewDTO) throws InvalidIdException{
+    public UserReviews newUserReview(@RequestBody UserReviewDTO userReviewDTO){
         return reviewService.addReview(userReviewDTO);
     }
 

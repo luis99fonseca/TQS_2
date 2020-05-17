@@ -29,6 +29,10 @@ public class HouseReviews {
     @Size(max=300)
     private String description;
 
+    public HouseReviews(){
+
+    }
+
     public HouseReviews(User user, House house, @Min(0) @Max(5) double rating, @Size(max = 300) String description) {
         this.user = user;
         this.house = house;

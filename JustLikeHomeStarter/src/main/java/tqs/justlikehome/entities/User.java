@@ -88,7 +88,7 @@ public class User {
         this.userReviewed.add(userReview);
     }
 
-    public Long getId() {
+    public long getId() {
         return this.id;
     }
 

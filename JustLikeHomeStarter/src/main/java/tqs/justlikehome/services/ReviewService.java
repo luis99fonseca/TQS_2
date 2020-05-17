@@ -47,9 +47,8 @@ public class ReviewService {
         }catch(Exception e){
             throw new InvalidIdException();
         }
-
         List<Rent> rent = rentRepository.findByUserAndHouse(houseReviewDTO.getReviewerId(), houseReviewDTO.getHouseId());   //user was in house
-
+        
         if (rent.isEmpty()){
             throw new NoPermitionException();
         }

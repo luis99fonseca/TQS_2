@@ -17,12 +17,14 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.JustlikehomeApplication;
 import tqs.justlikehome.dtos.HouseReviewDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
+import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,13 +48,16 @@ public class ReviewControllerIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RentRepository rentRepository;
+
     private User user;
     private User owner;
     private House house;
 
 
     @BeforeEach
-    private void setup(){
+    public void setup(){
         userRepository.deleteAll();
         houseRepository.deleteAll();
         
@@ -68,10 +73,12 @@ public class ReviewControllerIT {
         );
         owner.addHouse(house);
         house.setOwner(owner);
-
+        owner = userRepository.save(owner);
+        user = userRepository.save(user);
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         Rent rent = new Rent(house,user,start,end);
+
         house.addRent(rent);
         user.addPurchasedRent(rent);
 
@@ -85,11 +92,11 @@ public class ReviewControllerIT {
         HouseReviewDTO hrdto = new HouseReviewDTO(user.getId(), house.getId(), 3.0, "good");
         mvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
             .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
             .andExpect(jsonPath("$.user.username",is("Fonsequini")))
             .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
-            .andExpect(jsonPath("$.house.id",is(0)))
-            .andExpect(jsonPath("$.user.id",is(0)));
-
+            .andExpect(jsonPath("$.house.id",is((int) house.getId())))
+            .andExpect(jsonPath("$.user.id",is((int) user.getId())));
     }
 
     private String objectToJson(Object obj){
