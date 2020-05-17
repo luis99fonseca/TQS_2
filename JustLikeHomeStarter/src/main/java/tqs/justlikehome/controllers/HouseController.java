@@ -11,11 +11,11 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-public class HouseControler {
+public class HouseController {
     @Autowired
     private HouseService houseService;
 
-    public HouseControler(HouseService houseService){
+    public HouseController(HouseService houseService){
         this.houseService=houseService;
     }
 

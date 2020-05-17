@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-    
+
     @Mock(lenient = true)
     private UserRepository userRepository;
 
