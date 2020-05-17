@@ -61,6 +61,10 @@ public class HouseSearchDTO {
         return maxNumberOfUsers;
     }
 
+    public String getHouseName() {
+        return houseName;
+    }
+
     public double getRating() {
         return rating;
     }

@@ -107,6 +107,19 @@ public class HouseControllerIT {
                 .andExpect(status().is4xxClientError());
     }
 
+    @Test
+    public void whenGetSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
+
+        mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
+                .andExpect(jsonPath("$.userRating").value(0))
+                .andExpect(jsonPath("$.rating").value(0))
+                .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
+    }
+
+    //TODO: Check if there is a way to inject Ratings easily :)
+
 
     private String objectToJson(Object obj) {
         try {

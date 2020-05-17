@@ -34,7 +34,7 @@ public class HouseController {
         return houseService.addComoditieToHouse(comoditiesDTO);
     }
 
-    @GetMapping(value="specificHouse/houseId={houseId}")
+    @GetMapping(value="/specificHouse/houseId={houseId}")
     public HouseSearchDTO getSpecificHouse(@PathVariable long houseId){
         return houseService.getSpecificHouse(houseId);
     }

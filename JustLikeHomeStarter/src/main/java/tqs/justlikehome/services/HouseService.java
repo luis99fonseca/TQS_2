@@ -69,4 +69,5 @@ public class HouseService {
         houseSearch.setUserRating(ratingOwner==null?0:ratingOwner);
         return houseSearch;
     }
+
 }
