@@ -10,27 +10,31 @@ import java.util.GregorianCalendar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.JustlikehomeApplication;
 import tqs.justlikehome.dtos.HouseReviewDTO;
+import tqs.justlikehome.dtos.UserReviewDTO;
 import tqs.justlikehome.entities.House;
+import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
-import tqs.justlikehome.repositories.RentRepository;
+
 import tqs.justlikehome.repositories.UserRepository;
+
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = JustlikehomeApplication.class)
 @AutoConfigureMockMvc
@@ -48,12 +52,11 @@ public class ReviewControllerIT {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private RentRepository rentRepository;
-
     private User user;
     private User owner;
     private House house;
+    private User user2;
+
 
 
     @BeforeEach
@@ -63,6 +66,8 @@ public class ReviewControllerIT {
         
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         owner = new User("JaoSiuba", "Joao", "Silva", new GregorianCalendar(1999, Calendar.OCTOBER,25));
+        user2 = new User("Dummy","dummy","dummy",new GregorianCalendar(1999, Calendar.JULY,20));
+
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -85,6 +90,7 @@ public class ReviewControllerIT {
         owner = userRepository.save(owner);
         user = userRepository.save(user);
         house = houseRepository.save(house);
+        user2 = userRepository.save(user2);
     }
     
     @Test
@@ -98,6 +104,51 @@ public class ReviewControllerIT {
             .andExpect(jsonPath("$.house.id",is((int) house.getId())))
             .andExpect(jsonPath("$.user.id",is((int) user.getId())));
     }
+
+    @Test
+    public void addHouseReviewNoRent() throws Exception{
+        HouseReviewDTO hrdto = new HouseReviewDTO(user2.getId(), house.getId(), 3.0, "good");
+        mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
+        .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void addUserReview() throws Exception {
+        UserReviewDTO urdto = new UserReviewDTO(owner.getId(), user.getId(), 3.0, "good");
+        mvc.perform(post("/newUserReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(urdto)))
+            .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+            .andExpect(jsonPath("$.userReviewed.username",is("Fonsequini")))
+            .andExpect(jsonPath("$.userReviewing.username",is("JaoSiuba")))
+            .andExpect(jsonPath("$.userReviewing.id",is((int) owner.getId())))
+            .andExpect(jsonPath("$.userReviewed.id",is((int) user.getId())));
+    }
+
+    @Test
+    public void addUserReviewNoRent() throws Exception{
+        UserReviewDTO urdto = new UserReviewDTO(owner.getId(), user2.getId(), 3.0, "good");
+        mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(urdto)))
+        .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void getHouseReviews() throws Exception {
+        // HouseReviews houseReview = new HouseReviews(user, house, 3.0, "good");
+        // house.addReview(houseReview);
+        // user.addMyReview(houseReview);
+
+        // user = userRepository.save(user);
+        // house = houseRepository.save(house);
+
+        // mvc.perform(get("/houseReviews/house=" + house.getId()).contentType(MediaType.APPLICATION_JSON))
+        //     .andExpect(status().isOk())
+        //     .andExpect(jsonPath("$").isNotEmpty())
+        //     .andExpect(jsonPath("$",hasSize(1)))
+        //     .andExpect(jsonPath("$.[0].user.username",is(user.getUsername())))
+        //     .andExpect(jsonPath("$.[0].house.id",is(house.getId())));
+
+    }
+
 
     private String objectToJson(Object obj){
         try{
