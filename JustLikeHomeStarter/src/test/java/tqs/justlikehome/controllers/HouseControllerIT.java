@@ -15,12 +15,15 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
+import tqs.justlikehome.utils.ObjectJsonHelper;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = JustlikehomeApplication.class)
 @AutoConfigureMockMvc
@@ -59,8 +62,6 @@ public class HouseControllerIT {
 
     @Test
     public void whenAddValidComoditiesToHouse_thenReturnHouse() throws Exception {
-        // TODO: check here, as ID starts at 1, which i'm not sure if its intended as its the first house saved ever
-        // the way to make the ID dinamic was getting it directly, which i'm not sure if its good practice
         ComoditiesDTO comoditiesDto = new ComoditiesDTO("pool", "pool to swim", houseRepository.findAll().get(0).getId());
 
         mockMvc.perform(post("/addComoditie").contentType(MediaType.APPLICATION_JSON)
@@ -95,13 +96,5 @@ public class HouseControllerIT {
                 .andExpect(status().is4xxClientError());
     }
 
-
-    private String objectToJson(Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException();
-        }
-    }
 
 }

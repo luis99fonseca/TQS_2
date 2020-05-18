@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = JustlikehomeApplication.class)
 @AutoConfigureMockMvc
@@ -50,7 +51,6 @@ public class UserControllerIT {
         userRepository.deleteAll();
         houseRepository.deleteAll();
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
-        // TODO: must fail - house has no houseName
         house = new House(
                 "aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -88,7 +88,7 @@ public class UserControllerIT {
         UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "20-12-1999");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .content(objectToJson(userDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(userDTO.getUsername()));
     }
@@ -98,7 +98,7 @@ public class UserControllerIT {
         UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "1999-12-12");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .content(objectToJson(userDTO)))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -107,7 +107,7 @@ public class UserControllerIT {
         UserDTO userDTO = new UserDTO(user.getUsername(), "joao", "miguel", "19-12-1999");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .content(objectToJson(userDTO)))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -116,7 +116,7 @@ public class UserControllerIT {
         HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, user.getId(), "casa do bairro");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(houseDTO)))
+                .content(objectToJson(houseDTO)))
                 .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
                 .andExpect(jsonPath("$.description").value(houseDTO.getDescription()));
     }
@@ -127,7 +127,7 @@ public class UserControllerIT {
         HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, -1, "casa do bairro");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(houseDTO)))
+                .content(objectToJson(houseDTO)))
                 .andExpect(status().is4xxClientError());
     }
 }

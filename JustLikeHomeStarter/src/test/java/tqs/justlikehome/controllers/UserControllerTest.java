@@ -22,6 +22,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
 
 
 @WebMvcTest(UserController.class)
@@ -68,7 +69,7 @@ class UserControllerTest {
         given(userService.createUser(any(UserDTO.class))).willReturn(new User(userDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .content(objectToJson(userDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(userDTO.getUsername()));
     }
@@ -80,7 +81,7 @@ class UserControllerTest {
         given(userService.createUser(any(UserDTO.class))).willThrow(InvalidDateInputException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .content(objectToJson(userDTO)))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -91,7 +92,7 @@ class UserControllerTest {
         given(userService.createUser(any(UserDTO.class))).willThrow(InvalidIdException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .content(objectToJson(userDTO)))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -102,7 +103,7 @@ class UserControllerTest {
         given(userService.addHouseToUser(any(HouseDTO.class))).willReturn(new House(houseDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(houseDTO)))
+                .content(objectToJson(houseDTO)))
         .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
         .andExpect(jsonPath("$.description").value(houseDTO.getDescription()));
     }
@@ -114,7 +115,7 @@ class UserControllerTest {
         given(userService.addHouseToUser(any(HouseDTO.class))).willThrow(InvalidIdException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
-                .content(ObjectJsonHelper.objectToJson(houseDTO)))
+                .content(objectToJson(houseDTO)))
                 .andExpect(status().is4xxClientError());
     }
 }
