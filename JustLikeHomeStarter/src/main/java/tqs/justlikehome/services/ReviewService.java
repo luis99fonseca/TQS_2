@@ -54,7 +54,6 @@ public class ReviewService {
         }
 
         HouseReviews houseReview = new HouseReviews(houseReviewDTO);
-        house.addReview(houseReview);
         user.addMyReview(houseReview);
 
         houseReview.setHouse(house);
@@ -85,7 +84,6 @@ public class ReviewService {
         }
 
         UserReviews userReview = new UserReviews(userReviewDTO);
-        reviwedUser.addReview(userReview);
         reviwerUser.addMyReview(userReview);
 
         userReview.setUserReviewed(reviwedUser);
