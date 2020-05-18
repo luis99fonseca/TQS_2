@@ -58,7 +58,8 @@ public class ReviewControllerTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "Casinha do Joao"
         );
         owner.addHouse(house);
         house.setOwner(owner);
@@ -74,7 +75,7 @@ public class ReviewControllerTest {
         mockMvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isNotEmpty())
-            .andExpect(jsonPath("$.user.username",is("Fonsequini")))
+            .andExpect(jsonPath("$.reviewer.username",is("Fonsequini")))
             .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
             .andExpect(jsonPath("$.house.id",is(0)));
     }
@@ -131,7 +132,7 @@ public class ReviewControllerTest {
         mockMvc.perform(get("/houseReviews/house="+0).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$",hasSize(1)))
-                .andExpect(jsonPath("$.[0].user.username",is("Fonsequini")))
+                .andExpect(jsonPath("$.[0].reviewer.username",is("Fonsequini")))
                 .andExpect(jsonPath("$.[0].house.description",is("Incredible House near Ria de Aveiro")))
                 .andExpect(jsonPath("$.[0].house.id",is(0)));
     }
@@ -156,7 +157,7 @@ public class ReviewControllerTest {
         mockMvc.perform(get("/HouseReviewsFromUser/user="+0).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$",hasSize(1)))
-                .andExpect(jsonPath("$.[0].user.username",is("Fonsequini")))
+                .andExpect(jsonPath("$.[0].reviewer.username",is("Fonsequini")))
                 .andExpect(jsonPath("$.[0].house.description",is("Incredible House near Ria de Aveiro")))
                 .andExpect(jsonPath("$.[0].house.id",is(0)));
     }

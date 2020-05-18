@@ -74,7 +74,8 @@ public class ReviewControllerIT {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "Casinha do joao"
         );
         owner.addHouse(house);
         house.setOwner(owner);
@@ -99,10 +100,10 @@ public class ReviewControllerIT {
         mvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
             .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
-            .andExpect(jsonPath("$.user.username",is("Fonsequini")))
+            .andExpect(jsonPath("$.reviewer.username",is("Fonsequini")))
             .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
             .andExpect(jsonPath("$.house.id",is((int) house.getId())))
-            .andExpect(jsonPath("$.user.id",is((int) user.getId())));
+            .andExpect(jsonPath("$.reviewer.id",is((int) user.getId())));
     }
 
     @Test
@@ -142,8 +143,8 @@ public class ReviewControllerIT {
              .andExpect(status().isOk())
              .andExpect(jsonPath("$").isNotEmpty())
              .andExpect(jsonPath("$",hasSize(1)))
-             .andExpect(jsonPath("$.[0].user.username",is(user.getUsername())))
-             .andExpect(jsonPath("$.[0].house.id",is(house.getId())));
+             .andExpect(jsonPath("$.[0].reviewer.username",is(user.getUsername())))
+             .andExpect(jsonPath("$.[0].house.id",is((int) house.getId())));
 
     }
 
