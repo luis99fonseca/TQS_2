@@ -39,7 +39,7 @@ public class User {
     @JsonIgnore
     private Set<Rent> purchasedRents = new HashSet<>();
 
-    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<UserReviews> userReviews = new HashSet<>();
 

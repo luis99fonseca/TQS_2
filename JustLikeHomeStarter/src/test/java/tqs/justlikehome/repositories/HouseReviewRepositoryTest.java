@@ -76,6 +76,21 @@ public class HouseReviewRepositoryTest {
     }
 
     @Test
+    public void getHouseReviewsByUserAndHouse(){
+        List<HouseReviews> houseReviews = houseReviewRepository.findByReviewerAndHouse(user2, house);
+        
+        assertEquals(houseReviews.size(), 1);
+        assertEquals(houseReviews.get(0), houseReview);
+    }
+
+    @Test
+    public void getHouseReviewsByUserAndHouseNoUserRent(){
+        List<HouseReviews> houseReviews = houseReviewRepository.findByReviewerAndHouse(user1, house);
+        
+        assertEquals(houseReviews.size(), 0);
+    }
+
+    @Test
     public void getHouseReviewsForHouseWithNoReviews(){
 
         List<HouseReviews> houseReviews = houseReviewRepository.findByReviewer(user1);

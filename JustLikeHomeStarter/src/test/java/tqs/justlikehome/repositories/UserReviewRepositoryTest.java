@@ -27,6 +27,7 @@ public class UserReviewRepositoryTest {
 
     User user1;
     User user2;
+    User user3; //no review
     House house;
     UserReviews userReview;
 
@@ -34,7 +35,7 @@ public class UserReviewRepositoryTest {
     public void setup(){
         user1 = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         user2 = new User("JaoSiuba","Joao","Silva",new GregorianCalendar(1999, Calendar.OCTOBER,25));
-
+        user3 = new User("Dummy","Dummy","Dummy",new GregorianCalendar(1999, Calendar.OCTOBER,25));
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -58,6 +59,7 @@ public class UserReviewRepositoryTest {
         testEntityManager.persist(user2);
         testEntityManager.persist(user1);
         testEntityManager.persist(house);
+        testEntityManager.persist(user3);
 
     }
 
@@ -73,6 +75,21 @@ public class UserReviewRepositoryTest {
     public void getUserReviewsForUserWithNoReviews(){
         List<UserReviews> userReviews = userReviewRepository.findByUserReviewed(user1);
         assertEquals(0, userReviews.size());
+    }
+
+    @Test
+    public void getUserReviewingAndUserReviewed(){
+        List<UserReviews> houseReviews = userReviewRepository.findByUserReviewingAndUserReviewed(user1, user2);
+        
+        assertEquals(houseReviews.size(), 1);
+        assertEquals(houseReviews.get(0), userReview);
+    }
+
+    @Test
+    public void getUserReviewingAndUserReviewedNoUserREnt(){
+        List<UserReviews> houseReviews = userReviewRepository.findByUserReviewingAndUserReviewed(user1, user3);
+        
+        assertEquals(houseReviews.size(), 0);
     }
 
     @Test

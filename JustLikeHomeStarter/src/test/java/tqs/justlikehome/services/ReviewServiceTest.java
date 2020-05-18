@@ -102,6 +102,12 @@ public class ReviewServiceTest {
         Mockito.when(rentRepository.findByUserAndHouse(user2.getId(), house.getId())).thenReturn(rents);
         Mockito.when(rentRepository.findByUserAndOwner(user2.getId(), user1.getId())).thenReturn(rents);
 
+        List<UserReviews> ur= new ArrayList<>();
+        Mockito.when(userReviewRepository.findByUserReviewingAndUserReviewed(user1, user2)).thenReturn(ur);
+
+        List<HouseReviews> hr= new ArrayList<>();
+        Mockito.when(houseReviewRepository.findByReviewerAndHouse(user2, house)).thenReturn(hr);
+
         Mockito.when(houseRepository.findById(house.getId())).thenReturn(house);
         Mockito.when(houseRepository.findById((long)2)).thenThrow(InvalidIdException.class);
 
@@ -123,6 +129,19 @@ public class ReviewServiceTest {
     }
 
     @Test
+    public void addReviewToExistingHouseTwice(){
+
+        HouseReviews houseReview = reviewService.addReview(new HouseReviewDTO(this.user2.getId(), this.house.getId(),5,"topp"));
+        
+        List<HouseReviews> hr= new ArrayList<>();
+        hr.add(houseReview);
+        Mockito.when(houseReviewRepository.findByReviewerAndHouse(user2, house)).thenReturn(hr);
+
+        assertThrows(NoPermitionException.class,
+                ()->reviewService.addReview(new HouseReviewDTO(this.user2.getId(), this.house.getId(),5,"topp")));
+    }
+
+    @Test
     public void addReviewToExistingUser(){
 
         UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp");
@@ -133,6 +152,20 @@ public class ReviewServiceTest {
         assertEquals(ur.getRating(),userReviewDTO.getRating());
         assertEquals(ur.getDescription(),userReviewDTO.getDescription());
 
+    }
+
+    @Test
+    public void addReviewToExistingUserTwice(){
+
+        UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp");
+        UserReviews userReview = reviewService.addReview(userReviewDTO);
+        
+        List<UserReviews> ur= new ArrayList<>();
+        ur.add(userReview);
+        Mockito.when(userReviewRepository.findByUserReviewingAndUserReviewed(user1, user2)).thenReturn(ur);
+
+        assertThrows(NoPermitionException.class,
+                ()->reviewService.addReview(new HouseReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp")));
     }
 
     @Test
