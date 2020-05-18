@@ -47,6 +47,7 @@ public class User {
     @JsonIgnore
     private Set<UserReviews> userReviewed = new HashSet<>();
 
+    // EAGER SHOULDN'T BE USED BUT SPRING IS NOT INITIALIZING IT ANY OTHER WAY ...
     @OneToMany(mappedBy = "reviewer",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<HouseReviews> houseReviews = new HashSet<>();
