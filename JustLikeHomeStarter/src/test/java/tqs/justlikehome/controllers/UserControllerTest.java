@@ -35,7 +35,7 @@ class UserControllerTest {
     UserService userService;
 
     @Test
-    public void whenGetUserById_thenReturnUserHouses() throws Exception {
+    void whenGetUserById_thenReturnUserHouses() throws Exception {
         List<House> houseList = new ArrayList<>(Arrays.asList(new House("aveiro", "very good house", 2.0, 23, 2, 2, "casa da barra"),
                 new House("viseu", "very as house", 3.0, 23, 2, 2, "casa da mae")));
 

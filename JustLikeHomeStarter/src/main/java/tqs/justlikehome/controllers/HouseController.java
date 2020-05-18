@@ -10,7 +10,7 @@ import tqs.justlikehome.services.HouseService;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 public class HouseController {
     @Autowired
     private HouseService houseService;
