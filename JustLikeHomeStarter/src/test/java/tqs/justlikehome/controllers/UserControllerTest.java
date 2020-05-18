@@ -92,8 +92,7 @@ class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
                 .content(ObjectJsonHelper.objectToJson(userDTO)))
-                .andExpect(status().is4xxClientError())
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
