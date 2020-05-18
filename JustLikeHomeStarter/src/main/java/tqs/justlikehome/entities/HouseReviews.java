@@ -8,17 +8,17 @@ import javax.validation.constraints.Size;
 import tqs.justlikehome.dtos.HouseReviewDTO;
 
 @Entity
-@Table(name = "house_reviews")
+@Table(name = "houseReviews")
 public class HouseReviews {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
-    private User user;
+    private User reviewer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="house_id")
     private House house;
 
@@ -33,8 +33,8 @@ public class HouseReviews {
 
     }
 
-    public HouseReviews(User user, House house, @Min(0) @Max(5) double rating, @Size(max = 300) String description) {
-        this.user = user;
+    public HouseReviews(User reviewer, House house, @Min(0) @Max(5) double rating, @Size(max = 300) String description) {
+        this.reviewer = reviewer;
         this.house = house;
         this.rating=rating;
         this.description=description;
@@ -49,18 +49,17 @@ public class HouseReviews {
         this.description = description;
     }
 
-    public void setUser(User user){
-        this.user=user;
+    public void setReviewer(User user){
+        this.reviewer =user;
     }
 
     public void setHouse(House house){
         this.house=house;
     }
 
-    public User getUser(){
-        return this.user;
+    public User getReviewer(){
+        return this.reviewer;
     }
-
 
     public House getHouse() {
         return this.house;

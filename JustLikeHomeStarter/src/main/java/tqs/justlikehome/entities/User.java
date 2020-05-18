@@ -47,10 +47,9 @@ public class User {
     @JsonIgnore
     private Set<UserReviews> userReviewed = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reviewer",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<HouseReviews> houseReviews = new HashSet<>();
-
 
     public User(){
 

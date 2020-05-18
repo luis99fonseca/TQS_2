@@ -58,7 +58,7 @@ public class ReviewService {
         user.addMyReview(houseReview);
 
         houseReview.setHouse(house);
-        houseReview.setUser(user);
+        houseReview.setReviewer(user);
 
         houseRepository.save(house);
         userRepository.save(user);
@@ -114,7 +114,7 @@ public class ReviewService {
 
     public List<HouseReviews> getHouseReviewsFromUser(long id){
         User user = userRepository.findById(id);
-        return houseReviewRepository.findByUser(user);
+        return houseReviewRepository.findByReviewer(user);
     }
 
 }

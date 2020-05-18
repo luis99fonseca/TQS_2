@@ -115,7 +115,7 @@ public class ReviewServiceTest {
         HouseReviewDTO houseReviewDTO = new HouseReviewDTO(this.user2.getId(), this.house.getId(),5,"topp");
         HouseReviews hr = reviewService.addReview(houseReviewDTO);
 
-        assertEquals(hr.getUser().getId(),houseReviewDTO.getReviewerId());
+        assertEquals(hr.getReviewer().getId(),houseReviewDTO.getReviewerId());
         assertEquals(hr.getHouse().getId(),houseReviewDTO.getHouseId());
         assertEquals(hr.getRating(),houseReviewDTO.getRating());
         assertEquals(hr.getDescription(),houseReviewDTO.getDescription());
@@ -229,7 +229,7 @@ public class ReviewServiceTest {
         HouseReviews hr = new HouseReviews(user2,house,4.5,"topp");
         List<HouseReviews> hrs = new ArrayList<>();
         hrs.add(hr);
-        Mockito.when(houseReviewRepository.findByUser(user2)).thenReturn(hrs);
+        Mockito.when(houseReviewRepository.findByReviewer(user2)).thenReturn(hrs);
 
         assertEquals(reviewService.getHouseReviewsFromUser((long)1), hrs);
     }   

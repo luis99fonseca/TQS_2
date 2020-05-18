@@ -14,7 +14,6 @@ import tqs.justlikehome.dtos.HouseReviewDTO;
 import tqs.justlikehome.dtos.UserReviewDTO;
 import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.UserReviews;
-import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.ReviewService;
 
 @RestController

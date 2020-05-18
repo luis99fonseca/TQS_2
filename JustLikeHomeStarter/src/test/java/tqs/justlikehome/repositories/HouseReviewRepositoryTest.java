@@ -49,7 +49,7 @@ public class HouseReviewRepositoryTest {
 
         houseReview = new HouseReviews(4, "Toppp");
         houseReview.setHouse(house);
-        houseReview.setUser(user2);
+        houseReview.setReviewer(user2);
 
         house.addReview(houseReview);
         user2.addMyReview(houseReview);
@@ -70,7 +70,7 @@ public class HouseReviewRepositoryTest {
 
     @Test
     public void getHouseReviewsByUser(){
-        List<HouseReviews> houseReviews = houseReviewRepository.findByUser(user2);
+        List<HouseReviews> houseReviews = houseReviewRepository.findByReviewer(user2);
         
         assertEquals(houseReviews.size(), 1);
         assertEquals(houseReviews.get(0), houseReview);
@@ -79,7 +79,7 @@ public class HouseReviewRepositoryTest {
     @Test
     public void getHouseReviewsForHouseWithNoReviews(){
 
-        List<HouseReviews> houseReviews = houseReviewRepository.findByUser(user1);
+        List<HouseReviews> houseReviews = houseReviewRepository.findByReviewer(user1);
         
         assertEquals(houseReviews.size(), 0);
 

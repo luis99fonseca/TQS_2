@@ -25,6 +25,8 @@ import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
 
+import tqs.justlikehome.repositories.HouseReviewRepository;
+import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
 
 import org.springframework.http.MediaType;
@@ -56,8 +58,6 @@ public class ReviewControllerIT {
     private User owner;
     private House house;
     private User user2;
-
-
 
     @BeforeEach
     public void setup(){
@@ -133,22 +133,19 @@ public class ReviewControllerIT {
 
     @Test
     public void getHouseReviews() throws Exception {
-        // HouseReviews houseReview = new HouseReviews(user, house, 3.0, "good");
-        // house.addReview(houseReview);
-        // user.addMyReview(houseReview);
+        HouseReviews houseReview = new HouseReviews(user, house, 3.0, "good");
 
-        // user = userRepository.save(user);
-        // house = houseRepository.save(house);
+        user.addMyReview(houseReview);
+        user = userRepository.save(user);
 
-        // mvc.perform(get("/houseReviews/house=" + house.getId()).contentType(MediaType.APPLICATION_JSON))
-        //     .andExpect(status().isOk())
-        //     .andExpect(jsonPath("$").isNotEmpty())
-        //     .andExpect(jsonPath("$",hasSize(1)))
-        //     .andExpect(jsonPath("$.[0].user.username",is(user.getUsername())))
-        //     .andExpect(jsonPath("$.[0].house.id",is(house.getId())));
+        mvc.perform(get("/houseReviews/house=" + house.getId()).contentType(MediaType.APPLICATION_JSON))
+             .andExpect(status().isOk())
+             .andExpect(jsonPath("$").isNotEmpty())
+             .andExpect(jsonPath("$",hasSize(1)))
+             .andExpect(jsonPath("$.[0].user.username",is(user.getUsername())))
+             .andExpect(jsonPath("$.[0].house.id",is(house.getId())));
 
     }
-
 
     private String objectToJson(Object obj){
         try{

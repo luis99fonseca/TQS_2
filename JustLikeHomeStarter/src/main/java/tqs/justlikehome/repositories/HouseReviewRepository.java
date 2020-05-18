@@ -16,6 +16,6 @@ public interface HouseReviewRepository extends JpaRepository<HouseReviews,Intege
 
     List<HouseReviews> findByHouse(House house);
 
-    List<HouseReviews> findByUser(User user);
+    List<HouseReviews> findByReviewer(User user);
 
 }

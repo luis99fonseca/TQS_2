@@ -8,17 +8,17 @@ import javax.validation.constraints.Size;
 import tqs.justlikehome.dtos.UserReviewDTO;
 
 @Entity
-@Table(name = "user_reviews")
+@Table(name = "userReviews")
 public class UserReviews {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="from_user_id")
     private User userReviewing;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="to_user_id")
     private User userReviewed;
 
