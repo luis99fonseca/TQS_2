@@ -103,6 +103,8 @@ public class ReviewServiceTest {
         Mockito.when(rentRepository.findByUserAndOwner(user2.getId(), user1.getId())).thenReturn(rents);
 
         Mockito.when(houseRepository.findById(house.getId())).thenReturn(house);
+        Mockito.when(houseRepository.findById((long)2)).thenThrow(InvalidIdException.class);
+
         house.setOwner(user1);
 
     }
@@ -146,7 +148,7 @@ public class ReviewServiceTest {
     @Test
     public void addReviewToNonExistingHouse(){
 
-        HouseReviewDTO houseReviewDTO = new HouseReviewDTO(this.user2.getId(), 1, 5,"topp");
+        HouseReviewDTO houseReviewDTO = new HouseReviewDTO(this.user2.getId(), 2, 5,"topp");
 
         assertThrows(InvalidIdException.class,
                 ()->reviewService.addReview(houseReviewDTO));

@@ -26,8 +26,6 @@ public class ReviewController {
     @PostMapping(value = "/newHouseReview")
     @ResponseBody
     public HouseReviews newHouseReview(@RequestBody HouseReviewDTO houseReviewDTO){
-        System.out.println(houseReviewDTO.getHouseId());
-        System.out.println(houseReviewDTO.getReviewerId());
         return reviewService.addReview(houseReviewDTO);
     }
 

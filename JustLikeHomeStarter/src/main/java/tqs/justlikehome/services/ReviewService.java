@@ -79,7 +79,7 @@ public class ReviewService {
         }
 
         List<Rent> rent = rentRepository.findByUserAndOwner(userReviewDTO.getReviewedId(), userReviewDTO.getReviewerId()); //owner had user as client
-
+        
         if (rent.isEmpty()){
             throw new NoPermitionException();
         }
