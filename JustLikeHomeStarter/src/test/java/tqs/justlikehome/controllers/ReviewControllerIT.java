@@ -23,6 +23,7 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
+import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.repositories.HouseRepository;
 
 import tqs.justlikehome.repositories.HouseReviewRepository;
@@ -99,10 +100,10 @@ public class ReviewControllerIT {
         mvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
             .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
-            .andExpect(jsonPath("$.user.username",is("Fonsequini")))
+            .andExpect(jsonPath("$.reviewer.username",is("Fonsequini")))
             .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
             .andExpect(jsonPath("$.house.id",is((int) house.getId())))
-            .andExpect(jsonPath("$.user.id",is((int) user.getId())));
+            .andExpect(jsonPath("$.reviewer.id",is((int) user.getId())));
     }
 
     @Test
@@ -142,9 +143,53 @@ public class ReviewControllerIT {
              .andExpect(status().isOk())
              .andExpect(jsonPath("$").isNotEmpty())
              .andExpect(jsonPath("$",hasSize(1)))
-             .andExpect(jsonPath("$.[0].user.username",is(user.getUsername())))
-             .andExpect(jsonPath("$.[0].house.id",is(house.getId())));
+             .andExpect(jsonPath("$.[0].reviewer.username",is(user.getUsername())))
+             .andExpect(jsonPath("$.[0].house.id",is((int)house.getId())));
+    }
 
+    @Test
+    public void getHouseReviewsFromUser() throws Exception {
+        HouseReviews houseReview = new HouseReviews(user, house, 3.0, "good");
+
+        user.addMyReview(houseReview);
+        user = userRepository.save(user);
+
+        mvc.perform(get("/HouseReviewsFromUser/user=" + user.getId()).contentType(MediaType.APPLICATION_JSON))
+             .andExpect(status().isOk())
+             .andExpect(jsonPath("$").isNotEmpty())
+             .andExpect(jsonPath("$",hasSize(1)))
+             .andExpect(jsonPath("$.[0].reviewer.username",is(user.getUsername())))
+             .andExpect(jsonPath("$.[0].house.id",is((int)house.getId())));
+    }
+
+    @Test
+    public void getUserReviews() throws Exception {
+        UserReviews userReview = new UserReviews(owner, user, 3.0, "good");
+
+        user.addMyReview(userReview);
+        user = userRepository.save(user);
+
+        mvc.perform(get("/userReviews/user=" + user.getId()).contentType(MediaType.APPLICATION_JSON))
+             .andExpect(status().isOk())
+             .andExpect(jsonPath("$").isNotEmpty())
+             .andExpect(jsonPath("$",hasSize(1)))
+             .andExpect(jsonPath("$.[0].userReviewing.username",is(owner.getUsername())))
+             .andExpect(jsonPath("$.[0].userReviewed.username",is(user.getUsername())));
+    }
+
+    @Test
+    public void getUserReviewsFromUser() throws Exception {
+        UserReviews userReview = new UserReviews(owner, user, 3.0, "good");
+
+        user.addMyReview(userReview);
+        user = userRepository.save(user);
+
+        mvc.perform(get("/UserReviewsFromUser/user=" + owner.getId()).contentType(MediaType.APPLICATION_JSON))
+             .andExpect(status().isOk())
+             .andExpect(jsonPath("$").isNotEmpty())
+             .andExpect(jsonPath("$",hasSize(1)))
+             .andExpect(jsonPath("$.[0].userReviewing.username",is(owner.getUsername())))
+             .andExpect(jsonPath("$.[0].userReviewed.username",is(user.getUsername())));
     }
 
     private String objectToJson(Object obj){

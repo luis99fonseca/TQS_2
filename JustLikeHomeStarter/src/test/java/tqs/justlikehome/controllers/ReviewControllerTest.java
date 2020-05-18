@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import tqs.justlikehome.dtos.HouseReviewDTO;
 import tqs.justlikehome.dtos.UserReviewDTO;
@@ -74,7 +75,7 @@ public class ReviewControllerTest {
         mockMvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isNotEmpty())
-            .andExpect(jsonPath("$.user.username",is("Fonsequini")))
+            .andExpect(jsonPath("$.reviewer.username",is("Fonsequini")))
             .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
             .andExpect(jsonPath("$.house.id",is(0)));
     }
@@ -131,7 +132,7 @@ public class ReviewControllerTest {
         mockMvc.perform(get("/houseReviews/house="+0).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$",hasSize(1)))
-                .andExpect(jsonPath("$.[0].user.username",is("Fonsequini")))
+                .andExpect(jsonPath("$.[0].reviewer.username",is("Fonsequini")))
                 .andExpect(jsonPath("$.[0].house.description",is("Incredible House near Ria de Aveiro")))
                 .andExpect(jsonPath("$.[0].house.id",is(0)));
     }
@@ -156,7 +157,7 @@ public class ReviewControllerTest {
         mockMvc.perform(get("/HouseReviewsFromUser/user="+0).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$",hasSize(1)))
-                .andExpect(jsonPath("$.[0].user.username",is("Fonsequini")))
+                .andExpect(jsonPath("$.[0].reviewer.username",is("Fonsequini")))
                 .andExpect(jsonPath("$.[0].house.description",is("Incredible House near Ria de Aveiro")))
                 .andExpect(jsonPath("$.[0].house.id",is(0)));
     }
