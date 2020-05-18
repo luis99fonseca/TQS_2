@@ -19,7 +19,6 @@ import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.RentService;
-import tqs.justlikehome.utils.ObjectJsonHelper;
 
 
 import java.util.*;
@@ -30,6 +29,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
 
 @WebMvcTest(RentController.class)
 class RentControllerTest {
@@ -120,7 +120,7 @@ class RentControllerTest {
         Map<String,Long> rentId = new HashMap<>();
         rentId.put("rentID",(long) 200);
         given(rentService.acceptRent(rentId)).willThrow(InvalidIdException.class);
-        mockMvc.perform(put("/acceptRent").content(ObjectJsonHelper.objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/acceptRent").content(objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is4xxClientError());
     }
 
@@ -128,7 +128,7 @@ class RentControllerTest {
     public void addRentWithValidParams() throws Exception{
         RentDTO rentDTO = new RentDTO(0,0,"10-10-2019","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willReturn(rent);
-        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(ObjectJsonHelper.objectToJson(rentDTO)))
+        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(jsonPath("$.id",is(0)))
                 .andExpect(jsonPath("$.user.username",is("Fonsequini")))
                 .andExpect(jsonPath("$.pending",is(true)))
@@ -139,7 +139,7 @@ class RentControllerTest {
     public void addRentWithInvalidRentDTO() throws Exception{
         RentDTO rentDTO = new RentDTO(0,0,"2019-10-10","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidDateInputException.class);
-        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(ObjectJsonHelper.objectToJson(rentDTO)))
+        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
 
                 .andExpect(status().is4xxClientError());
     }
@@ -151,14 +151,5 @@ class RentControllerTest {
         mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().is4xxClientError());
     }
-
-    private String objectToJson(Object obj){
-        try{
-            return new ObjectMapper().writeValueAsString(obj);
-        }catch (JsonProcessingException e){
-            throw new RuntimeException();
-        }
-    }
-
 
 }
