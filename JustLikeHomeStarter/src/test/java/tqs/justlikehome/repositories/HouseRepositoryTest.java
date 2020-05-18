@@ -26,7 +26,7 @@ class HouseRepositoryTest {
     Set<Comodities> comodities;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         testEntityManager.persistAndFlush(user);
         Comodities comoditie = new Comodities("fun","Pool with jacuzzi");
@@ -51,7 +51,7 @@ class HouseRepositoryTest {
     }
 
     @Test
-    public void searchForHouseWithCorrectValuesAndNoPastRent(){
+    void searchForHouseWithCorrectValuesAndNoPastRent(){
         Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.MARCH,1).toZonedDateTime().toInstant());
         Date toTime = Date.from(new GregorianCalendar(2010, Calendar.MARCH,3).toZonedDateTime().toInstant());
         List<House> houses = houseRepository.searchHouse(5,"Aveiro",fromTime,toTime);
@@ -60,7 +60,7 @@ class HouseRepositoryTest {
     }
 
     @Test
-    public void searchForHouseWithCorrectValuesWithPastRent(){
+    void searchForHouseWithCorrectValuesWithPastRent(){
         // Create user to rent the house
         User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999, Calendar.MARCH,10));
         testEntityManager.persistAndFlush(userRenting);
@@ -78,7 +78,7 @@ class HouseRepositoryTest {
     }
 
     @Test
-    public void searchForHouseWithCorrectValuesWithOnGoingRent(){
+    void searchForHouseWithCorrectValuesWithOnGoingRent(){
         // Create user to rent the house
         User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,2,10));
         testEntityManager.persistAndFlush(userRenting);
@@ -95,7 +95,7 @@ class HouseRepositoryTest {
     }
 
     @Test
-    public void searchForHouseWithCorrectValuesWithOnGoingRentWithAnotherHouseAvailable(){
+    void searchForHouseWithCorrectValuesWithOnGoingRentWithAnotherHouseAvailable(){
         // Create user to rent the house
         User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,2,10));
         testEntityManager.persistAndFlush(userRenting);
@@ -125,24 +125,24 @@ class HouseRepositoryTest {
     }
 
     @Test
-    public void searchForHouseByValidID(){
+    void searchForHouseByValidID(){
         House tempHouse = houseRepository.findById(house.getId());
         assertThat(tempHouse).isEqualToComparingFieldByField(house);
     }
 
     @Test
-    public void searchForHouseByInvalidId(){
+    void searchForHouseByInvalidId(){
         House tempHouse = houseRepository.findById(50);
         assertThat(tempHouse).isNull();
     }
 
     @Test
-    public void searchForHouseRating(){
+    void searchForHouseRating(){
         assertThat(houseRepository.getRating(house.getId())).isEqualTo(4.5);
     }
 
     @Test
-    public void searchForRatingWithHouseWithNoReviews(){
+    void searchForRatingWithHouseWithNoReviews(){
         assertThat(houseRepository.getRating(50)).isNull();
     }
 }

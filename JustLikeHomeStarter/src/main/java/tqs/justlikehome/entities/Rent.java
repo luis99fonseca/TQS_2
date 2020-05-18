@@ -1,11 +1,6 @@
 package tqs.justlikehome.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeId;
 import tqs.justlikehome.dtos.RentDTO;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZoneId;

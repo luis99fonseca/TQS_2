@@ -15,7 +15,7 @@ function StandaloneFormPage(props: Props): React.Node {
           <div className="row">
             <div className="col col-login mx-auto">
               <div className="text-center mb-6">
-                <img src={props.imageURL} className="h-6" alt="logo" />
+                <img src={props.imageURL} className="h-6" alt="" />
               </div>
               {props.children}
             </div>

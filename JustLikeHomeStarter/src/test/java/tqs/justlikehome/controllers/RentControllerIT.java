@@ -9,13 +9,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.CoreMatchers.is;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.JustlikehomeApplication;
 import tqs.justlikehome.dtos.RentDTO;
 import tqs.justlikehome.entities.House;
@@ -24,14 +22,17 @@ import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
+import tqs.justlikehome.utils.ObjectJsonHelper;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
 
 import java.util.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = JustlikehomeApplication.class)
 @AutoConfigureMockMvc
-public class RentControllerIT {
+class RentControllerIT {
     @LocalServerPort
     int randomServerPort;
 
@@ -55,7 +56,7 @@ public class RentControllerIT {
     private House house;
 
     @BeforeEach
-    private void setup(){
+    void setup(){
         userRepository.deleteAll();
         houseRepository.deleteAll();
         rentRepository.deleteAll();
@@ -75,7 +76,7 @@ public class RentControllerIT {
     }
 
     @Test
-    public void askToRentWithRightValues() throws Exception{
+    void askToRentWithRightValues() throws Exception{
         RentDTO rentDTO = new RentDTO(((House) user.getOwnedHouses().toArray()[0]).getId(),user.getId(),"10-10-2019","10-10-2019");
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().isOk())
@@ -87,21 +88,21 @@ public class RentControllerIT {
     }
 
     @Test
-    public void askToRentWithInvalidValues() throws Exception{
+    void askToRentWithInvalidValues() throws Exception{
         RentDTO rentDTO = new RentDTO(((House) user.getOwnedHouses().toArray()[0]).getId(),user.getId(),"2019-10-20","2019-10-21");
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    public void askToRentWithInvalidID() throws Exception{
+    void askToRentWithInvalidID() throws Exception{
         RentDTO rentDTO = new RentDTO(50,50,"2019-10-20","2019-10-21");
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    public void acceptRentWithValidValues() throws Exception{
+    void acceptRentWithValidValues() throws Exception{
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         Rent rent = new Rent(house,user,start,end);
@@ -120,18 +121,11 @@ public class RentControllerIT {
     }
 
     @Test
-    public void acceptRentWithInvalidValuesThenClientError() throws Exception{
+    void acceptRentWithInvalidValuesThenClientError() throws Exception{
         Map<String,Long> rentID = new HashMap<>();
         rentID.put("rentID",(long) 70);
         mvc.perform(put("/acceptRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)))
                 .andExpect(status().is4xxClientError());
     }
 
-    private String objectToJson(Object obj){
-        try{
-            return new ObjectMapper().writeValueAsString(obj);
-        }catch (JsonProcessingException e){
-            throw new RuntimeException();
-        }
-    }
 }
