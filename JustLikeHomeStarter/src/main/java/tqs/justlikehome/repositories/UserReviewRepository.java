@@ -16,4 +16,6 @@ public interface UserReviewRepository extends JpaRepository<UserReviews,Integer>
 
     List<UserReviews> findByUserReviewing(User user);
 
+    List<UserReviews> findByUserReviewingAndUserReviewed(User userReviewing,User userReviewed);
+
 }

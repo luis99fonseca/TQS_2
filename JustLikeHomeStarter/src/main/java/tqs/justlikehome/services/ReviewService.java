@@ -48,10 +48,12 @@ public class ReviewService {
             throw new InvalidIdException();
         }
         List<Rent> rent = rentRepository.findByUserAndHouse(houseReviewDTO.getReviewerId(), houseReviewDTO.getHouseId());   //user was in house
-        
-        if (rent.isEmpty()){
+        List<HouseReviews> housereviews = houseReviewRepository.findByReviewerAndHouse(user, house);
+
+        if (housereviews.size() >= rent.size()){
             throw new NoPermitionException();
         }
+
 
         HouseReviews houseReview = new HouseReviews(houseReviewDTO);
         user.addMyReview(houseReview);
@@ -78,8 +80,9 @@ public class ReviewService {
         }
 
         List<Rent> rent = rentRepository.findByUserAndOwner(userReviewDTO.getReviewedId(), userReviewDTO.getReviewerId()); //owner had user as client
-        
-        if (rent.isEmpty()){
+        List<UserReviews> usereviews = userReviewRepository.findByUserReviewingAndUserReviewed(reviwerUser, reviwedUser);
+
+        if (usereviews.size() >= rent.size()){
             throw new NoPermitionException();
         }
 
