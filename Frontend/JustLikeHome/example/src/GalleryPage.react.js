@@ -1,20 +1,34 @@
 // @flow
 
-import React, { Component, useCallback } from "react";
+import React, { Component } from "react";
 import { Page, Grid, GalleryCard, Form, Button} from "tabler-react";
 import Icon from "./components/Icon";
 import "tabler-react/dist/Tabler.css";
 import SiteWrapper from "./SiteWrapper.react";
+import getDataForm from "./Rest/getDataForm";
+import Property from "./Rest/Property";
 
-import json from "./data/Gallery.Items";
+import DatePicker from "react-datepicker";
+ 
+import "react-datepicker/dist/react-datepicker.css";
 
 
 export default class GalleryPage extends Component {
 
   constructor(props) {
       super(props);
-
+      this.state = {
+        startDate : new Date(),
+        endDate : new Date(),
+        houses : [
+          {id: -2,  rating:5 ,ownerName:"jbtavares" ,city:"Aveiro", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:300.0, numberOfBeds: 1, maxNumberOfUsers:1, comodities: []},
+          {id: -3,  rating:5 ,ownerName:"ricardoTeves" , city:"Porto", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:200.0, numberOfBeds: 2, maxNumberOfUsers:1, comodities: []},
+          {id: -4,  rating:5 ,ownerName:"arturmns" , city:"Lisboa", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:500.0, numberOfBeds: 3, maxNumberOfUsers:1, comodities: []}
+        ]
+      }
       this.property_info = this.property_info.bind(this);
+      this.query_searchProperty = this.query_searchProperty.bind(this);
+      this.property_obj = new Property();
   }
 
   property_info() {
@@ -24,73 +38,73 @@ export default class GalleryPage extends Component {
     return true;
   }
 
+  async query_searchProperty(event){
+    event.preventDefault();
+    let data = getDataForm(event.target);
+    
+    let response = await this.property_obj.get_searchProperty(data.city, data.inicio, data.fim, data.guests)
+    let status = response[0]
+    let houses = response[1]
+    let state_houses = []
+    houses.map((home) => (
+      state_houses.push(home)
+      )
+    )
+
+    this.setState({
+      houses : state_houses
+    })
+
+  }
+
+  handleChange(date, name){
+    this.setState({
+      [name]: date
+    })
+
+  };
+
+ 
+
+
+
 
   render(){
     const options = (
       <React.Fragment>
-        <Form>
+        <Form onSubmit={this.query_searchProperty}>
           <div class="row">
             <div class="col-lg-4">
-            <form class="group" >
-              <input  placeholder="Insira localização" style={{marginBottom:"30px", marginTop:"30px"}} required/>
-              <input type="number"  min="0" placeholder="Número de pessoas" required/>
-            </form>
+            
+              <input name="city" placeholder="Insira localização" style={{marginBottom:"30px", marginTop:"30px"}} required/>
+              <input type="number" name="guests" min="0" placeholder="Número de pessoas" required/>
+           
             </div>
           
             <Form.Group>
               <Form.Label>Data de Início:</Form.Label>
   
-              <Form.DatePicker
-                   defaultDate={new Date("2020-05-13T16:06:07.669Z")}
-                   format="mm/dd/yyyy"
-                   required
-                   maxYear={2030}
-                   minYear={2020}
-                   monthLabels={[
-                     'Janeiro',
-                     'Fevereiro',
-                     'Março',
-                     'Abril',
-                     'Maio',
-                     'Junho',
-                     'Julho',
-                     'Agosto',
-                     'Setembro',
-                     'Outubro',
-                     'Novembro',
-                     'Dezembro'
-                   ]}
+              <DatePicker
+                  name="inicio"
+                   selected={this.state.startDate}
+                   dateFormat="dd-MM-yyyy"
+                   onChange={(date) => this.handleChange(date, "startDate")}
                  />
                  <Form.Label>Data de Fim:</Form.Label>
-                 <Form.DatePicker
-                    defaultDate={new Date("2020-05-13T16:06:07.669Z")}
-                    format="mm/dd/yyyy"
-                    required
-                    maxYear={2030}
-                    minYear={2020}
-                    monthLabels={[
-                      'Janeiro',
-                      'Fevereiro',
-                      'Março',
-                      'Abril',
-                      'Maio',
-                      'Junho',
-                      'Julho',
-                      'Agosto',
-                      'Setembro',
-                      'Outubro',
-                      'Novembro',
-                      'Dezembro'
-                    ]}
+                 <DatePicker
+                    name="fim"
+                    selected={this.state.endDate}
+                    dateFormat="dd-MM-yyyy"
+                    onChange={(date) => this.handleChange(date, "endDate")}
                   />
-          </Form.Group>
-          <div class="col-lg-2" style={{marginTop:"92px"}}>
-          <Button 
+            </Form.Group>
+            <div class="col-lg-2" style={{marginTop:"92px"}}>
+            <Button 
                   type="submit"
                   color="secondary"
                   icon="search"
                 />
-          </div>
+            </div>
           </div>
           </Form>
       </React.Fragment>
@@ -104,27 +118,26 @@ export default class GalleryPage extends Component {
           />
   
           <Grid.Row className="row-cards">
-            {json.items.map((item, key) => (
-              <div class="col-lg-4" key={key} onClick={() => this.property_info()} >
+            {this.state.houses.map((house, key) => (
+              <div class="col-lg-4" key={house.id} onClick={() => this.property_info()} >
                 <GalleryCard >
                   <GalleryCard.Image
-                    src={item.imageURL}
-                    alt={`Photo by ${item.fullName}`}
+                    src={"demo/photos/apart_example.jpg"}
                     onClick={() => this.property_info()} 
                   />
                   <GalleryCard.Footer>
                     <GalleryCard.Details
-                      avatarURL={item.avatarURL}
-                      fullName={item.fullName}
-                      dateString={item.dateString}
+                      avatarURL={"demo/faces/female/1.jpg"}
+                      fullName={house.city}
+                      dateString={house.ownerName}
                     />
                     <GalleryCard.IconGroup>
-                      <Icon prefix="fa" name="male"  />  <span style={{padding : '5px'}}>{item.totalRooms}</span>
-                      <Icon prefix="fa" name="bed"  />  <span style={{padding : '5px'}}>{item.totalRooms}</span>
-                      <Icon prefix="fa" name="bath" />  <span style={{paddingLeft : '5px'}}>{item.totalWC}</span>
+                      <Icon prefix="fa" name="male"  />  <span style={{padding : '5px'}}>{house.maxNumberOfUsers}</span>
+                      <Icon prefix="fa" name="bed"  />  <span style={{padding : '5px'}}>{house.numberOfBeds}</span>
+                      <Icon prefix="fa" name="star"  />  <span style={{padding : '5px'}}>{house.rating}</span>
                     </GalleryCard.IconGroup>
                   </GalleryCard.Footer>
-                  <span style={{paddingLeft:"300px", fontSize:"25px" }}>{item.price}€</span>
+                  <span><span style={{paddingLeft:"220px", fontSize:"25px" }}>{house.pricePerNight}€</span> /por noite</span>
                 </GalleryCard>
               </div>
             ))}

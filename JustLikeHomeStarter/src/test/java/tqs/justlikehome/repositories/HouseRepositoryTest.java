@@ -39,7 +39,8 @@ class HouseRepositoryTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house3"
         );
         HouseReviews review = new HouseReviews(user,house,5,"BERY GOOD HOUSE");
         HouseReviews review2 = new HouseReviews(user,house,4,"BERY GOOD HOUSE");
@@ -109,7 +110,8 @@ class HouseRepositoryTest {
                 4.0,
                 75.0,
                 2,
-                3
+                3,
+                "house3"
         );
         house2.setOwner(user);
         testEntityManager.persistAndFlush(house2);

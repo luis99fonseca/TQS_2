@@ -1,10 +1,9 @@
 package tqs.justlikehome.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name="comodities")
@@ -15,8 +14,10 @@ public class Comodities {
     private String type;
     private String description;
 
-    @ManyToMany(mappedBy = "comodities")
-    private Set<House> houses = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name="house_id")
+    @JsonIgnore
+    private House house;
 
     public Comodities(){
 

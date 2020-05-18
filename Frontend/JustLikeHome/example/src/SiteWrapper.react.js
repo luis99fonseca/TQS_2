@@ -55,6 +55,12 @@ const navBarItems: Array<navItem> = [
     LinkComponent: withRouter(NavLink),
   },
   {
+    value: "Seus anúncios",
+    to: "/announcements",
+    icon: "briefcase",
+    LinkComponent: withRouter(NavLink),
+  },
+  {
     value: "Profile",
     icon: "user",
     to: "/profile",

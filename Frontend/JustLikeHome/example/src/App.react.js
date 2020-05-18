@@ -12,9 +12,10 @@ import {
   Error503,
   Empty,
   Email,
-  ProfilePage,
+  ProfilePage
 } from "./pages";
 
+import AnnoucementPage from "./pages/AnnouncementPage"
 import HomePage from "./HomePage.react";
 import FormElementsPage from "./FormElementsPage.react";
 import PricingCardsPage from "./interface/PricingCardsPage.react";
@@ -25,7 +26,8 @@ import ChartsPage from "./interface/ChartsPage.react";
 import GalleryPage from "./GalleryPage.react";
 import MapCardsPage from "./components/MapCardsPage.react";
 import BlogPage from "./components/BlogPage.react";
-import Property from "./Porperty"
+import Property from "./PorpertyInfo"
+
 
 import "tabler-react/dist/Tabler.css";
 
@@ -59,6 +61,7 @@ function App(props: Props): React.Node {
           <Route exact path="/register" component={RegisterPage} />
           <Route exact path="/store" component={StoreCardsPage} />
           <Route exact path="/property" component={Property} />
+          <Route exact path="/announcements" component={AnnoucementPage} />
           <Route component={Error404} />
         </Switch>
       </Router>

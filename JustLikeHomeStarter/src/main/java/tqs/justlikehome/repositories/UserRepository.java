@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
-    User findById(Long id);
+    User findById(long id);
 
     User findByUsername(String username);
 

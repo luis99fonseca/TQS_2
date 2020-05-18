@@ -1,12 +1,8 @@
 package tqs.justlikehome.controllers;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.CoreMatchers.is;
-
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.dtos.RentDTO;
 import tqs.justlikehome.entities.House;
@@ -26,6 +20,7 @@ import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.RentService;
 import tqs.justlikehome.utils.ObjectJsonHelper;
+
 
 import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,7 +53,8 @@ class RentControllerTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house3"
         );
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
@@ -112,7 +108,7 @@ class RentControllerTest {
         rentId.put("rentID",(long) 0);
         rent.setPending(false);
         given(rentService.acceptRent(rentId)).willReturn(rent);
-        mockMvc.perform(put("/acceptRent").content(ObjectJsonHelper.objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        mockMvc.perform(put("/acceptRent").content(objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(jsonPath("$.user.username",is("Fonsequini")))
                 .andExpect(jsonPath("$.user.firstName",is("Luis")))
@@ -125,7 +121,7 @@ class RentControllerTest {
         rentId.put("rentID",(long) 200);
         given(rentService.acceptRent(rentId)).willThrow(InvalidIdException.class);
         mockMvc.perform(put("/acceptRent").content(ObjectJsonHelper.objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
+        .andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -144,6 +140,7 @@ class RentControllerTest {
         RentDTO rentDTO = new RentDTO(0,0,"2019-10-10","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidDateInputException.class);
         mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(ObjectJsonHelper.objectToJson(rentDTO)))
+
                 .andExpect(status().is4xxClientError());
     }
 
@@ -151,8 +148,17 @@ class RentControllerTest {
     public void addRentWithInvalidIDDTO() throws Exception{
         RentDTO rentDTO = new RentDTO(500,500,"10-10-2019","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidIdException.class);
-        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(ObjectJsonHelper.objectToJson(rentDTO)))
+        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().is4xxClientError());
     }
+
+    private String objectToJson(Object obj){
+        try{
+            return new ObjectMapper().writeValueAsString(obj);
+        }catch (JsonProcessingException e){
+            throw new RuntimeException();
+        }
+    }
+
 
 }

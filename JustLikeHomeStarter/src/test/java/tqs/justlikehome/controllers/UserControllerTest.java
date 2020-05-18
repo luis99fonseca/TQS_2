@@ -7,7 +7,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.entities.House;
@@ -16,10 +15,7 @@ import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.UserService;
 import tqs.justlikehome.utils.ObjectJsonHelper;
-
-import java.time.format.DateTimeParseException;
 import java.util.*;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -39,8 +35,8 @@ class UserControllerTest {
 
     @Test
     public void whenGetUserById_thenReturnUserHouses() throws Exception {
-        List<House> houseList = new ArrayList<>(Arrays.asList(new House("aveiro", "very good house", 2.0, 23, 2, 2),
-                new House("viseu", "very as house", 3.0, 23, 2, 2)));
+        List<House> houseList = new ArrayList<>(Arrays.asList(new House("aveiro", "very good house", 2.0, 23, 2, 2, "casa da barra"),
+                new House("viseu", "very as house", 3.0, 23, 2, 2, "casa da mae")));
 
         given(userService.getUserHouses(anyLong())).willReturn(
                 houseList
@@ -74,8 +70,7 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
                 .content(ObjectJsonHelper.objectToJson(userDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value(userDTO.getUsername()))
-                .andExpect(jsonPath("$.houseReviews").isEmpty());
+                .andExpect(jsonPath("$.username").value(userDTO.getUsername()));
     }
 
     @Test
@@ -103,7 +98,7 @@ class UserControllerTest {
 
     @Test
     public void whenAddUserValidHouse_returnHouse() throws Exception {
-        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0);
+        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0, "casa do bairro");
 
         given(userService.addHouseToUser(any(HouseDTO.class))).willReturn(new House(houseDTO));
 
@@ -115,7 +110,7 @@ class UserControllerTest {
 
     @Test
     public void whenAddUserHouseWithInvalidParam_thenThrowException() throws Exception {
-        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0);
+        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0, "casa do bairro");
 
         given(userService.addHouseToUser(any(HouseDTO.class))).willThrow(InvalidIdException.class);
 
