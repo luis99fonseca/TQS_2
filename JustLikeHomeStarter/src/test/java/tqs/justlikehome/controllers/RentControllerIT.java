@@ -22,8 +22,11 @@ import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
+import tqs.justlikehome.utils.ObjectJsonHelper;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
 
 import java.util.*;
 
@@ -125,11 +128,4 @@ class RentControllerIT {
                 .andExpect(status().is4xxClientError());
     }
 
-    private String objectToJson(Object obj){
-        try{
-            return new ObjectMapper().writeValueAsString(obj);
-        }catch (JsonProcessingException e){
-            throw new RuntimeException();
-        }
-    }
 }
