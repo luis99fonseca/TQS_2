@@ -1,5 +1,5 @@
-on: push
-name: Tests w/ sonarcloud (no quality gate)
+on: [push,pull_request]
+name: Tests w/ sonarcloud
 jobs:
   sonarCloudTrigger:
     name: SonarCloud Trigger
@@ -12,7 +12,7 @@ jobs:
         java-version: 1.11
     - name: Maven Test and SonarCloud 
       run: 
-        mvn -f JustLikeHomeStarter verify sonar:sonar -Dsonar.projectKey=MotaMiguel_TQS_2 -Dsonar.organization=tqs-project -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        mvn -f JustLikeHomeStarter verify sonar:sonar -Dsonar.qualitygate.wait=true -Dsonar.projectKey=MotaMiguel_TQS_2 -Dsonar.organization=tqs-project -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
