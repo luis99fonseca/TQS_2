@@ -36,6 +36,14 @@ public class HouseSearchDTO {
         return userRating;
     }
 
+    public long getHouseId() {
+        return houseId;
+    }
+
+    public String getHouseName() {
+        return houseName;
+    }
+
     public void setUserRating(double userRating) {
         this.userRating = userRating;
     }

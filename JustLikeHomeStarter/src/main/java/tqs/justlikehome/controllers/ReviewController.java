@@ -2,6 +2,7 @@ package tqs.justlikehome.controllers;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.ReviewService;
 
 @RestController
+@CrossOrigin
 public class ReviewController {
 
     @Autowired
