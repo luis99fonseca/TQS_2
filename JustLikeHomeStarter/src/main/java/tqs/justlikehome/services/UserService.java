@@ -8,6 +8,7 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
 
 import javax.transaction.Transactional;
@@ -51,7 +52,7 @@ public class UserService {
                 throw new InvalidIdException();
             }
             User user = new User(userDTO);
-            userRepository.save(user);
+            user = userRepository.save(user);
             return user;
         }catch(DateTimeParseException e) {
             throw new InvalidDateInputException();

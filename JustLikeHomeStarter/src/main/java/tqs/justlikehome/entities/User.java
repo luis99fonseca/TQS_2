@@ -112,6 +112,10 @@ public class User {
         this.userReviews.add(userReview);
     }
 
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
     public void addReview(UserReviews userReview){
         this.userReviewed.add(userReview);
     }

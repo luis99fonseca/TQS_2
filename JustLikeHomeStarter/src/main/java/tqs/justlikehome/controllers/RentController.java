@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 public class RentController {
 
     @Autowired
@@ -29,16 +30,17 @@ public class RentController {
         return rentService.acceptRent(rentID);
     }
 
-    @GetMapping(value="/pendingRents/user={userID}")
+    @GetMapping(value="/pendingRents/owner={ownerID}")
     @ResponseBody
-    public List<Rent> pendingRents(@PathVariable long userID){
-        return rentService.pendingRents(userID);
+    public List<Rent> pendingRents(@PathVariable long ownerID){
+        return rentService.pendingRents(ownerID);
     }
 
-    @GetMapping(value="/onGoingRents/user={userID}")
+    @GetMapping(value="/onGoingRents/owner={ownerID}")
     @ResponseBody
-    public List<Rent> onGoingRents(@PathVariable long userID){
-        return rentService.onGoingRents(userID);
+    public List<Rent> onGoingRents(@PathVariable long ownerID){
+        System.out.println(rentService.onGoingRents(ownerID));
+        return rentService.onGoingRents(ownerID);
     }
 
 }

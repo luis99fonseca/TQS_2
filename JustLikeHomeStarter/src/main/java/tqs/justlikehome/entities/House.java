@@ -65,7 +65,7 @@ public class House {
         this.houseName=houseName;
     }
 
-    public void addComoditieToHouse(Comodities comodities) {
+    public void addComoditieToHouse(Comodities comodities){
         this.comodities.add(comodities);
     }
 

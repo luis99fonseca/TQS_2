@@ -24,6 +24,7 @@ import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.InvalidRentRequestException;
 import tqs.justlikehome.services.RentService;
 import tqs.justlikehome.utils.ObjectJsonHelper;
 
@@ -49,10 +50,11 @@ class RentControllerTest {
     private User user;
     private House house;
     private Rent rent;
-
+    private User owner;
     @BeforeEach
     private void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        owner = new User("Owner","Luis","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -62,6 +64,7 @@ class RentControllerTest {
                 5,
                 "house3"
         );
+        house.setOwner(owner);
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         rent = new Rent(house,user,start,end);
@@ -72,7 +75,7 @@ class RentControllerTest {
         List<Rent> rentList = new ArrayList<>();
         rentList.add(rent);
         given(rentService.pendingRents((long) 0)).willReturn(rentList);
-        mockMvc.perform(get("/pendingRents/user="+0).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        mockMvc.perform(get("/pendingRents/owner="+0).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$",hasSize(1)))
                 .andExpect(jsonPath("$[0].user.username",is("Fonsequini")))
@@ -83,7 +86,7 @@ class RentControllerTest {
     @Test
     public void whenPendingRentsWithInvalidID() throws Exception{
         given(rentService.pendingRents((long) 50)).willReturn(Collections.emptyList());
-        mockMvc.perform(get("/pendingRents/user="+50).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        mockMvc.perform(get("/pendingRents/owner="+50).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
 
@@ -93,7 +96,7 @@ class RentControllerTest {
         List<Rent> rentList = new ArrayList<>();
         rentList.add(rent);
         given(rentService.onGoingRents((long) 0)).willReturn(rentList);
-        mockMvc.perform(get("/onGoingRents/user="+0).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        mockMvc.perform(get("/onGoingRents/owner="+0).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$",hasSize(1)))
                 .andExpect(jsonPath("$[0].user.username",is("Fonsequini")))
@@ -104,7 +107,7 @@ class RentControllerTest {
     @Test
     public void whenNotPendingRentsWithInvalidID() throws Exception{
         given(rentService.pendingRents((long) 50)).willReturn(Collections.emptyList());
-        mockMvc.perform(get("/onGoingRents/user="+50).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+        mockMvc.perform(get("/onGoingRents/owner="+50).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
 
@@ -154,6 +157,14 @@ class RentControllerTest {
     public void addRentWithInvalidIDDTO() throws Exception{
         RentDTO rentDTO = new RentDTO(500,500,"10-10-2019","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidIdException.class);
+        mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void tryToAddRentOfOwnedHouseToOwnerThenThenException() throws Exception{
+        RentDTO rentDTO = new RentDTO(0,1,"10-10-2019","10-10-2019");
+        given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidRentRequestException.class);
         mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().is4xxClientError());
     }
