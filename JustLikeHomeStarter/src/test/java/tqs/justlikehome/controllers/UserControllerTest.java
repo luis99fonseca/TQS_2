@@ -89,17 +89,17 @@ class UserControllerTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    //@Test //TODO: can't import such Exception
-//    public void whenAddNewUserWithIUsername_thenThrowException() throws Exception {
-//        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "19-12-1999");
-//
-//        given(userService.createUser(any(UserDTO.class))).willThrow(DateTimeParseException.class);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
-//                .content(ObjectJsonHelper.objectToJson(userDTO)))
-//                .andExpect(status().is4xxClientError())
-//                .andDo(MockMvcResultHandlers.print());
-//    }
+    @Test
+    public void whenAddNewUserWithInvalidUsername_thenThrowException() throws Exception {
+        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "19-12-1999");
+
+        given(userService.createUser(any(UserDTO.class))).willThrow(InvalidIdException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
+                .content(ObjectJsonHelper.objectToJson(userDTO)))
+                .andExpect(status().is4xxClientError())
+                .andDo(MockMvcResultHandlers.print());
+    }
 
     @Test
     public void whenAddUserValidHouse_returnHouse() throws Exception {
