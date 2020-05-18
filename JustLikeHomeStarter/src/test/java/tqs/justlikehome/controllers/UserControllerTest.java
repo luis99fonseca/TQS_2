@@ -50,7 +50,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void whenGetUserByNoExistentId_thenReturnEmptyUserHouses() throws Exception {
+    void whenGetUserByNoExistentId_thenReturnEmptyUserHouses() throws Exception {
 
         given(userService.getUserHouses(anyLong())).willReturn(
                 Collections.emptyList()
@@ -62,7 +62,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void whenAddNewValidUser_thenReturnUser() throws Exception {
+    void whenAddNewValidUser_thenReturnUser() throws Exception {
         UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "20-12-1999");
 
         given(userService.createUser(any(UserDTO.class))).willReturn(new User(userDTO));
@@ -74,7 +74,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void whenAddNewUserWithInvalidDate_thenThrowException() throws Exception {
+    void whenAddNewUserWithInvalidDate_thenThrowException() throws Exception {
         UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "1999-12-12");
 
         given(userService.createUser(any(UserDTO.class))).willThrow(InvalidDateInputException.class);
@@ -83,21 +83,8 @@ class UserControllerTest {
                 .content(ObjectJsonHelper.objectToJson(userDTO)))
                 .andExpect(status().is4xxClientError());
     }
-
-    //@Test //TODO: can't import such Exception
-//    public void whenAddNewUserWithIUsername_thenThrowException() throws Exception {
-//        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "19-12-1999");
-//
-//        given(userService.createUser(any(UserDTO.class))).willThrow(DateTimeParseException.class);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
-//                .content(ObjectJsonHelper.objectToJson(userDTO)))
-//                .andExpect(status().is4xxClientError())
-//                .andDo(MockMvcResultHandlers.print());
-//    }
-
     @Test
-    public void whenAddUserValidHouse_returnHouse() throws Exception {
+    void whenAddUserValidHouse_returnHouse() throws Exception {
         HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0, "casa do bairro");
 
         given(userService.addHouseToUser(any(HouseDTO.class))).willReturn(new House(houseDTO));
@@ -109,7 +96,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void whenAddUserHouseWithInvalidParam_thenThrowException() throws Exception {
+    void whenAddUserHouseWithInvalidParam_thenThrowException() throws Exception {
         HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0, "casa do bairro");
 
         given(userService.addHouseToUser(any(HouseDTO.class))).willThrow(InvalidIdException.class);

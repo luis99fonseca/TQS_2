@@ -28,7 +28,7 @@ class UserRepositoryTest {
     House house;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         house = new House(
                 "Aveiro",
@@ -45,19 +45,19 @@ class UserRepositoryTest {
     }
 
     @Test
-    public void getHouseFromUserWithOneHouse(){
+    void getHouseFromUserWithOneHouse(){
         List<House> houses = userRepository.getUserHouses(user.getId());
         assertThat(houses.size()).isEqualTo(1);
     }
 
     @Test
-    public void getHouseFromUserWithNoHouse(){
+    void getHouseFromUserWithNoHouse(){
         List<House> houses = userRepository.getUserHouses(50);
         assertThat(houses.size()).isEqualTo(0);
     }
 
     @Test
-    public void getHouseFromUserWithTwoHouse(){
+    void getHouseFromUserWithTwoHouse(){
         House house2 = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro V2",
@@ -75,13 +75,13 @@ class UserRepositoryTest {
     }
 
     @Test
-    public void getUserNotReviewedAveragedRating(){
+    void getUserNotReviewedAveragedRating(){
         Double avg = userRepository.getUserAvgRating(user.getId());
         assertThat(avg).isNull();
     }
 
     @Test
-    public void getUserReviewedAveragedRating(){
+    void getUserReviewedAveragedRating(){
         User tempUser01 = new User("Motinhas","Migalhas","Motas",new GregorianCalendar(1980, Calendar.MARCH,20));
         testEntityManager.persistAndFlush(tempUser01);
 
@@ -96,13 +96,13 @@ class UserRepositoryTest {
     }
 
     @Test
-    public void checkUserReviews_whenHasNone(){
+    void checkUserReviews_whenHasNone(){
         Set<UserReviews> reviewsList = userRepository.getUserReviews(user.getId());
         assertThat(reviewsList.size()).isEqualTo(0);
     }
 
     @Test
-    public void checkUserReviews_whenHasReviews(){
+    void checkUserReviews_whenHasReviews(){
         User tempUser01 = new User("Motinhas","Migalhas","Motas",new GregorianCalendar(1980, Calendar.MARCH,20));
         testEntityManager.persistAndFlush(tempUser01);
 

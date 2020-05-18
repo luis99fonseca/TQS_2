@@ -39,7 +39,7 @@ import java.util.List;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ReviewServiceTest {
+class ReviewServiceTest {
     
     @Mock(lenient = true)
     private UserRepository userRepository;
@@ -73,7 +73,7 @@ public class ReviewServiceTest {
 
 
     @BeforeEach
-    public void setup(){
+    void setup(){
 
         Mockito.when(user1.getId()).thenReturn((long)0);
         Mockito.when(user2.getId()).thenReturn((long)1);
@@ -116,7 +116,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addReviewToExistingHouse(){
+    void addReviewToExistingHouse(){
 
         HouseReviewDTO houseReviewDTO = new HouseReviewDTO(this.user2.getId(), this.house.getId(),5,"topp");
         HouseReviews hr = reviewService.addReview(houseReviewDTO);
@@ -129,7 +129,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addReviewToExistingHouseTwice(){
+    void addReviewToExistingHouseTwice(){
 
         HouseReviews houseReview = reviewService.addReview(new HouseReviewDTO(this.user2.getId(), this.house.getId(),5,"topp"));
         
@@ -142,7 +142,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addReviewToExistingUser(){
+    void addReviewToExistingUser(){
 
         UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp");
         UserReviews ur = reviewService.addReview(userReviewDTO);
@@ -155,7 +155,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addReviewToExistingUserTwice(){
+    void addReviewToExistingUserTwice(){
 
         UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp");
         UserReviews userReview = reviewService.addReview(userReviewDTO);
@@ -169,7 +169,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addReviewToNonExistingUser(){
+    void addReviewToNonExistingUser(){
 
         UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), 3, 5,"topp");
 
@@ -179,7 +179,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addReviewToNonExistingHouse(){
+    void addReviewToNonExistingHouse(){
 
         HouseReviewDTO houseReviewDTO = new HouseReviewDTO(this.user2.getId(), 2, 5,"topp");
 
@@ -189,7 +189,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addHouseReviewfromNonExistingUser(){
+    void addHouseReviewfromNonExistingUser(){
 
         HouseReviewDTO houseReviewDTO = new HouseReviewDTO(3, this.house.getId(), 5,"topp");
 
@@ -199,7 +199,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addUserReviewfromNonExistingUser(){
+    void addUserReviewfromNonExistingUser(){
 
         UserReviewDTO userReviewDTO = new UserReviewDTO(3, this.user2.getId(), 5,"topp");
 
@@ -209,7 +209,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addReviewToNonRentedHouse(){
+    void addReviewToNonRentedHouse(){
 
         HouseReviewDTO houseReviewDTO = new HouseReviewDTO(this.user3.getId(), this.house.getId(), 5, "topp");
 
@@ -218,7 +218,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void addReviewToUserThatDidntRent(){
+    void addReviewToUserThatDidntRent(){
 
         UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), this.user3.getId(), 5, "topp");
 
@@ -227,7 +227,7 @@ public class ReviewServiceTest {
     }
 
     @Test
-    public void getReviewsForHouse(){
+    void getReviewsForHouse(){
         HouseReviews hr = new HouseReviews(user2,house,4.5,"topp");
         List<HouseReviews> hrs = new ArrayList<>();
         hrs.add(hr);
@@ -238,7 +238,7 @@ public class ReviewServiceTest {
     
     
     @Test
-    public void getUserReviewsFromUser(){
+    void getUserReviewsFromUser(){
         UserReviews ur = new UserReviews(user1,user2,4.5,"topp");
         List<UserReviews> urs = new ArrayList<>();
         urs.add(ur);
@@ -248,7 +248,7 @@ public class ReviewServiceTest {
     }   
 
     @Test
-    public void getReviewsForUser(){
+    void getReviewsForUser(){
         UserReviews ur = new UserReviews(user1,user2,4.5,"topp");
         List<UserReviews> urs = new ArrayList<>();
         urs.add(ur);
@@ -258,7 +258,7 @@ public class ReviewServiceTest {
     }   
 
     @Test
-    public void getHouseReviewsFromUser(){
+    void getHouseReviewsFromUser(){
         HouseReviews hr = new HouseReviews(user2,house,4.5,"topp");
         List<HouseReviews> hrs = new ArrayList<>();
         hrs.add(hr);

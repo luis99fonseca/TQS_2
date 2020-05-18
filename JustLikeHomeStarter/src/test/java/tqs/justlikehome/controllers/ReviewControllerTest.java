@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 
 @WebMvcTest(ReviewController.class)
-public class ReviewControllerTest {
+class ReviewControllerTest {
     
     @MockBean
     private ReviewService reviewService;
@@ -50,7 +50,7 @@ public class ReviewControllerTest {
     private UserReviews userReview;
 
     @BeforeEach
-    private void setup(){
+    void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         owner = new User("JaoSiuba", "Joao", "Silva", new GregorianCalendar(1999, Calendar.OCTOBER,25));
         house = new House(
@@ -70,7 +70,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void newHouseReview() throws Exception {
+    void newHouseReview() throws Exception {
         HouseReviewDTO hrdto= new HouseReviewDTO(0, 0, 5, "topp");
         given(reviewService.addReview(any(HouseReviewDTO.class))).willReturn(houseReview);
         mockMvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
@@ -82,7 +82,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void newHouseReviewInvalid() throws Exception{
+    void newHouseReviewInvalid() throws Exception{
         HouseReviewDTO hrdto = new HouseReviewDTO(0, 0, 5, "topp");
         given(reviewService.addReview(any(HouseReviewDTO.class))).willThrow(InvalidIdException.class);
         mockMvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
@@ -90,7 +90,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void newHouseReviewNoPermission() throws Exception{
+    void newHouseReviewNoPermission() throws Exception{
         HouseReviewDTO hrdto = new HouseReviewDTO(0, 0, 5, "topp");
         given(reviewService.addReview(any(HouseReviewDTO.class))).willThrow(NoPermitionException.class);
         mockMvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
@@ -99,7 +99,7 @@ public class ReviewControllerTest {
 
 
     @Test
-    public void newUserReview() throws Exception {
+    void newUserReview() throws Exception {
         UserReviewDTO urdto= new UserReviewDTO(0, 0, 5, "topp");
         given(reviewService.addReview(any(UserReviewDTO.class))).willReturn(userReview);
         mockMvc.perform(post("/newUserReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(urdto)))
@@ -110,7 +110,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void newUserReviewInvalid() throws Exception{
+    void newUserReviewInvalid() throws Exception{
         UserReviewDTO urdto = new UserReviewDTO(0, 0, 5, "topp");
         given(reviewService.addReview(any(UserReviewDTO.class))).willThrow(InvalidIdException.class);
         mockMvc.perform(post("/newUserReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(urdto)))
@@ -118,7 +118,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void newUserReviewNoPermission() throws Exception{
+    void newUserReviewNoPermission() throws Exception{
         UserReviewDTO urdto = new UserReviewDTO(0, 0, 5, "topp");
         given(reviewService.addReview(any(UserReviewDTO.class))).willThrow(NoPermitionException.class);
         mockMvc.perform(post("/newUserReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(urdto)))
@@ -126,7 +126,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void getHouseReviews() throws Exception{
+    void getHouseReviews() throws Exception{
         List<HouseReviews> revList = new ArrayList<>();
         revList.add(houseReview);
         given(reviewService.getReviewsForHouse((long) 0)).willReturn(revList);
@@ -139,7 +139,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void getUserReviews() throws Exception{
+    void getUserReviews() throws Exception{
         List<UserReviews> revList = new ArrayList<>();
         revList.add(userReview);
         given(reviewService.getReviewsForUser((long) 0)).willReturn(revList);
@@ -151,7 +151,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void getUserDoneHouseReviews() throws Exception{
+    void getUserDoneHouseReviews() throws Exception{
         List<HouseReviews> revList = new ArrayList<>();
         revList.add(houseReview);
         given(reviewService.getHouseReviewsFromUser((long) 0)).willReturn(revList);
@@ -164,7 +164,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void getUserDoneUserReviews() throws Exception{
+    void getUserDoneUserReviews() throws Exception{
         List<UserReviews> revList = new ArrayList<>();
         revList.add(userReview);
         given(reviewService.getUserReviewsFromUser((long) 1)).willReturn(revList);

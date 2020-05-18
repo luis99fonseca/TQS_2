@@ -15,7 +15,7 @@ import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.User;
 
 @DataJpaTest
-public class HouseReviewRepositoryTest {
+class HouseReviewRepositoryTest {
 
     @Autowired
     private TestEntityManager testEntityManager;
@@ -29,7 +29,7 @@ public class HouseReviewRepositoryTest {
     HouseReviews houseReview;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         user1 = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         user2 = new User("JaoSiuba","Joao","Silva",new GregorianCalendar(1999, Calendar.OCTOBER,25));
 
@@ -60,7 +60,7 @@ public class HouseReviewRepositoryTest {
     }
 
     @Test
-    public void getHouseReviewsByHouse(){
+    void getHouseReviewsByHouse(){
         List<HouseReviews> houseReviews = houseReviewRepository.findByHouse(house);
         
         assertEquals(1, houseReviews.size());
@@ -68,39 +68,39 @@ public class HouseReviewRepositoryTest {
     }
 
     @Test
-    public void getHouseReviewsByUser(){
+    void getHouseReviewsByUser(){
         List<HouseReviews> houseReviews = houseReviewRepository.findByReviewer(user2);
         
-        assertEquals(houseReviews.size(), 1);
+        assertEquals(1,houseReviews.size());
         assertEquals(houseReviews.get(0), houseReview);
     }
 
     @Test
-    public void getHouseReviewsByUserAndHouse(){
+    void getHouseReviewsByUserAndHouse(){
         List<HouseReviews> houseReviews = houseReviewRepository.findByReviewerAndHouse(user2, house);
         
-        assertEquals(houseReviews.size(), 1);
+        assertEquals(1, houseReviews.size());
         assertEquals(houseReviews.get(0), houseReview);
     }
 
     @Test
-    public void getHouseReviewsByUserAndHouseNoUserRent(){
+    void getHouseReviewsByUserAndHouseNoUserRent(){
         List<HouseReviews> houseReviews = houseReviewRepository.findByReviewerAndHouse(user1, house);
         
-        assertEquals(houseReviews.size(), 0);
+        assertEquals(0, houseReviews.size());
     }
 
     @Test
-    public void getHouseReviewsForHouseWithNoReviews(){
+    void getHouseReviewsForHouseWithNoReviews(){
 
         List<HouseReviews> houseReviews = houseReviewRepository.findByReviewer(user1);
         
-        assertEquals(houseReviews.size(), 0);
+        assertEquals(0, houseReviews.size());
 
     }
 
     @Test
-    public void getHouseReviewsForUserWithNoReviews(){
+    void getHouseReviewsForUserWithNoReviews(){
 
         House house2 = new House(
             "Aveiro2",
@@ -118,9 +118,6 @@ public class HouseReviewRepositoryTest {
         
         assertEquals(0,houseReviews.size());
 
-    }
+    }    
 
-
-    
-    
 }

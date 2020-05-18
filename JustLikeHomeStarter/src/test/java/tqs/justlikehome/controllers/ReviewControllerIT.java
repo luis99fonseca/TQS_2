@@ -41,7 +41,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = JustlikehomeApplication.class)
 @AutoConfigureMockMvc
-public class ReviewControllerIT {
+class ReviewControllerIT {
     @LocalServerPort
     int randomServerPort;
 
@@ -61,7 +61,7 @@ public class ReviewControllerIT {
     private User user2;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         userRepository.deleteAll();
         houseRepository.deleteAll();
         
@@ -96,7 +96,7 @@ public class ReviewControllerIT {
     }
     
     @Test
-    public void addHouseReview() throws Exception {
+    void addHouseReview() throws Exception {
         HouseReviewDTO hrdto = new HouseReviewDTO(user.getId(), house.getId(), 3.0, "good");
         mvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
             .andExpect(status().isOk())
@@ -108,14 +108,14 @@ public class ReviewControllerIT {
     }
 
     @Test
-    public void addHouseReviewNoRent() throws Exception{
+    void addHouseReviewNoRent() throws Exception{
         HouseReviewDTO hrdto = new HouseReviewDTO(user2.getId(), house.getId(), 3.0, "good");
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
         .andExpect(status().is4xxClientError());
     }
 
     @Test
-    public void addUserReview() throws Exception {
+    void addUserReview() throws Exception {
         UserReviewDTO urdto = new UserReviewDTO(owner.getId(), user.getId(), 3.0, "good");
         mvc.perform(post("/newUserReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(urdto)))
             .andExpect(status().isOk())
@@ -127,14 +127,14 @@ public class ReviewControllerIT {
     }
 
     @Test
-    public void addUserReviewNoRent() throws Exception{
+    void addUserReviewNoRent() throws Exception{
         UserReviewDTO urdto = new UserReviewDTO(owner.getId(), user2.getId(), 3.0, "good");
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(urdto)))
         .andExpect(status().is4xxClientError());
     }
 
     @Test
-    public void getHouseReviews() throws Exception {
+    void getHouseReviews() throws Exception {
         HouseReviews houseReview = new HouseReviews(user, house, 3.0, "good");
 
         user.addMyReview(houseReview);
@@ -149,7 +149,7 @@ public class ReviewControllerIT {
     }
 
     @Test
-    public void getHouseReviewsFromUser() throws Exception {
+    void getHouseReviewsFromUser() throws Exception {
         HouseReviews houseReview = new HouseReviews(user, house, 3.0, "good");
 
         user.addMyReview(houseReview);
@@ -164,7 +164,7 @@ public class ReviewControllerIT {
     }
 
     @Test
-    public void getUserReviews() throws Exception {
+    void getUserReviews() throws Exception {
         UserReviews userReview = new UserReviews(owner, user, 3.0, "good");
 
         user.addMyReview(userReview);
@@ -179,7 +179,7 @@ public class ReviewControllerIT {
     }
 
     @Test
-    public void getUserReviewsFromUser() throws Exception {
+    void getUserReviewsFromUser() throws Exception {
         UserReviews userReview = new UserReviews(owner, user, 3.0, "good");
 
         user.addMyReview(userReview);

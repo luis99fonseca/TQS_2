@@ -34,7 +34,7 @@ class HouseServiceTest {
     private Set<Comodities> comodities = new HashSet<>();
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         User user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         Comodities comoditie = new Comodities("fun","Pool with jacuzzi");
         comodities.add(comoditie);
@@ -56,19 +56,19 @@ class HouseServiceTest {
     }
 
     @Test
-    public void searchForHouseWithReverseDate(){
+    void searchForHouseWithReverseDate(){
         assertThrows(InvalidDateInputException.class,
                 ()->houseService.getHouse("Aveiro","2019-11-02","2019-11-02",3));
     }
 
     @Test
-    public void searchForHouseWithInvalidDate(){
+    void searchForHouseWithInvalidDate(){
         assertThrows(InvalidDateInputException.class,
                 ()->houseService.getHouse("Aveiro","2019-ab-2","as2019-11-022",3));
     }
 
     @Test
-    public void searchForHouseWithValidDate(){
+    void searchForHouseWithValidDate(){
         List<HouseSearchDTO> houses = houseService.getHouse("Aveiro","11-02-2013","11-03-2014",3);
         assertThat(houses.size()).isEqualTo(1);
         assertThat(houses.get(0).getCity()).isEqualTo(house.getCity());
@@ -81,7 +81,7 @@ class HouseServiceTest {
     }
 
     @Test
-    public void addComoditieToRightID() {
+    void addComoditieToRightID() {
         // Spy because we need to make sure the ID is correct
         house = Mockito.spy(house);
         Mockito.when(house.getId()).thenReturn((long) 0);
@@ -91,7 +91,7 @@ class HouseServiceTest {
     }
 
     @Test
-    public void addComoditieToWrongID(){
+    void addComoditieToWrongID(){
         ComoditiesDTO comoditiesDTO = new ComoditiesDTO("Pool","Pool 20m by 30m",10);
         assertThrows(InvalidIdException.class,
                 ()->houseService.addComoditieToHouse(comoditiesDTO));
