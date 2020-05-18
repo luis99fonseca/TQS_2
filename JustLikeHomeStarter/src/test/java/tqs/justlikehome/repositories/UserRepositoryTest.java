@@ -36,7 +36,8 @@ class UserRepositoryTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house03"
         );
         house.setOwner(user);
         user.addHouse(house);
@@ -63,7 +64,8 @@ class UserRepositoryTest {
                 4.0,
                 75.0,
                 2,
-                3
+                3,
+                "house03"
         );
         house2.setOwner(user);
         user.addHouse(house2);
@@ -73,18 +75,18 @@ class UserRepositoryTest {
     }
 
     @Test
-    public void getUserWithNoReviewsAveragedRating(){
+    public void getUserNotReviewedAveragedRating(){
         Double avg = userRepository.getUserAvgRating(user.getId());
         assertThat(avg).isNull();
     }
 
     @Test
-    public void getUserWithReviewsAveragedRating(){
+    public void getUserReviewedAveragedRating(){
         User tempUser01 = new User("Motinhas","Migalhas","Motas",new GregorianCalendar(1980, Calendar.MARCH,20));
         testEntityManager.persistAndFlush(tempUser01);
 
-        UserReviews uRev01 = new UserReviews(user, tempUser01, 4, "Bom Hospede");
-        UserReviews uRev02 = new UserReviews(user, tempUser01, 5, "Bom Hospede");
+        UserReviews uRev01 = new UserReviews(tempUser01, user, 4, "Bom Hospede");
+        UserReviews uRev02 = new UserReviews(tempUser01, user, 5, "Bom Hospede");
 
         user.addReview(uRev01);
         user.addReview(uRev02);

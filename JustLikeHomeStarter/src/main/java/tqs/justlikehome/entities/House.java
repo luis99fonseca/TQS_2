@@ -15,6 +15,7 @@ public class House {
     private long id;
     private String city;
     private String description;
+    private String houseName;
     private double kmFromCityCenter;
     private double pricePerNight;
     private int numberOfBeds;
@@ -36,34 +37,32 @@ public class House {
     @ManyToMany(mappedBy = "bookmarkedHouses")
     private Set<User> bookmarkedBy = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name="house_comodities",
-            joinColumns = {@JoinColumn(name="house_id")},
-            inverseJoinColumns = {@JoinColumn(name="comodities_id")}
-    )
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
     private Set<Comodities> comodities = new HashSet<>();
 
     public House(){
 
     }
 
-    public House(HouseDTO house){
+    public House(HouseDTO house) {
         this.city=house.getCity();
+        this.houseName=house.getHouseName();
         this.description=house.getDescription();
         this.kmFromCityCenter=house.getKmFromCityCenter();
         this.pricePerNight=house.getPricePerNight();
+        this.houseName=house.getHouseName();
         this.numberOfBeds=house.getNumberOfBeds();
         this.maxNumberOfUsers=house.getMaxNumberOfUsers();
     }
 
-    public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers) {
+    public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,String houseName) {
         this.city = city;
         this.description = description;
         this.kmFromCityCenter = kmFromCityCenter;
         this.pricePerNight = pricePerNight;
         this.numberOfBeds = numberOfBeds;
         this.maxNumberOfUsers = maxNumberOfUsers;
+        this.houseName=houseName;
     }
 
     public void addComoditieToHouse(Comodities comodities) {
@@ -76,6 +75,10 @@ public class House {
 
     public Set<HouseReviews> getHouseReviews() {
         return houseReviews;
+    }
+
+    public String getHouseName() {
+        return houseName;
     }
 
     public void addRent(Rent rent){

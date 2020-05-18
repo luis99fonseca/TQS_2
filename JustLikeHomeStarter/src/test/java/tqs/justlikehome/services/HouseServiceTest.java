@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
@@ -43,13 +44,15 @@ class HouseServiceTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house3"
         );
         house.setOwner(user);
         List<House> houses = new ArrayList<>();
         houses.add(house);
         Mockito.when(houseRepository.searchHouse(any(Integer.class),any(String.class),any(Date.class),any(Date.class))).thenReturn(houses);
         Mockito.when(houseRepository.findById(house.getId())).thenReturn(house);
+        Mockito.when(houseRepository.getRating(house.getId())).thenReturn(4.5);
     }
 
     @Test
@@ -66,13 +69,19 @@ class HouseServiceTest {
 
     @Test
     public void searchForHouseWithValidDate(){
-        List<House> houses = houseService.getHouse("Aveiro","11-02-2013","11-03-2014",3);
+        List<HouseSearchDTO> houses = houseService.getHouse("Aveiro","11-02-2013","11-03-2014",3);
         assertThat(houses.size()).isEqualTo(1);
-        assertThat(houses.get(0)).isEqualToComparingFieldByField(house);
+        assertThat(houses.get(0).getCity()).isEqualTo(house.getCity());
+        assertThat(houses.get(0).getDescription()).isEqualTo(house.getDescription());
+        assertThat(houses.get(0).getKmFromCityCenter()).isEqualTo(house.getKmFromCityCenter());
+        assertThat(houses.get(0).getNumberOfBeds()).isEqualTo(house.getNumberOfBeds());
+        assertThat(houses.get(0).getPricePerNight()).isEqualTo(house.getPricePerNight());
+        assertThat(houses.get(0).getOwnerName()).isEqualTo(house.getOwner().getUsername());
+        assertThat(houses.get(0).getRating()).isEqualTo(4.5);
     }
 
     @Test
-    public void addComoditieToRightID(){
+    public void addComoditieToRightID() {
         // Spy because we need to make sure the ID is correct
         house = Mockito.spy(house);
         Mockito.when(house.getId()).thenReturn((long) 0);

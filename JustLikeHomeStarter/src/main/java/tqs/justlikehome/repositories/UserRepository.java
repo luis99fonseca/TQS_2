@@ -15,13 +15,17 @@ import java.util.Set;
 public interface UserRepository extends JpaRepository<User,Integer> {
     User findById(long id);
 
+    User findByUsername(String username);
+
     @Query("SELECT u.ownedHouses FROM User u " +
             "WHERE u.id=:userId")
     List<House> getUserHouses(@Param("userId") long userId);
 
-    @Query("SELECT AVG(ur.rating) FROM User u LEFT JOIN u.userReviews ur WHERE u.id=:userId")
+    @Query("SELECT AVG(ur.rating) FROM User u LEFT JOIN u.userReviewed ur WHERE u.id=:userId")
     Double getUserAvgRating(@Param("userId") long userId);
 
     @Query("SELECT u.userReviews from User u WHERE u.id=:userId")
     Set<UserReviews> getUserReviews(@Param("userId") long userId);
+
+    List<User> findAll();
 }

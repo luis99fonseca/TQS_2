@@ -12,7 +12,6 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.HouseRepository;
@@ -53,7 +52,8 @@ class RentServiceTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house2"
         );
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());

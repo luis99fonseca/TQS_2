@@ -41,7 +41,8 @@ public class UserReviewRepositoryTest {
                 3.0,
                 50.0,
                 2,
-                5
+                5,
+                "house03"
         );
 
         house.setOwner(user1);
@@ -71,16 +72,14 @@ public class UserReviewRepositoryTest {
     @Test
     public void getUserReviewsForUserWithNoReviews(){
         List<UserReviews> userReviews = userReviewRepository.findByUserReviewed(user1);
-        
-        assertEquals(userReviews.size(), 0);
-
+        assertEquals(0, userReviews.size());
     }
 
     @Test
     public void getUserDoneReviews(){
         List<UserReviews> userReviews = userReviewRepository.findByUserReviewing(user1);
         
-        assertEquals(userReviews.size(), 1);
+        assertEquals(1, userReviews.size());
         assertEquals(userReviews.get(0), userReview);
     }
 
@@ -88,7 +87,7 @@ public class UserReviewRepositoryTest {
     public void getUserDoneReviewsForUserWithNoReviews(){
         List<UserReviews> userReviews = userReviewRepository.findByUserReviewing(user2);
         
-        assertEquals(userReviews.size(), 0);
+        assertEquals(0, userReviews.size());
     }
 
     
