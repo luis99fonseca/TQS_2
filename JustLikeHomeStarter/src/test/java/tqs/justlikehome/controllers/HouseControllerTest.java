@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
 
 @WebMvcTest(HouseController.class)
-public class HouseControllerTest {
+class HouseControllerTest {
 
     @MockBean
     private HouseService houseService;
@@ -48,7 +48,7 @@ public class HouseControllerTest {
     }
 
     @Test
-    public void whenAddValidComoditiesToHouse_thenReturnHouse() throws Exception {
+    void whenAddValidComoditiesToHouse_thenReturnHouse() throws Exception {
         given(houseService.addComoditieToHouse(any(ComoditiesDTO.class))).willReturn(house);
 
         mockMvc.perform(post("/addComoditie").contentType(MediaType.APPLICATION_JSON)
@@ -60,7 +60,7 @@ public class HouseControllerTest {
     }
 
     @Test
-    public void whenAddInvalidComoditiesToHouse_thenThrowException() throws Exception {
+    void whenAddInvalidComoditiesToHouse_thenThrowException() throws Exception {
         given(houseService.addComoditieToHouse(any(ComoditiesDTO.class))).willThrow(InvalidIdException.class);
 
         mockMvc.perform(post("/addComoditie").contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +69,7 @@ public class HouseControllerTest {
     }
 
     @Test
-    public void whenGetHouseByParameters_thenReturnOfMatchingHouses() throws Exception {
+    void whenGetHouseByParameters_thenReturnOfMatchingHouses() throws Exception {
         List<HouseSearchDTO> searchDTOList = new ArrayList<>();
         searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5));
         given(houseService.getHouse("aveiro", "12-10-1999", "12-10-1999", 4))
@@ -82,7 +82,7 @@ public class HouseControllerTest {
     }
 
     @Test
-    public void whenGetHouseByInvalidDate_thenThrowException() throws Exception {
+    void whenGetHouseByInvalidDate_thenThrowException() throws Exception {
         List<HouseSearchDTO> searchDTOList = new ArrayList<>();
         searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5));
         given(houseService.getHouse("aveiro", "12-10-1999", "12-10-1999", 4))

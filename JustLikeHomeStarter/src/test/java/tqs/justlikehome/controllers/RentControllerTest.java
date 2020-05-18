@@ -45,7 +45,7 @@ class RentControllerTest {
     private Rent rent;
 
     @BeforeEach
-    private void setup(){
+    void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         house = new House(
                 "Aveiro",
@@ -62,7 +62,7 @@ class RentControllerTest {
     }
 
     @Test
-    public void whenPendingRentsWithValidID() throws Exception{
+    void whenPendingRentsWithValidID() throws Exception{
         List<Rent> rentList = new ArrayList<>();
         rentList.add(rent);
         given(rentService.pendingRents((long) 0)).willReturn(rentList);
@@ -75,14 +75,14 @@ class RentControllerTest {
     }
 
     @Test
-    public void whenPendingRentsWithInvalidID() throws Exception{
+    void whenPendingRentsWithInvalidID() throws Exception{
         given(rentService.pendingRents((long) 50)).willReturn(Collections.emptyList());
         mockMvc.perform(get("/pendingRents/user="+50).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
 
     @Test
-    public void whenNotPendingRentsWithValidID() throws Exception{
+    void whenNotPendingRentsWithValidID() throws Exception{
         rent.setPending(false);
         List<Rent> rentList = new ArrayList<>();
         rentList.add(rent);
@@ -96,14 +96,14 @@ class RentControllerTest {
     }
 
     @Test
-    public void whenNotPendingRentsWithInvalidID() throws Exception{
+    void whenNotPendingRentsWithInvalidID() throws Exception{
         given(rentService.pendingRents((long) 50)).willReturn(Collections.emptyList());
         mockMvc.perform(get("/onGoingRents/user="+50).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
 
     @Test
-    public void acceptRentWithValidID() throws Exception{
+    void acceptRentWithValidID() throws Exception{
         Map<String,Long> rentId = new HashMap<>();
         rentId.put("rentID",(long) 0);
         rent.setPending(false);
@@ -116,7 +116,7 @@ class RentControllerTest {
     }
 
     @Test
-    public void acceptRentWithInvalidID() throws Exception{
+    void acceptRentWithInvalidID() throws Exception{
         Map<String,Long> rentId = new HashMap<>();
         rentId.put("rentID",(long) 200);
         given(rentService.acceptRent(rentId)).willThrow(InvalidIdException.class);
@@ -125,7 +125,7 @@ class RentControllerTest {
     }
 
     @Test
-    public void addRentWithValidParams() throws Exception{
+    void addRentWithValidParams() throws Exception{
         RentDTO rentDTO = new RentDTO(0,0,"10-10-2019","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willReturn(rent);
         mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
@@ -136,7 +136,7 @@ class RentControllerTest {
     }
 
     @Test
-    public void addRentWithInvalidRentDTO() throws Exception{
+    void addRentWithInvalidRentDTO() throws Exception{
         RentDTO rentDTO = new RentDTO(0,0,"2019-10-10","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidDateInputException.class);
         mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
@@ -145,7 +145,7 @@ class RentControllerTest {
     }
 
     @Test
-    public void addRentWithInvalidIDDTO() throws Exception{
+    void addRentWithInvalidIDDTO() throws Exception{
         RentDTO rentDTO = new RentDTO(500,500,"10-10-2019","10-10-2019");
         given(rentService.askToRent(any(RentDTO.class))).willThrow(InvalidIdException.class);
         mockMvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))

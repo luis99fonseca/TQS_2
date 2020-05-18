@@ -31,7 +31,7 @@ class UserServiceTest {
     private HouseDTO houseDTO;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         houseDTO = new HouseDTO(
                 "Aveiro",
@@ -49,20 +49,20 @@ class UserServiceTest {
     }
 
     @Test
-    public void addHouseToExistingUser(){
+    void addHouseToExistingUser(){
         House house = userService.addHouseToUser(houseDTO);
         assertThat(house.getOwner()).isEqualTo(user);
     }
 
     @Test
-    public void addHouseToInvalidUser(){
+    void addHouseToInvalidUser(){
         houseDTO.setUserId(1);
         assertThrows(InvalidDateInputException.class,
                 ()->userService.addHouseToUser(houseDTO));
     }
 
     @Test
-    public void createUserValidDTO(){
+    void createUserValidDTO(){
         UserDTO userDTO = new UserDTO("josi","Joao","Silva","02-10-2019");
         User newUser = userService.createUser(userDTO);
         // Not comparing birthday because if it fails it throws exception
@@ -72,7 +72,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void createUserInvalidDTO(){
+    void createUserInvalidDTO(){
         UserDTO userDTO = new UserDTO("josi","Joao","Silva","2019-10-02");
         assertThrows(InvalidDateInputException.class,
                 ()->userService.createUser(userDTO));

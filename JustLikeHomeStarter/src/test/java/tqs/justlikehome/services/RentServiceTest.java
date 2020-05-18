@@ -44,7 +44,7 @@ class RentServiceTest {
     private Rent rentPending2;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         house = new House(
                 "Aveiro",
@@ -77,7 +77,7 @@ class RentServiceTest {
     }
 
     @Test
-    public void addRentToValidHouseUser(){
+    void addRentToValidHouseUser(){
         RentDTO rentDTO = new RentDTO(0,0,"10-10-2019","11-10-2019");
         Rent newRent = rentService.askToRent(rentDTO);
         assertThat(newRent.getHouse().getId()).isEqualTo(rentDTO.getHouseID());
@@ -86,21 +86,21 @@ class RentServiceTest {
     }
 
     @Test
-    public void addRentToInvalidHouseOrUserExceptException(){
+    void addRentToInvalidHouseOrUserExceptException(){
         RentDTO rentDTO = new RentDTO(50,50,"10-10-2019","11-10-2019");
         assertThrows(InvalidIdException.class,
                 ()->rentService.askToRent(rentDTO));
     }
 
     @Test
-    public void addRentWithInvalidDate(){
+    void addRentWithInvalidDate(){
         RentDTO rentDTO = new RentDTO(50,50,"2019-10-20","2019-11-10");
         assertThrows(InvalidDateInputException.class,
                 ()->rentService.askToRent(rentDTO));
     }
 
     @Test
-    public void whenGivenACorrectRentThenReturnRentAccepted(){
+    void whenGivenACorrectRentThenReturnRentAccepted(){
         Map<String,Long> map= new HashMap<>();
         map.put("rentID",(long) 0);
         Rent rent = rentService.acceptRent(map);
@@ -108,7 +108,7 @@ class RentServiceTest {
     }
 
     @Test
-    public void whenGivenAIncorrectRentThenReturnInvalidIDException(){
+    void whenGivenAIncorrectRentThenReturnInvalidIDException(){
         Map<String,Long> map= new HashMap<>();
         map.put("rentID",(long) 50);
         assertThrows(InvalidIdException.class,
@@ -116,7 +116,7 @@ class RentServiceTest {
     }
 
     @Test
-    public void whenSearchForPendingAndThereAreReturnPendingList(){
+    void whenSearchForPendingAndThereAreReturnPendingList(){
         user = Mockito.spy(user);
         Mockito.when(user.getId()).thenReturn((long) 0);
         List<Rent> rents = rentService.pendingRents(user.getId());
@@ -126,7 +126,7 @@ class RentServiceTest {
     }
 
     @Test
-    public void whenSearchForPendingAndThereArentReturnEmptyList(){
+    void whenSearchForPendingAndThereArentReturnEmptyList(){
         user = Mockito.spy(user);
         Mockito.when(user.getId()).thenReturn((long) 0);
         List<Rent> rents = rentService.onGoingRents(user.getId());

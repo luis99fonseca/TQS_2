@@ -39,7 +39,7 @@ public class User {
     @JsonIgnore
     private Set<Rent> purchasedRents = new HashSet<>();
 
-    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userReviewing",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<UserReviews> userReviews = new HashSet<>();
 
@@ -47,10 +47,10 @@ public class User {
     @JsonIgnore
     private Set<UserReviews> userReviewed = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    // EAGER SHOULDN'T BE USED BUT SPRING IS NOT INITIALIZING IT ANY OTHER WAY ...
+    @OneToMany(mappedBy = "reviewer",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<HouseReviews> houseReviews = new HashSet<>();
-
 
     public User(){
 
@@ -116,7 +116,7 @@ public class User {
         this.userReviewed.add(userReview);
     }
 
-    public Long getId() {
+    public long getId() {
         return this.id;
     }
 

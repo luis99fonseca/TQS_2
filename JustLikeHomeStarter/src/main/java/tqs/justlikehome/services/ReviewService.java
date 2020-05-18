@@ -7,10 +7,12 @@ import tqs.justlikehome.dtos.HouseReviewDTO;
 import tqs.justlikehome.dtos.UserReviewDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.HouseReviews;
+import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.HouseReviewRepository;
+import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
 import tqs.justlikehome.repositories.UserReviewRepository;
 
@@ -18,6 +20,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.NoPermitionException;
+
 
 @Service
 @Transactional
@@ -31,26 +35,31 @@ public class ReviewService {
     public HouseReviewRepository houseReviewRepository;
     @Autowired
     public UserReviewRepository userReviewRepository;
+    @Autowired
+    public RentRepository rentRepository;
 
     public HouseReviews addReview(HouseReviewDTO houseReviewDTO){
-        House house = houseRepository.findById(houseReviewDTO.getHouseId());
-        if(house==null){
+        House house;
+        User user;
+        try{
+            house = houseRepository.findById(houseReviewDTO.getHouseId());
+            user = userRepository.findById(houseReviewDTO.getReviewerId());
+        }catch(Exception e){
             throw new InvalidIdException();
         }
-        
-        User user = userRepository.findById(houseReviewDTO.getReviewerId());
-        if (user==null){
-            throw new InvalidIdException();
+        List<Rent> rent = rentRepository.findByUserAndHouse(houseReviewDTO.getReviewerId(), houseReviewDTO.getHouseId());   //user was in house
+        List<HouseReviews> housereviews = houseReviewRepository.findByReviewerAndHouse(user, house);
+
+        if (housereviews.size() >= rent.size()){
+            throw new NoPermitionException();
         }
 
-        //TODO check if rent user and house existed
 
         HouseReviews houseReview = new HouseReviews(houseReviewDTO);
-        house.addReview(houseReview);
         user.addMyReview(houseReview);
 
         houseReview.setHouse(house);
-        houseReview.setUser(user);
+        houseReview.setReviewer(user);
 
         houseRepository.save(house);
         userRepository.save(user);
@@ -59,20 +68,25 @@ public class ReviewService {
     }
 
     public UserReviews addReview(UserReviewDTO userReviewDTO){
-        User reviwedUser = userRepository.findById(userReviewDTO.getReviewedId());
-        if(reviwedUser==null){
+
+        User reviwedUser;
+        User reviwerUser;
+
+        try{
+            reviwedUser = userRepository.findById(userReviewDTO.getReviewedId());
+            reviwerUser = userRepository.findById(userReviewDTO.getReviewerId());
+        }catch(Exception e){
             throw new InvalidIdException();
         }
 
-        User reviwerUser = userRepository.findById(userReviewDTO.getReviewerId());
-        if (reviwerUser==null){
-            throw new InvalidIdException();
-        }
+        List<Rent> rent = rentRepository.findByUserAndOwner(userReviewDTO.getReviewedId(), userReviewDTO.getReviewerId()); //owner had user as client
+        List<UserReviews> usereviews = userReviewRepository.findByUserReviewingAndUserReviewed(reviwerUser, reviwedUser);
 
-        //TODO check if rent user and house existed
+        if (usereviews.size() >= rent.size()){
+            throw new NoPermitionException();
+        }
 
         UserReviews userReview = new UserReviews(userReviewDTO);
-        reviwedUser.addReview(userReview);
         reviwerUser.addMyReview(userReview);
 
         userReview.setUserReviewed(reviwedUser);
@@ -94,9 +108,14 @@ public class ReviewService {
         return userReviewRepository.findByUserReviewed(user);
     }
 
-    public List<UserReviews> getReviewsFromUser(long id){
+    public List<UserReviews> getUserReviewsFromUser(long id){
         User user = userRepository.findById(id);
         return userReviewRepository.findByUserReviewing(user);
+    }
+
+    public List<HouseReviews> getHouseReviewsFromUser(long id){
+        User user = userRepository.findById(id);
+        return houseReviewRepository.findByReviewer(user);
     }
 
 }

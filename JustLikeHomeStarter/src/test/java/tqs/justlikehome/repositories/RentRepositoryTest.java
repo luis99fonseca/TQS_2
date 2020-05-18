@@ -29,10 +29,13 @@ class RentRepositoryTest {
     Rent rent02;
     User user;
     House house;
+    User owner;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        owner = new User("Owner","Luis","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
+
         testEntityManager.persistAndFlush(user);
         house = new House(
                 "Aveiro",
@@ -43,8 +46,11 @@ class RentRepositoryTest {
                 5,
                 "house03"
         );
-        house.setOwner(user);
+        house.setOwner(owner);
+
+        testEntityManager.persistAndFlush(owner);
         testEntityManager.persistAndFlush(house);
+
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         rent01 = new Rent(house,user,start,end);
@@ -54,13 +60,13 @@ class RentRepositoryTest {
     }
 
     @Test
-    public void searchByIdThenGetRent(){
+    void searchByIdThenGetRent(){
         Rent rent = rentRepository.findById(rent01.getId());
         assertThat(rent).isEqualToComparingFieldByField(rent01);
     }
 
     @Test
-    public void searchPendingRentsWhenThereAreZeroPending(){
+    void searchPendingRentsWhenThereAreZeroPending(){
         // No pending rents then expect empty list
         rent01.setPending(false);
         rent02.setPending(false);
@@ -71,14 +77,14 @@ class RentRepositoryTest {
     }
 
     @Test
-    public void searchPendingRentsWhenThereArePendingRents(){
+    void searchPendingRentsWhenThereArePendingRents(){
         // two pending rent01 and rent02
         List<Rent> rent = rentRepository.findByIdAndPending(user.getId(),true);
         assertThat(rent.size()).isEqualTo(2);
     }
 
     @Test
-    public void searchPendingRentsWhenThereIsOnlyOnePending(){
+    void searchPendingRentsWhenThereIsOnlyOnePending(){
         // one pending then get the other
         rent01.setPending(false);
         testEntityManager.persistAndFlush(rent01);
@@ -88,7 +94,7 @@ class RentRepositoryTest {
     }
 
     @Test
-    public void searchPendingRentsWhenThereIsOnlyOneNotPending(){
+    void searchPendingRentsWhenThereIsOnlyOneNotPending(){
         // one pending then get the other
         rent01.setPending(false);
         testEntityManager.persistAndFlush(rent01);
@@ -98,7 +104,7 @@ class RentRepositoryTest {
     }
 
     @Test
-    public void searchByUserAndHouse(){
+    void searchByUserAndHouse(){
         List<Rent> rents = rentRepository.findByUserAndHouse(user.getId(), house.getId());
         assertEquals(2,rents.size());
 
@@ -108,9 +114,27 @@ class RentRepositoryTest {
     }
 
     @Test
-    public void searchByUserAndHouseShouldBeEmpty(){
+    void searchByUserAndHouseShouldBeEmpty(){
         User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
         List<Rent> rents = rentRepository.findByUserAndHouse(user2.getId(), house.getId());
         assertEquals(0,rents.size());
     }
+
+    
+    @Test
+    void searchByUserAndOwnerShouldBeEmpty(){
+        User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
+        List<Rent> rents = rentRepository.findByUserAndOwner(user2.getId(), owner.getId());
+        assertEquals(0, rents.size());
+    }
+        
+    @Test
+    void searchByUserAndOwner(){
+        List<Rent> rents = rentRepository.findByUserAndOwner(user.getId(), owner.getId());
+        assertEquals(2, rents.size());
+
+        assertThat(rents).contains(rent01);
+        assertThat(rents).contains(rent02);
+    }
+
 }
