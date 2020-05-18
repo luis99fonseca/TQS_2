@@ -13,7 +13,6 @@ import tqs.justlikehome.dtos.HouseReviewDTO;
 import tqs.justlikehome.dtos.UserReviewDTO;
 import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.UserReviews;
-import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.ReviewService;
 
 @RestController
@@ -24,13 +23,13 @@ public class ReviewController {
 
     @PostMapping(value = "/newHouseReview")
     @ResponseBody
-    public HouseReviews newHouseReview(@RequestBody HouseReviewDTO houseReviewDTO) throws InvalidIdException{
+    public HouseReviews newHouseReview(@RequestBody HouseReviewDTO houseReviewDTO){
         return reviewService.addReview(houseReviewDTO);
     }
 
     @PostMapping(value = "/newUserReview")
     @ResponseBody
-    public UserReviews newUserReview(@RequestBody UserReviewDTO userReviewDTO) throws InvalidIdException{
+    public UserReviews newUserReview(@RequestBody UserReviewDTO userReviewDTO){
         return reviewService.addReview(userReviewDTO);
     }
 

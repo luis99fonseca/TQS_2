@@ -48,14 +48,6 @@ public class RentService {
         }
     }
 
-    private String objectToJson(Object obj){
-        try{
-            return new ObjectMapper().writeValueAsString(obj);
-        }catch (JsonProcessingException e){
-            throw new RuntimeException();
-        }
-    }
-
     public Rent acceptRent(Map<String,Long> rentID){
         try {
             Rent rent = rentRepository.findById(rentID.get("rentID"));

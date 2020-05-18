@@ -12,7 +12,6 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.HouseRepository;

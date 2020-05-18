@@ -1,6 +1,4 @@
 package tqs.justlikehome.repositories;
-
-import org.assertj.core.condition.AllOf;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,10 +100,10 @@ class RentRepositoryTest {
     @Test
     public void searchByUserAndHouse(){
         List<Rent> rents = rentRepository.findByUserAndHouse(user.getId(), house.getId());
-        assertEquals(rents.size(), 2);
+        assertEquals(2,rents.size());
 
-        assertThat(rents.contains(rent01));
-        assertThat(rents.contains(rent02));
+        assertThat(rents).contains(rent01);
+        assertThat(rents).contains(rent02);
 
     }
 
@@ -113,6 +111,6 @@ class RentRepositoryTest {
     public void searchByUserAndHouseShouldBeEmpty(){
         User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
         List<Rent> rents = rentRepository.findByUserAndHouse(user2.getId(), house.getId());
-        assertEquals(rents.size(), 0);
+        assertEquals(0,rents.size());
     }
 }

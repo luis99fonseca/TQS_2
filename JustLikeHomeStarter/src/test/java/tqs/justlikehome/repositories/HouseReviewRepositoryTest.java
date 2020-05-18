@@ -5,13 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.User;
@@ -65,7 +63,7 @@ public class HouseReviewRepositoryTest {
     public void getHouseReviews(){
         List<HouseReviews> houseReviews = houseReviewRepository.findByHouse(house);
         
-        assertEquals(houseReviews.size(), 1);
+        assertEquals(1, houseReviews.size());
         assertEquals(houseReviews.get(0), houseReview);
     }
 
@@ -86,7 +84,7 @@ public class HouseReviewRepositoryTest {
 
         List<HouseReviews> houseReviews = houseReviewRepository.findByHouse(house2);
         
-        assertEquals(houseReviews.size(), 0);
+        assertEquals(0,houseReviews.size());
 
     }
 
