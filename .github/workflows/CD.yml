@@ -13,6 +13,7 @@ jobs:
         docker volume ls -qf dangling=true
         docker volume rm $(docker volume ls -qf dangling=true) || true
         docker rmi $(docker image ls) || true
-    - name: CD for TQS 
+    - name: CD for backend  
       run: |
-        echo "Hello World!"
+        docker build --tag "Backend" JustLikeHomeStarter/
+        docker run -p 8080:8080 -d Backend
