@@ -15,5 +15,6 @@ jobs:
         sudo docker rmi $(docker image ls) || true;
     - name: CD for backend  
       run: |
-        sudo docker build --tag "backend" JustLikeHomeStarter;
+        git -C ~/TQS_2/ pull;
+        sudo docker build --tag "backend" ~/TQS_2/JustLikeHomeStarter;
         sudo docker run -p 8080:8080 -d backend;
