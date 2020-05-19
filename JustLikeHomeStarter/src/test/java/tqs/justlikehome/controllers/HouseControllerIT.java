@@ -1,7 +1,5 @@
 package tqs.justlikehome.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +13,6 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
-import tqs.justlikehome.utils.ObjectJsonHelper;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -102,14 +98,9 @@ class HouseControllerIT {
     public void whenGetSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
 
         mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
                 .andExpect(jsonPath("$.userRating").value(0))
                 .andExpect(jsonPath("$.rating").value(0))
                 .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
     }
-
-    //TODO: Check if there is a way to inject Ratings easily :)
-
-
 }

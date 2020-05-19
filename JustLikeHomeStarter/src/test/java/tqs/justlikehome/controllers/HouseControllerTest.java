@@ -85,15 +85,15 @@ class HouseControllerTest {
     void whenGetHouseByInvalidDate_thenThrowException() throws Exception {
         List<HouseSearchDTO> searchDTOList = new ArrayList<>();
         searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5));
-        given(houseService.getHouse("aveiro", "12-10-1999", "12-10-1999", 4))
+        given(houseService.getHouse("aveiro", "1999-10-14", "1999-10-20", 4))
                 .willThrow(InvalidDateInputException.class);
 
-        mockMvc.perform(get("/houses/city=aveiro&start=12-14-1999&end=12-10-1999&guests=4").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/houses/city=aveiro&start=1999-10-14&end=1999-10-20&guests=4").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    public void whenGetSpecificHouse_thenReturnHouseSearchDTO() throws Exception {
+    void whenGetSpecificHouse_thenReturnHouseSearchDTO() throws Exception {
         HouseSearchDTO houseSearchDTO = new HouseSearchDTO(house, new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20)), 5);
         houseSearchDTO.setUserRating(10);
         given(houseService.getSpecificHouse(house.getId())).willReturn(houseSearchDTO);
