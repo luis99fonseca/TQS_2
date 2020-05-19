@@ -35,7 +35,6 @@ public class RentService {
             House house = houseRepository.findById(rentDTO.getHouseID());
             Rent newRent = new Rent(house,user,rentDTO);
             user.addPurchasedRent(newRent);
-            house.addRent(newRent);
             userRepository.save(user);
             return newRent;
         }catch(NullPointerException e){

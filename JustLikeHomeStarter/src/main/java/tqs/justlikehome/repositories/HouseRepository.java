@@ -11,9 +11,10 @@ import java.util.List;
 
 @Repository
 public interface HouseRepository extends JpaRepository<House,Long> {
-    @Query("SELECT h FROM House h LEFT JOIN h.timesRented tr "+
+    @Query("SELECT distinct(h) FROM House h LEFT JOIN h.timesRented tr "+
             "WHERE h.maxNumberOfUsers >= :numberGuests and lower(h.city)=lower(:city) and " +
-            "(((tr.rentStart not between :begin and :end) or tr.rentStart is null) and ((tr.rentEnd not between :begin and :end) or tr.rentEnd is null))")
+            "(((tr.rentStart not between :begin and :end) or tr.rentStart is null) and ((tr.rentEnd not between :begin and :end) or tr.rentEnd is null)) or "+
+            "(((tr.rentStart between :begin and :end and tr.pending=true) or tr.rentStart is null) and ((tr.rentEnd between :begin and :end and tr.pending=true) or tr.rentEnd is null))")
     List<House> searchHouse(@Param("numberGuests") Integer numberGuests,
                             @Param("city") String city,
                             @Param("begin") Date begin,
