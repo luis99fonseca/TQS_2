@@ -5,6 +5,7 @@ import React, { Component, useCallback } from "react";
 import { Page, Grid, GalleryCard, Form, Button, Container, Text, Card} from "tabler-react";
 import SiteWrapper from "./SiteWrapper.react";
 import House from "./Rest/House"
+import getDataForm from "./Rest/getDataForm"
 
 import DatePicker from "react-datepicker";
 
@@ -59,6 +60,12 @@ export default class Property extends Component {
         })
     
       };
+
+    async ask_rent(event){
+        event.preventDefault();
+        let data = getDataForm(event.target);
+        console.log(data)
+    }
 
     render() {
         const images = [
@@ -134,7 +141,7 @@ export default class Property extends Component {
                     )
                 })}
             </div>
-            <form>
+            <form onSubmit={this.ask_rent}>
                 <div class="row" style={{marginTop:"50px"}}>
                 <div class="col-lg-2">
                     <GalleryCard.Details
@@ -147,7 +154,7 @@ export default class Property extends Component {
                     <div class="col-lg-3">
                         <p>Data de Início:</p>
                         <DatePicker
-                          name="inicio"
+                          name="rentStart"
                            selected={this.state.startDate}
                            dateFormat="dd-MM-yyyy"
                            onChange={(date) => this.handleChange(date, "startDate")}
@@ -156,9 +163,10 @@ export default class Property extends Component {
                     <div class="col-lg-3">
                         <p>Data de Fim:</p>
                         <DatePicker
-                          name="fim"
+                          name="rentEnd"
                           selected={this.state.endDate}
                           dateFormat="dd-MM-yyyy"
+                          min={this.state.startDate}
                           onChange={(date) => this.handleChange(date, "endDate")}
                         />
                     </div>
