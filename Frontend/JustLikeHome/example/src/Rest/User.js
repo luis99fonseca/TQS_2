@@ -45,7 +45,7 @@ export default class User extends Component{
    async get_rents_requests(data){
     // USE LATER CACHE TO GET ID DYNAMIC
     const response = await fetch(url + '/pendingRents/user=1', {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
             //'Authorization': 'Token ' + localStorage.getItem('token')
@@ -62,7 +62,7 @@ export default class User extends Component{
    async get_rents_ongoing(data){
     // USE LATER CACHE TO GET ID DYNAMIC
     const response = await fetch(url + '/onGoingRents/user=1', {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
             //'Authorization': 'Token ' + localStorage.getItem('token')

@@ -61,6 +61,12 @@ const navBarItems: Array<navItem> = [
     LinkComponent: withRouter(NavLink),
   },
   {
+    value: "Arrendamentos",
+    to: "/rents",
+    icon: "check-circle",
+    LinkComponent: withRouter(NavLink),
+  },
+  {
     value: "Profile",
     icon: "user",
     to: "/profile",

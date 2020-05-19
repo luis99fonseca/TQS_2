@@ -16,6 +16,7 @@ import {
 } from "./pages";
 
 import AnnoucementPage from "./pages/AnnouncementPage"
+import RentsPage from "./pages/RentsPage"
 import HomePage from "./HomePage.react";
 import FormElementsPage from "./FormElementsPage.react";
 import PricingCardsPage from "./interface/PricingCardsPage.react";
@@ -61,6 +62,7 @@ function App(props: Props): React.Node {
           <Route exact path="/register" component={RegisterPage} />
           <Route exact path="/store" component={StoreCardsPage} />
           <Route exact path="/property" component={Property} />
+          <Route exact path="/rents" component={RentsPage} />
           <Route exact path="/announcements" component={AnnoucementPage} />
           <Route component={Error404} />
         </Switch>
