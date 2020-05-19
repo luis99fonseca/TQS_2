@@ -13,8 +13,10 @@ jobs:
         sudo docker volume ls -qf dangling=true;
         sudo docker volume rm $(docker volume ls -qf dangling=true) || true;
         sudo docker rmi $(docker image ls) || true;
-    - name: CD for backend  
+    - name: Server pull repository
       run: |
         git -C ~/TQS_2/ pull;
+    - name: CD for backend  
+      run: |
         sudo docker build --tag "backend" ~/TQS_2/JustLikeHomeStarter;
         sudo docker run -p 8080:8080 -d backend;
