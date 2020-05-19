@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.House;
 
 import java.util.Date;
@@ -19,10 +20,11 @@ public interface HouseRepository extends JpaRepository<House,Long> {
                             @Param("city") String city,
                             @Param("begin") Date begin,
                             @Param("end") Date end);
-    House findById(long userId);
+    House findById(long houseId);
 
     // FOR SOME REASON THIS DOESNT WORK WITH THE QUERY ABOVE
     @Query("SELECT AVG(hr.rating) FROM House h LEFT JOIN h.houseReviews hr " +
             "WHERE h.id=:houseID")
     Double getRating(@Param("houseID") long houseID);
+
 }

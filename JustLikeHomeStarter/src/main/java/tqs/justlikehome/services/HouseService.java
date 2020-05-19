@@ -6,9 +6,11 @@ import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
+import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.HouseRepository;
+import tqs.justlikehome.repositories.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -27,6 +29,9 @@ public class HouseService {
 
     @Autowired
     public HouseRepository houseRepository;
+
+    @Autowired
+    public UserRepository userRepository;
 
     public List<HouseSearchDTO> getHouse(String cityName, String start, String end, int numberOfGuests){
         try{
@@ -54,4 +59,15 @@ public class HouseService {
            throw new InvalidIdException();
         }
     }
+
+    public HouseSearchDTO getSpecificHouse(long houseID){
+        House house = houseRepository.findById(houseID);
+        User owner = house.getOwner();
+        Double ratingHouse = houseRepository.getRating(houseID);
+        HouseSearchDTO houseSearch = new HouseSearchDTO(house,owner,ratingHouse==null?0:ratingHouse);
+        Double ratingOwner = userRepository.getUserAvgRating(owner.getId());
+        houseSearch.setUserRating(ratingOwner==null?0:ratingOwner);
+        return houseSearch;
+    }
+
 }

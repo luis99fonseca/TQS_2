@@ -1,0 +1,18 @@
+on: [push,pull_request]
+name: Continuous Deployment
+jobs:
+  CD:
+    name: Continuous Deployment for React and Java Project
+    runs-on: [self-hosted]
+    steps:
+    - name: Docker clean
+      run: |
+        docker ps -aq
+        docker kill $(docker ps -aq) || true
+        docker rm $(docker ps -aq) || true
+        docker volume ls -qf dangling=true
+        docker volume rm $(docker volume ls -qf dangling=true) || true
+        docker rmi $(docker image ls) || true
+    - name: CD for TQS 
+      run: |
+        echo "Hello World!"
