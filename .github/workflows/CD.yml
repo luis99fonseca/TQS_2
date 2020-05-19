@@ -17,4 +17,4 @@ jobs:
       run: |
         git -C ~/TQS_2/ pull;
         sudo docker build --tag "backend" ~/TQS_2/JustLikeHomeStarter;
-        sudo docker run -p 8080:8080 backend;
+        sudo docker run -p 8080:8080 -d backend;
