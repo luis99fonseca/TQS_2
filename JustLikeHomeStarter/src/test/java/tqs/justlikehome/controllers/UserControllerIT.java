@@ -32,7 +32,7 @@ import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = JustlikehomeApplication.class)
 @AutoConfigureMockMvc
-public class UserControllerIT {
+class UserControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,7 +47,7 @@ public class UserControllerIT {
     private House house;
 
     @BeforeEach
-    public void setUp(){
+    void setUp(){
         userRepository.deleteAll();
         houseRepository.deleteAll();
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
@@ -66,7 +66,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void whenGetUserById_thenReturnUserHouses() throws Exception {
+    void whenGetUserById_thenReturnUserHouses() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/userHouses/user=" + user.getId())).
                 andExpect(status().isOk()).
@@ -76,7 +76,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void whenGetUserByNoExistentId_thenReturnEmptyUserHouses() throws Exception {
+    void whenGetUserByNoExistentId_thenReturnEmptyUserHouses() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/userHouses/user=" + "123")).
                 andExpect(status().isOk()).
@@ -84,7 +84,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void whenAddNewValidUser_thenReturnUser() throws Exception {
+    void whenAddNewValidUser_thenReturnUser() throws Exception {
         UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "20-12-1999");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +94,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void whenAddNewUserWithInvalidDate_thenThrowException() throws Exception {
+    void whenAddNewUserWithInvalidDate_thenThrowException() throws Exception {
         UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "1999-12-12");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
@@ -103,7 +103,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void whenAddNewUserWithInvalidUsername_thenThrowException() throws Exception {
+    void whenAddNewUserWithInvalidUsername_thenThrowException() throws Exception {
         UserDTO userDTO = new UserDTO(user.getUsername(), "joao", "miguel", "19-12-1999");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +112,7 @@ public class UserControllerIT {
     }
 
     @Test
-    public void whenAddUserValidHouse_returnHouse() throws Exception {
+    void whenAddUserValidHouse_returnHouse() throws Exception {
         HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, user.getId(), "casa do bairro");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +123,7 @@ public class UserControllerIT {
 
 
     @Test
-    public void whenAddUserHouseWithInvalidParam_thenThrowException() throws Exception {
+    void whenAddUserHouseWithInvalidParam_thenThrowException() throws Exception {
         HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, -1, "casa do bairro");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)

@@ -10,7 +10,7 @@ import tqs.justlikehome.services.HouseService;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 public class HouseController {
     @Autowired
     private HouseService houseService;
@@ -32,5 +32,10 @@ public class HouseController {
     @ResponseBody
     public House addComoditieToHouse(@RequestBody ComoditiesDTO comoditiesDTO){
         return houseService.addComoditieToHouse(comoditiesDTO);
+    }
+
+    @GetMapping(value="/specificHouse/houseId={houseId}")
+    public HouseSearchDTO getSpecificHouse(@PathVariable long houseId){
+        return houseService.getSpecificHouse(houseId);
     }
 }
