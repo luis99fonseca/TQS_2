@@ -5,6 +5,7 @@ import React, { Component, useCallback } from "react";
 import { Page, Grid, GalleryCard, Form, Button, Container, Text, Card} from "tabler-react";
 import SiteWrapper from "./SiteWrapper.react";
 import House from "./Rest/House"
+import User from "./Rest/User"
 import getDataForm from "./Rest/getDataForm"
 
 import DatePicker from "react-datepicker";
@@ -32,13 +33,37 @@ export default class Property extends Component {
                 userRating: 0.0,
                 ownerName: ""
             },
-            reviews:[]
+            reviews:[],
+            feedback_askrent: "Pedido feito com sucesso",
+            pending: false
         }
 
+        this.user_obj = new User()
         this.house_obj = new House()
+
+        this.ask_rent = this.ask_rent.bind(this)
+        this.renderFeedbackRent = this.renderFeedbackRent.bind(this)
         this.get_house()
-    
     }
+
+
+    async ask_rent(event){
+        event.preventDefault();
+        let data = getDataForm(event.target);
+        data["userID"] = "1" // later use cache for id user
+        data["houseID"] = localStorage.getItem('house_id')
+
+        console.log(data)
+        let response = await this.user_obj.askRent_house(data)
+        let status = response[0]
+        let check_pending = response[1]
+
+        this.setState({
+            pending : check_pending['pending']
+        })
+    }
+        
+    
 
     async get_house(){
     let response = await this.house_obj.get_specificHouse()
@@ -59,13 +84,14 @@ export default class Property extends Component {
           [name]: date
         })
     
-      };
+      }
 
-    async ask_rent(event){
-        event.preventDefault();
-        let data = getDataForm(event.target);
-        console.log(data)
-    }
+    renderFeedbackRent() {
+        return (
+        <span style={{color: "green", marginLeft:"10px"}}>{this.state.feedback_askrent}</span>
+        )
+      }
+    
 
     render() {
         const images = [
@@ -141,7 +167,7 @@ export default class Property extends Component {
                     )
                 })}
             </div>
-            <form onSubmit={this.ask_rent}>
+            <Form onSubmit={this.ask_rent}>
                 <div class="row" style={{marginTop:"50px"}}>
                 <div class="col-lg-2">
                     <GalleryCard.Details
@@ -154,7 +180,7 @@ export default class Property extends Component {
                     <div class="col-lg-3">
                         <p>Data de Início:</p>
                         <DatePicker
-                          name="rentStart"
+                          name="startDate"
                            selected={this.state.startDate}
                            dateFormat="dd-MM-yyyy"
                            onChange={(date) => this.handleChange(date, "startDate")}
@@ -163,7 +189,7 @@ export default class Property extends Component {
                     <div class="col-lg-3">
                         <p>Data de Fim:</p>
                         <DatePicker
-                          name="rentEnd"
+                          name="endDate"
                           selected={this.state.endDate}
                           dateFormat="dd-MM-yyyy"
                           min={this.state.startDate}
@@ -172,11 +198,12 @@ export default class Property extends Component {
                     </div>
                     <div class="col-lg-4">
                         <h3 style={{fontSize:"20px"}}><b style={{fontSize:"40px"}}>{this.state.house.pricePerNight}€</b>/por noite</h3>
-                        <button type="button" class="btn btn-primary" style={{size:"lg"}} >Alugar</button>
+                        <Button type="submit" color="primary">Alugar</Button>
+                        {this.state.pending === true && this.renderFeedbackRent()}
                     </div>
                
                 </div>
-            </form>
+            </Form>
 
                     
                 </Container>

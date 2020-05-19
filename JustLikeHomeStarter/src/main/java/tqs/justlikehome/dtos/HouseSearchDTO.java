@@ -4,6 +4,7 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 
 public class HouseSearchDTO {
+    private long houseId;
     private String city;
     private String description;
     private String houseName;
@@ -12,10 +13,12 @@ public class HouseSearchDTO {
     private int numberOfBeds;
     private int maxNumberOfUsers;
     private double rating;
+    private double userRating;
     private long userId;
     private String ownerName;
 
     public HouseSearchDTO(House house, User owner,double rating) {
+        this.houseId=house.getId();
         this.city = house.getCity();
         this.description = house.getDescription();
         this.kmFromCityCenter = house.getKmFromCityCenter();
@@ -26,6 +29,15 @@ public class HouseSearchDTO {
         this.userId=owner.getId();
         this.rating=rating;
         this.ownerName=owner.getUsername();
+        this.houseName=house.getHouseName();
+    }
+
+    public double getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(double userRating) {
+        this.userRating = userRating;
     }
 
     public String getCity() {
@@ -36,10 +48,6 @@ public class HouseSearchDTO {
         return description;
     }
 
-    public String getHouseName() {
-        return houseName;
-    }
-
     public double getKmFromCityCenter() {
         return kmFromCityCenter;
     }
@@ -48,12 +56,20 @@ public class HouseSearchDTO {
         return pricePerNight;
     }
 
+    public long getHouseId() {
+        return houseId;
+    }
+
     public int getNumberOfBeds() {
         return numberOfBeds;
     }
 
     public int getMaxNumberOfUsers() {
         return maxNumberOfUsers;
+    }
+
+    public String getHouseName() {
+        return houseName;
     }
 
     public double getRating() {

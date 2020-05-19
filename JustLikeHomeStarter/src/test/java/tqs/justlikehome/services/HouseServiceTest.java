@@ -15,6 +15,8 @@ import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.HouseRepository;
+import tqs.justlikehome.repositories.UserRepository;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.*;
@@ -27,15 +29,19 @@ class HouseServiceTest {
     @Mock(lenient=true)
     private HouseRepository houseRepository;
 
+    @Mock(lenient=true)
+    private UserRepository userRepository;
+
     @InjectMocks
     private HouseService houseService;
 
     private House house;
+    private User user;
     private Set<Comodities> comodities = new HashSet<>();
 
     @BeforeEach
     void setup(){
-        User user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         Comodities comoditie = new Comodities("fun","Pool with jacuzzi");
         comodities.add(comoditie);
         house = new House(
@@ -53,6 +59,7 @@ class HouseServiceTest {
         Mockito.when(houseRepository.searchHouse(any(Integer.class),any(String.class),any(Date.class),any(Date.class))).thenReturn(houses);
         Mockito.when(houseRepository.findById(house.getId())).thenReturn(house);
         Mockito.when(houseRepository.getRating(house.getId())).thenReturn(4.5);
+        Mockito.when(userRepository.getUserAvgRating(user.getId())).thenReturn(10.0);
     }
 
     @Test
@@ -95,5 +102,26 @@ class HouseServiceTest {
         ComoditiesDTO comoditiesDTO = new ComoditiesDTO("Pool","Pool 20m by 30m",10);
         assertThrows(InvalidIdException.class,
                 ()->houseService.addComoditieToHouse(comoditiesDTO));
+    }
+
+    @Test
+    public void whenSearchSpecificExistingHouse_returnHouseSearchDTO(){
+        HouseSearchDTO houseSearchDTO = houseService.getSpecificHouse(house.getId());
+        assertThat(houseSearchDTO.getCity()).isEqualTo(house.getCity());
+        assertThat(houseSearchDTO.getOwnerName()).isEqualTo(user.getUsername());
+        assertThat(houseSearchDTO.getRating()).isEqualTo(4.5);
+        assertThat(houseSearchDTO.getUserRating()).isEqualTo(10.0);
+    }
+
+    @Test
+    public void whenSearchSpecificExistingHouse_withNoRatings_returnHouseSearchDTO(){
+        Mockito.when(houseRepository.getRating(house.getId())).thenReturn(null);
+        Mockito.when(userRepository.getUserAvgRating(user.getId())).thenReturn(null);
+
+        HouseSearchDTO houseSearchDTO = houseService.getSpecificHouse(house.getId());
+        assertThat(houseSearchDTO.getCity()).isEqualTo(house.getCity());
+        assertThat(houseSearchDTO.getOwnerName()).isEqualTo(user.getUsername());
+        assertThat(houseSearchDTO.getRating()).isEqualTo(0);
+        assertThat(houseSearchDTO.getUserRating()).isEqualTo(0);
     }
 }
