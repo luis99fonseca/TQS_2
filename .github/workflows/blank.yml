@@ -1,0 +1,9 @@
+on: [push,pull_request]
+name: Continuous Deployment
+jobs:
+  CD:
+    name: Continuous Deployment for React and Java Project
+    runs-on: TQS
+    steps:
+    - name: CD for TQS 
+      run: echo "Hello World!"
