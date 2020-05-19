@@ -3,7 +3,8 @@ name: Continuous Deployment
 jobs:
   CD:
     name: Continuous Deployment for React and Java Project
-    runs-on: TQS
+    runs-on: [self-hosted]
     steps:
     - name: CD for TQS 
-      run: echo "Hello World!"
+      run: |
+        echo "Hello World!"
