@@ -83,7 +83,7 @@ class ReviewServiceTest {
         Mockito.when(userRepository.findById(user1.getId())).thenReturn(user1);
         Mockito.when(userRepository.findById(user2.getId())).thenReturn(user2);
         Mockito.when(userRepository.findById(user3.getId())).thenReturn(user3);
-        Mockito.when(userRepository.findById((long) 3)).thenThrow(InvalidIdException.class);
+        Mockito.when(userRepository.findById((long) 3)).thenReturn(null);
 
         Mockito.when(userRepository.save(user1)).thenReturn(user1);
         Mockito.when(userRepository.save(user2)).thenReturn(user2);
@@ -109,7 +109,7 @@ class ReviewServiceTest {
         Mockito.when(houseReviewRepository.findByReviewerAndHouse(user2, house)).thenReturn(hr);
 
         Mockito.when(houseRepository.findById(house.getId())).thenReturn(house);
-        Mockito.when(houseRepository.findById((long)2)).thenThrow(InvalidIdException.class);
+        Mockito.when(houseRepository.findById((long)2)).thenReturn(null);
 
         house.setOwner(user1);
 
@@ -165,7 +165,7 @@ class ReviewServiceTest {
         Mockito.when(userReviewRepository.findByUserReviewingAndUserReviewed(user1, user2)).thenReturn(ur);
 
         assertThrows(NoPermitionException.class,
-                ()->reviewService.addReview(new HouseReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp")));
+                ()->reviewService.addReview(new UserReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp")));
     }
 
     @Test
