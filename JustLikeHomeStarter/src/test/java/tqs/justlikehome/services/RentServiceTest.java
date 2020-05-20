@@ -108,11 +108,27 @@ class RentServiceTest {
     }
 
     @Test
+    void whenGivenACorrectRentThenReturnRentDenyed(){
+        Map<String,Long> map= new HashMap<>();
+        map.put("rentID",(long) 0);
+        Rent rent = rentService.denyRent(map);
+        assertThat(rent.getPending()).isEqualTo(false);
+    }
+
+    @Test
     void whenGivenAIncorrectRentThenReturnInvalidIDException(){
         Map<String,Long> map= new HashMap<>();
         map.put("rentID",(long) 50);
         assertThrows(InvalidIdException.class,
                 ()->rentService.acceptRent(map));
+    }
+
+    @Test
+    void whenGivenAIncorrectRentDenyThenReturnInvalidIDException(){
+        Map<String,Long> map= new HashMap<>();
+        map.put("rentID",(long) 50);
+        assertThrows(InvalidIdException.class,
+                ()->rentService.denyRent(map));
     }
 
     @Test
