@@ -55,6 +55,7 @@ public class House {
         this.maxNumberOfUsers=house.getMaxNumberOfUsers();
     }
 
+
     public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,String houseName) {
         this.city = city;
         this.description = description;
@@ -123,5 +124,16 @@ public class House {
 
     public User getOwner() {
         return owner;
+    }
+
+    public void updateHouse(HouseDTO house){
+        this.city=house.getCity();
+        this.houseName=house.getHouseName();
+        this.description=house.getDescription();
+        this.kmFromCityCenter=house.getKmFromCityCenter();
+        this.pricePerNight=house.getPricePerNight();
+        this.houseName=house.getHouseName();
+        this.numberOfBeds=house.getNumberOfBeds();
+        this.maxNumberOfUsers=house.getMaxNumberOfUsers();
     }
 }

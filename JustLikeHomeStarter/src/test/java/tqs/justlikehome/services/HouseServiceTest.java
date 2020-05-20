@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
@@ -102,6 +103,27 @@ class HouseServiceTest {
         ComoditiesDTO comoditiesDTO = new ComoditiesDTO("Pool","Pool 20m by 30m",10);
         assertThrows(InvalidIdException.class,
                 ()->houseService.addComoditieToHouse(comoditiesDTO));
+    }
+
+    @Test
+    void updateWithRightID(){
+        house = Mockito.spy(house);
+        Mockito.when(house.getId()).thenReturn((long) 0);
+        HouseDTO houseDTO = new HouseDTO("Aveiro", "desc", 3.0, 75, 2, 5,0,"casa das conchas");
+        houseDTO.setHouseId(house.getId());
+        House testHouse = houseService.updateHouse(houseDTO);
+        assertEquals(testHouse.getCity(),"Aveiro");
+        assertEquals(testHouse.getDescription(),"desc");
+        assertEquals(testHouse.getPricePerNight(),75);
+        assertEquals(testHouse.getNumberOfBeds(),2);
+    }
+
+    @Test
+    void updateWithWrongID(){
+        HouseDTO houseDTO = new HouseDTO("Aveiro", "desc", 3.0, 75, 2, 5, 0, "casa das conchas");
+        houseDTO.setHouseId((long) 50);
+        assertThrows(InvalidIdException.class,
+        ()->houseService.updateHouse(houseDTO));
     }
 
     @Test
