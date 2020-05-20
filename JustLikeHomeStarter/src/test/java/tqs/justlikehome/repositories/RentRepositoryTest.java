@@ -79,7 +79,7 @@ class RentRepositoryTest {
     @Test
     void searchPendingRentsWhenThereArePendingRents(){
         // two pending rent01 and rent02
-        List<Rent> rent = rentRepository.findByIdAndPending(user.getId(),true);
+        List<Rent> rent = rentRepository.findByIdAndPending(owner.getId(),true);
         assertThat(rent.size()).isEqualTo(2);
     }
 
@@ -88,7 +88,7 @@ class RentRepositoryTest {
         // one pending then get the other
         rent01.setPending(false);
         testEntityManager.persistAndFlush(rent01);
-        List<Rent> rent = rentRepository.findByIdAndPending(user.getId(),true);
+        List<Rent> rent = rentRepository.findByIdAndPending(owner.getId(),true);
         assertThat(rent.size()).isEqualTo(1);
         assertThat(rent.get(0)).isEqualToComparingFieldByField(rent02);
     }
@@ -98,7 +98,7 @@ class RentRepositoryTest {
         // one pending then get the other
         rent01.setPending(false);
         testEntityManager.persistAndFlush(rent01);
-        List<Rent> rent = rentRepository.findByIdAndPending(user.getId(),false);
+        List<Rent> rent = rentRepository.findByIdAndPending(owner.getId(),false);
         assertThat(rent.size()).isEqualTo(1);
         assertThat(rent.get(0)).isEqualToComparingFieldByField(rent01);
     }

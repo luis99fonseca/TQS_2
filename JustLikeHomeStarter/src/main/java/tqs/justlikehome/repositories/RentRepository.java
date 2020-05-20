@@ -12,9 +12,9 @@ import java.util.List;
 public interface RentRepository extends JpaRepository<Rent,Integer>{
     Rent findById(long rent);
 
-    @Query("SELECT r FROM Rent r LEFT JOIN r.user u " +
-            "WHERE u.id=:userID and r.pending=:pending")
-    List<Rent> findByIdAndPending(@Param("userID") long userID,
+    @Query("SELECT r FROM Rent r LEFT JOIN r.user u LEFT JOIN r.house h " +
+            "WHERE r.pending=:pending and h.owner.id =:ownerID")
+    List<Rent> findByIdAndPending(@Param("ownerID") long ownerID,
                                   @Param("pending") boolean pending);
 
     @Query("SELECT r FROM Rent r LEFT JOIN r.user u LEFT JOIN r.house h " +
