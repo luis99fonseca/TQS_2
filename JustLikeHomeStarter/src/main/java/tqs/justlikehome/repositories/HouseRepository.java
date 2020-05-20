@@ -12,14 +12,18 @@ import java.util.List;
 
 @Repository
 public interface HouseRepository extends JpaRepository<House,Long> {
-    @Query("SELECT distinct(h) FROM House h LEFT JOIN h.timesRented tr "+
+    @Query("SELECT distinct(h) from House h " +
+            "WHERE h.maxNumberOfUsers >= :numberGuests and lower(h.city)=lower(:city) and h.id not in " +
+            "(" +
+            "SELECT h FROM Rent tr LEFT JOIN tr.house h "+
             "WHERE h.maxNumberOfUsers >= :numberGuests and lower(h.city)=lower(:city) and " +
-            "(((tr.rentStart not between :begin and :end) or tr.rentStart is null) and ((tr.rentEnd not between :begin and :end) or tr.rentEnd is null)) or "+
-            "(((tr.rentStart between :begin and :end and tr.pending=true) or tr.rentStart is null) and ((tr.rentEnd between :begin and :end and tr.pending=true) or tr.rentEnd is null))")
+            "(tr.pending=false and ((:begin  between tr.rentStart and :end) or (:end between :begin and tr.rentEnd)))" +
+            ")")
     List<House> searchHouse(@Param("numberGuests") Integer numberGuests,
                             @Param("city") String city,
                             @Param("begin") Date begin,
                             @Param("end") Date end);
+
     House findById(long houseId);
 
     // FOR SOME REASON THIS DOESNT WORK WITH THE QUERY ABOVE
