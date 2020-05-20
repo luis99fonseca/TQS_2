@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.JustlikehomeApplication;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.entities.House;
@@ -102,5 +103,11 @@ class HouseControllerIT {
                 .andExpect(jsonPath("$.userRating").value(0))
                 .andExpect(jsonPath("$.rating").value(0))
                 .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
+    }
+
+    @Test
+    public void whenGetInvalidSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
+
+        mockMvc.perform(get("/specificHouse/houseId="+(-1))).andExpect(status().is4xxClientError());
     }
 }

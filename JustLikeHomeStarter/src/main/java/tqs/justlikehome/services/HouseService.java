@@ -2,6 +2,7 @@ package tqs.justlikehome.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
@@ -62,6 +63,9 @@ public class HouseService {
 
     public HouseSearchDTO getSpecificHouse(long houseID){
         House house = houseRepository.findById(houseID);
+        if (house == null){
+            throw new InvalidIdException();
+        }
         User owner = house.getOwner();
         Double ratingHouse = houseRepository.getRating(houseID);
         HouseSearchDTO houseSearch = new HouseSearchDTO(house,owner,ratingHouse==null?0:ratingHouse);
@@ -70,4 +74,8 @@ public class HouseService {
         return houseSearch;
     }
 
+    public House addBookmark(BookMarkDTO bookmark) {
+        System.out.println("ola" + bookmark);
+        return null;
+    }
 }

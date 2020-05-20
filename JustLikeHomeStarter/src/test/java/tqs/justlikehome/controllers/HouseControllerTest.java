@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
@@ -20,6 +22,7 @@ import tqs.justlikehome.services.HouseService;
 import tqs.justlikehome.utils.ObjectJsonHelper;
 
 import java.util.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -94,25 +97,34 @@ class HouseControllerTest {
 
     @Test
     void whenGetSpecificHouse_thenReturnHouseSearchDTO() throws Exception {
-        HouseSearchDTO houseSearchDTO = new HouseSearchDTO(house, new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20)), 5);
+        HouseSearchDTO houseSearchDTO = new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5);
         houseSearchDTO.setUserRating(10);
         given(houseService.getSpecificHouse(house.getId())).willReturn(houseSearchDTO);
 
-        mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
-        .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
+        mockMvc.perform(get("/specificHouse/houseId=" + house.getId())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
                 .andExpect(jsonPath("$.userRating").value(10))
                 .andExpect(jsonPath("$.rating").value(5))
                 .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
     }
 
-    // TODO: something for then the houseId doesn't exist, which @mota didnt verify yet; as can't verify those ternary operator conditions here
+    @Test
+    public void whenGetInvalidSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
 
+        given(houseService.getSpecificHouse(-1)).willThrow(InvalidIdException.class);
 
-    private String objectToJson(Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException();
-        }
+        mockMvc.perform(get("/specificHouse/houseId="+(-1))).andExpect(status().is4xxClientError());
     }
+    @Test
+    void whenAddBookmark_ifValid_returnMarkedHouse() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(0, 0);
+
+        given(houseService.addBookmark(any(BookMarkDTO.class))).willReturn(house);
+
+        mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(0));
+    }
+
 }
