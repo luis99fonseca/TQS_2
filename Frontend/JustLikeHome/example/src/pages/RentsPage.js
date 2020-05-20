@@ -21,12 +21,11 @@ export default class RentsPage extends Component {
 
           this.get_rentsRequests = this.get_rentsRequests.bind(this)
           this.get_onGoingRents = this.get_onGoingRents.bind(this)
-
+          this.go_profileUser = this.go_profileUser.bind(this)
           this.get_rentsRequests()
           
 
           this.accept_rents = this.accept_rents.bind(this)
-      //    this.get_onGoingRequests()
     }
 
 
@@ -69,7 +68,13 @@ export default class RentsPage extends Component {
         
         this.get_rentsRequests()
     }
+
    
+    go_profileUser(id){
+        localStorage.setItem('client_id', id)
+        window.location.href = '/user/profile'
+        return true;
+    }
 
     render(){
         return(
@@ -100,7 +105,6 @@ export default class RentsPage extends Component {
                                             <span style={{padding:"5px"}}></span>
                                             <Button color="danger" icon="trash"  />
                                         </Table.Col>
-
                                     </Table.Row>
                                 )
                                 )}
@@ -108,14 +112,16 @@ export default class RentsPage extends Component {
                                 </Table>
                             </Card>
 
-                            <Card title="Em progresso">
+                            <Card title="Em progresso/Concluídos">
                                 <Table className="card-table table-vcenter">
                                     <Table.Body>
                                     {this.state.onGoing_rents.map((rent) => (
                                     <Table.Row>
                                         <Table.Col>
-                                            <span>{rent['user'].firstName} {rent['user'].lastName}</span> <div></div>
-                                            <span>{rent['user'].username}</span>
+                                            <span onClick={() => this.go_profileUser(rent['user'].id)}>
+                                                {rent['user'].firstName} {rent['user'].lastName}
+                                            </span> <div></div>
+                                            <span onClick={() => this.go_profileUser(rent['user'].id)} >{rent['user'].username}</span>
                                         </Table.Col>
                                         <Table.Col className="text-right text-muted d-none d-md-table-cell text-nowrap">
                                             <Icon prefix="fe" name="arrow-right"  /> 
@@ -127,6 +133,7 @@ export default class RentsPage extends Component {
                                             <span> De {rent.rentStart} a {rent.rentEnd}</span>
                                         </Table.Col>
                                     </Table.Row>
+                                
                                 )
                                 )}
                                     </Table.Body>

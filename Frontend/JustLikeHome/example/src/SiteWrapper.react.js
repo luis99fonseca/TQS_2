@@ -76,7 +76,7 @@ const navBarItems: Array<navItem> = [
 ];
 
 const accountDropdownProps = {
-  avatarURL: "./demo/faces/female/25.jpg",
+  avatarURL: "/demo/faces/female/25.jpg",
   name: "André Baião",
   description: "Administrador",
   options: [
