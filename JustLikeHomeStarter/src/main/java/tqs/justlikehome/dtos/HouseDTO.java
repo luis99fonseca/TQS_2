@@ -1,5 +1,9 @@
 package tqs.justlikehome.dtos;
 
+import tqs.justlikehome.entities.Comodities;
+
+import java.util.Set;
+
 public class HouseDTO {
     private String city;
     private String description;
@@ -9,8 +13,9 @@ public class HouseDTO {
     private int maxNumberOfUsers;
     private long userId;
     private String houseName;
+    private Set<Comodities> comodities;
 
-    public HouseDTO(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,long userId,String houseName) {
+    public HouseDTO(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,long userId,String houseName, Set<Comodities> comodities) {
         this.city = city;
         this.description = description;
         this.kmFromCityCenter = kmFromCityCenter;
@@ -19,6 +24,7 @@ public class HouseDTO {
         this.maxNumberOfUsers = maxNumberOfUsers;
         this.userId=userId;
         this.houseName=houseName;
+        this.comodities = comodities;
     }
 
     public String getHouseName() {
@@ -55,5 +61,9 @@ public class HouseDTO {
 
     public void setUserId(long id){
         this.userId=id;
+    }
+
+    public Set<Comodities> getComodities() {
+        return comodities;
     }
 }

@@ -53,6 +53,7 @@ public class House {
         this.houseName=house.getHouseName();
         this.numberOfBeds=house.getNumberOfBeds();
         this.maxNumberOfUsers=house.getMaxNumberOfUsers();
+        this.comodities = house.getComodities();
     }
 
     public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,String houseName) {
@@ -63,6 +64,17 @@ public class House {
         this.numberOfBeds = numberOfBeds;
         this.maxNumberOfUsers = maxNumberOfUsers;
         this.houseName=houseName;
+    }
+
+    public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,String houseName, Set<Comodities> comodities) {
+        this.city = city;
+        this.description = description;
+        this.kmFromCityCenter = kmFromCityCenter;
+        this.pricePerNight = pricePerNight;
+        this.numberOfBeds = numberOfBeds;
+        this.maxNumberOfUsers = maxNumberOfUsers;
+        this.houseName=houseName;
+        this.comodities = comodities;
     }
 
     public void addComoditieToHouse(Comodities comodities) {
