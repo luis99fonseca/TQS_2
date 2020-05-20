@@ -12,6 +12,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tqs.justlikehome.JustlikehomeApplication;
@@ -118,13 +121,45 @@ class RentControllerIT {
                 .andExpect(jsonPath("$.house.numberOfBeds",is(2)))
                 .andExpect(jsonPath("$.user.username",is("Fonsequini")))
                 .andExpect(jsonPath("$.pending",is(false)));
+        
+        assertNotNull(rentRepository.findById(idRent));
     }
+
+    @Test
+    void denyRentWithValidValues() throws Exception{
+        Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
+        Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
+        Rent rent = new Rent(house,user,start,end);
+        user.addPurchasedRent(rent);
+        user = userRepository.save(user);
+        long idRent = ((Rent)user.getPurchasedRents().toArray()[0]).getId();
+        Map<String,Long> rentID = new HashMap<>();
+        rentID.put("rentID",idRent);
+        mvc.perform(put("/denyRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
+                .andExpect(jsonPath("$.house.pricePerNight",is(50.0)))
+                .andExpect(jsonPath("$.house.numberOfBeds",is(2)))
+                .andExpect(jsonPath("$.user.username",is("Fonsequini")))
+                .andExpect(jsonPath("$.pending",is(false)));
+        
+        assertNull(rentRepository.findById(idRent));
+    }
+
 
     @Test
     void acceptRentWithInvalidValuesThenClientError() throws Exception{
         Map<String,Long> rentID = new HashMap<>();
         rentID.put("rentID",(long) 70);
         mvc.perform(put("/acceptRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void denyRentWithInvalidValuesThenClientError() throws Exception{
+        Map<String,Long> rentID = new HashMap<>();
+        rentID.put("rentID",(long) 70);
+        mvc.perform(put("/denyRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentID)))
                 .andExpect(status().is4xxClientError());
     }
 

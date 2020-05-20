@@ -39,21 +39,17 @@ public class ReviewService {
     public RentRepository rentRepository;
 
     public HouseReviews addReview(HouseReviewDTO houseReviewDTO){
-        House house;
-        User user;
-        try{
-            house = houseRepository.findById(houseReviewDTO.getHouseId());
-            user = userRepository.findById(houseReviewDTO.getReviewerId());
-        }catch(Exception e){
+        House house= houseRepository.findById(houseReviewDTO.getHouseId());
+        User user= userRepository.findById(houseReviewDTO.getReviewerId());
+        if (house==null || user ==null)
             throw new InvalidIdException();
-        }
+
         List<Rent> rent = rentRepository.findByUserAndHouse(houseReviewDTO.getReviewerId(), houseReviewDTO.getHouseId());   //user was in house
         List<HouseReviews> housereviews = houseReviewRepository.findByReviewerAndHouse(user, house);
 
         if (housereviews.size() >= rent.size()){
             throw new NoPermitionException();
         }
-
 
         HouseReviews houseReview = new HouseReviews(houseReviewDTO);
         user.addMyReview(houseReview);
@@ -69,13 +65,11 @@ public class ReviewService {
 
     public UserReviews addReview(UserReviewDTO userReviewDTO){
 
-        User reviwedUser;
-        User reviwerUser;
+        User reviwedUser= userRepository.findById(userReviewDTO.getReviewedId());
+        User reviwerUser= userRepository.findById(userReviewDTO.getReviewerId());
 
-        try{
-            reviwedUser = userRepository.findById(userReviewDTO.getReviewedId());
-            reviwerUser = userRepository.findById(userReviewDTO.getReviewerId());
-        }catch(Exception e){
+
+        if (reviwedUser==null || reviwerUser == null){
             throw new InvalidIdException();
         }
 

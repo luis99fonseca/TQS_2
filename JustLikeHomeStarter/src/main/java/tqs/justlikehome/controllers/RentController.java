@@ -28,6 +28,12 @@ public class RentController {
         return rentService.acceptRent(rentID);
     }
 
+    @PutMapping(value="/denyRent")
+    @ResponseBody
+    public Rent denyRent(@RequestBody Map<String, Long> rentID){
+        return rentService.denyRent(rentID);
+    }
+
     @GetMapping(value="/pendingRents/user={userID}")
     @ResponseBody
     public List<Rent> pendingRents(@PathVariable long userID){

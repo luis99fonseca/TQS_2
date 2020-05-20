@@ -66,6 +66,14 @@ class RentRepositoryTest {
     }
 
     @Test
+    void deleteRent(){
+        rentRepository.delete(rent01);
+        Rent rent = rentRepository.findById(rent01.getId());
+        assertNull(rent);
+
+    }
+
+    @Test
     void searchPendingRentsWhenThereAreZeroPending(){
         // No pending rents then expect empty list
         rent01.setPending(false);
@@ -105,6 +113,9 @@ class RentRepositoryTest {
 
     @Test
     void searchByUserAndHouse(){
+        rent01.setPending(false);
+        rent02.setPending(false);
+
         List<Rent> rents = rentRepository.findByUserAndHouse(user.getId(), house.getId());
         assertEquals(2,rents.size());
 
@@ -130,6 +141,9 @@ class RentRepositoryTest {
         
     @Test
     void searchByUserAndOwner(){
+        rent01.setPending(false);
+        rent02.setPending(false);
+
         List<Rent> rents = rentRepository.findByUserAndOwner(user.getId(), owner.getId());
         assertEquals(2, rents.size());
 

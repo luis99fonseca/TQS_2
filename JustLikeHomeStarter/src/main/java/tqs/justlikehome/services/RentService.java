@@ -55,6 +55,17 @@ public class RentService {
         }
     }
 
+    public Rent denyRent(Map<String, Long> rentID){
+        try{
+            Rent rent = rentRepository.findById(rentID.get("rentID"));
+            rent.setPending(false);
+            rentRepository.delete(rent);
+            return rent;
+        }catch (NullPointerException e){
+            throw new InvalidIdException();
+        }
+    }
+
     public List<Rent> pendingRents(long userID){
         return rentRepository.findByIdAndPending(userID,true);
     }

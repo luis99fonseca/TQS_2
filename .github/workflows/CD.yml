@@ -1,0 +1,28 @@
+on: 
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+name: Continuous Deployment
+jobs:
+  CD:
+    name: Continuous Deployment for React and Java Project
+    runs-on: [self-hosted]
+    steps:
+    - name: Docker clean
+      run: |
+        sudo docker ps -aq;
+        sudo docker kill $(docker ps -aq) || true;
+        sudo docker rm $(docker ps -aq) || true;
+        sudo docker volume ls -qf dangling=true;
+        sudo docker volume rm $(docker volume ls -qf dangling=true) || true;
+        sudo docker rmi $(docker image ls) || true;
+    - name: Server pull repository
+      run: |
+        git -C ~/TQS_2/ pull;
+    - name: CD for backend  
+      run: |
+        sudo docker build --tag "backend" ~/TQS_2/JustLikeHomeStarter;
+        sudo docker run -p 8080:8080 -d backend;

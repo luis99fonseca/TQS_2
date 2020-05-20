@@ -115,12 +115,36 @@ class RentControllerTest {
                 .andExpect(jsonPath("$.pending",is(false)));
     }
 
+
+    @Test
+    void denyRentWithValidID() throws Exception{
+        Map<String,Long> rentId = new HashMap<>();
+        rentId.put("rentID",(long) 0);
+        rent.setPending(false);
+        given(rentService.denyRent(rentId)).willReturn(rent);
+        mockMvc.perform(put("/denyRent").content(objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$.user.username",is("Fonsequini")))
+                .andExpect(jsonPath("$.user.firstName",is("Luis")))
+                .andExpect(jsonPath("$.pending",is(false)));
+    }
+
+
     @Test
     void acceptRentWithInvalidID() throws Exception{
         Map<String,Long> rentId = new HashMap<>();
         rentId.put("rentID",(long) 200);
         given(rentService.acceptRent(rentId)).willThrow(InvalidIdException.class);
         mockMvc.perform(put("/acceptRent").content(objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void denyRentWithInvalidID() throws Exception{
+        Map<String,Long> rentId = new HashMap<>();
+        rentId.put("rentID",(long) 200);
+        given(rentService.denyRent(rentId)).willThrow(InvalidIdException.class);
+        mockMvc.perform(put("/denyRent").content(objectToJson(rentId)).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is4xxClientError());
     }
 
