@@ -105,6 +105,12 @@ class HouseControllerIT {
                 .andExpect(jsonPath("$.userRating").value(0))
                 .andExpect(jsonPath("$.rating").value(0))
                 .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
+
+        mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
+                .andExpect(jsonPath("$.userRating").value(0))
+                .andExpect(jsonPath("$.rating").value(0))
+                .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
     }
 
     @Test

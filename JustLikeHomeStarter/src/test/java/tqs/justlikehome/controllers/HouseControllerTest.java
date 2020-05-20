@@ -137,7 +137,6 @@ class HouseControllerTest {
 
     // TODO: something for then the houseId doesn't exist, which @mota didnt verify yet; as can't verify those ternary operator conditions here
 
-
     private String objectToJson(Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
