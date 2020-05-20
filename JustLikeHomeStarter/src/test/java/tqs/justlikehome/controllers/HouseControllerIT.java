@@ -98,7 +98,7 @@ class HouseControllerIT {
     }
 
     @Test
-    public void whenGetSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
+    void whenGetSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
 
         mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
@@ -124,7 +124,7 @@ class HouseControllerIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.houseName").value("Casa de Tabua"));
 
-        assertEquals(houseRepository.findById(house.getId()).getHouseName(), "Casa de Tabua");
+        assertEquals("Casa de Tabua",houseRepository.findById(house.getId()).getHouseName());
 
     }
 
