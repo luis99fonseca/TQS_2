@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.JustlikehomeApplication;
+import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
@@ -16,6 +17,9 @@ import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -109,5 +113,27 @@ class HouseControllerIT {
     public void whenGetInvalidSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
 
         mockMvc.perform(get("/specificHouse/houseId="+(-1))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void whenAddBookmark_ifValid_returnMarkedHouse() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(user.getId(), house.getId());
+
+        mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.houseId").value(house.getId()))
+        .andExpect(jsonPath("$.userId").value(user.getId()));
+
+        //TODO: check this, cause now there ain't a way to verify if the add was actually done;
+    }
+
+    @Test
+    void whenAddBookmark_ifInvalid_thenThrowException() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(-1, -1);
+
+        mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().is4xxClientError());
     }
 }

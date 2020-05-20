@@ -74,8 +74,14 @@ public class HouseService {
         return houseSearch;
     }
 
-    public House addBookmark(BookMarkDTO bookmark) {
-        System.out.println("ola" + bookmark);
-        return null;
+    public BookMarkDTO addBookmark(BookMarkDTO bookmark) {
+        House house = houseRepository.findById(bookmark.getHouseId());
+        User user = userRepository.findById(bookmark.getUserId());
+        if (house == null || user == null){
+            throw new InvalidIdException();
+        }
+        user.addBookmarkedHouse(house);
+        house.addBookmarkedBy(user);
+        return bookmark;
     }
 }

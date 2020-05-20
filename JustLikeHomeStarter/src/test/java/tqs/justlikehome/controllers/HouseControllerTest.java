@@ -119,12 +119,25 @@ class HouseControllerTest {
     void whenAddBookmark_ifValid_returnMarkedHouse() throws Exception {
         BookMarkDTO bookMarkDTO = new BookMarkDTO(0, 0);
 
-        given(houseService.addBookmark(any(BookMarkDTO.class))).willReturn(house);
+        given(houseService.addBookmark(any(BookMarkDTO.class))).willReturn(bookMarkDTO);
 
         mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(bookMarkDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(0));
+                .andExpect(jsonPath("$.houseId").value(0))
+                .andExpect(jsonPath("$.userId").value(0));
+
+    }
+
+    @Test
+    void whenAddBookmark_ifInvalid_thenThrowException() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(0, 0);
+
+        given(houseService.addBookmark(any(BookMarkDTO.class))).willThrow(InvalidIdException.class);
+
+        mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().is4xxClientError());
     }
 
 }
