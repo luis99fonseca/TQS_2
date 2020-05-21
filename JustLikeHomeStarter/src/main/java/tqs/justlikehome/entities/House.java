@@ -35,10 +35,16 @@ public class House {
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
     @ManyToMany(mappedBy = "bookmarkedHouses")
+    @JsonIgnore
     private Set<User> bookmarkedBy = new HashSet<>();
 
     @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
     private Set<Comodities> comodities = new HashSet<>();
+
+    // TODO: for debugging, remove later
+    public Set<User> getBookmarkedBy() {
+        return bookmarkedBy;
+    }
 
     public House(){
 
@@ -53,6 +59,7 @@ public class House {
         this.houseName=house.getHouseName();
         this.numberOfBeds=house.getNumberOfBeds();
         this.maxNumberOfUsers=house.getMaxNumberOfUsers();
+        this.comodities = house.getComodities();
     }
 
 
@@ -66,12 +73,31 @@ public class House {
         this.houseName=houseName;
     }
 
+    public House(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,String houseName, Set<Comodities> comodities) {
+        this.city = city;
+        this.description = description;
+        this.kmFromCityCenter = kmFromCityCenter;
+        this.pricePerNight = pricePerNight;
+        this.numberOfBeds = numberOfBeds;
+        this.maxNumberOfUsers = maxNumberOfUsers;
+        this.houseName=houseName;
+        this.comodities = comodities;
+    }
+
     public void addComoditieToHouse(Comodities comodities) {
         this.comodities.add(comodities);
     }
 
+    public Set<Rent> getTimesRented() {
+        return timesRented;
+    }
+
     public void addReview(HouseReviews houseReview){
         this.houseReviews.add(houseReview);
+    }
+
+    public void addBookmarkedBy(User user) {
+        this.bookmarkedBy.add(user);
     }
 
     public Set<HouseReviews> getHouseReviews() {

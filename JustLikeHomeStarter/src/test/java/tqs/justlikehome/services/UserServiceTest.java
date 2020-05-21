@@ -9,12 +9,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
+import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.repositories.UserRepository;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+
+import java.util.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,7 +43,8 @@ class UserServiceTest {
                 2,
                 5,
                 0, //We are testing so default value is always 0
-                "house2"
+                "house2",
+                Collections.emptySet()
         );
         Mockito.when(userRepository.findById((long) 0)).thenReturn(user);
         Mockito.when(userRepository.findById((long) 1)).thenThrow(InvalidDateInputException.class);
@@ -52,6 +55,20 @@ class UserServiceTest {
     void addHouseToExistingUser(){
         House house = userService.addHouseToUser(houseDTO);
         assertThat(house.getOwner()).isEqualTo(user);
+        assertThat(house.getComodities()).isEmpty();
+    }
+
+    @Test
+    void addHouseToExistingUser_withSomeComodities(){
+        Set<Comodities> tempComodities = new HashSet<>();
+        tempComodities.add(new Comodities("bed", "very large"));
+        tempComodities.add(new Comodities("pool", "very wet"));
+
+        HouseDTO houseDTO2 = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, user.getId(), "casa do bairro", tempComodities);
+
+        House house = userService.addHouseToUser(houseDTO2);
+        assertThat(house.getOwner()).isEqualTo(user);
+        assertThat(house.getComodities()).hasSize(2);
     }
 
     @Test

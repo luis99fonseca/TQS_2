@@ -7,7 +7,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.JustlikehomeApplication;
+import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.entities.House;
@@ -15,8 +17,11 @@ import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -114,12 +119,63 @@ class HouseControllerIT {
     }
 
     @Test
+    public void whenGetInvalidSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
+
+        mockMvc.perform(get("/specificHouse/houseId="+(-1))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void whenAddBookmark_ifValid_returnBookmark() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(user.getId(), house.getId());
+
+        mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.houseId").value(house.getId()))
+        .andExpect(jsonPath("$.userId").value(user.getId()));
+
+        //TODO: check this, cause now there ain't a way to verify if the add was actually done;
+    }
+
+    @Test
+    void whenAddBookmark_ifInvalid_thenThrowException() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(-1, -1);
+
+        mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void whenDeleteBookmark_ifValid_returnBookmark() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(user.getId(), house.getId());
+
+        // adding a bookmark previously
+        mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/deleteBookmark/userId=" + user.getId() +"&houseId=" + house.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.houseId").value(house.getId()))
+                .andExpect(jsonPath("$.userId").value(user.getId()));
+
+        //TODO: check this, cause now there ain't a way to verify if the delete was actually done;
+    }
+
+    @Test
+    void whenDeleteBookmark_ifInvalid_thenThrowException() throws Exception {
+        mockMvc.perform(delete("/deleteBookmark/userId=" + (-1) + "&houseId=" + (-1)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void updateHouse() throws Exception {
 
-        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua");
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua", Collections.emptySet());
         housedto.setHouseId(house.getId());
 
-        mockMvc.perform(post("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
         .content(objectToJson(housedto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.houseName").value("Casa de Tabua"));
@@ -130,10 +186,10 @@ class HouseControllerIT {
 
     @Test
     void updateHouse_Invalid() throws Exception {
-        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua");
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua",Collections.emptySet());
         housedto.setHouseId((long)50);
 
-        mockMvc.perform(post("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(housedto)))
                 .andExpect(status().is4xxClientError());
     }

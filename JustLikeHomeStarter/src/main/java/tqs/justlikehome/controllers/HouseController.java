@@ -2,6 +2,7 @@ package tqs.justlikehome.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
@@ -35,7 +36,7 @@ public class HouseController {
         return houseService.addComoditieToHouse(comoditiesDTO);
     }
 
-    @PostMapping(value = "/updateHouse")
+    @PutMapping(value = "/updateHouse")
     @ResponseBody
     public House updateHouse(@RequestBody HouseDTO houseDTO){   //need to do HouseDTO.setHouseID()
         return houseService.updateHouse(houseDTO);
@@ -45,4 +46,17 @@ public class HouseController {
     public HouseSearchDTO getSpecificHouse(@PathVariable long houseId){
         return houseService.getSpecificHouse(houseId);
     }
+
+    // maybe change pa PUT as it is idempotent
+    @PostMapping(value = "/addBookmark")
+    @ResponseBody
+    public BookMarkDTO addBookmark(@RequestBody BookMarkDTO bookmark) {
+        return houseService.addBookmark(bookmark);
+    }
+
+    @DeleteMapping(value = "/deleteBookmark/userId={userId}&houseId={houseId}")
+    public BookMarkDTO deleteBookmark(@PathVariable long userId, @PathVariable long houseId) {
+        return houseService.deleteBookmark(userId, houseId);
+    }
+
 }
