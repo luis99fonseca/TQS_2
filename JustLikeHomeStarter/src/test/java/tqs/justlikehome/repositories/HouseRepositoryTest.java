@@ -9,6 +9,8 @@ import tqs.justlikehome.entities.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @DataJpaTest
@@ -27,6 +29,7 @@ class HouseRepositoryTest {
 
     @BeforeEach
     void setup(){
+        testEntityManager.clear();
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
         testEntityManager.persistAndFlush(user);
         Comodities comoditie = new Comodities("fun","Pool with jacuzzi");
@@ -54,7 +57,7 @@ class HouseRepositoryTest {
     void searchForHouseWithCorrectValuesAndNoPastRent(){
         Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.MARCH,1).toZonedDateTime().toInstant());
         Date toTime = Date.from(new GregorianCalendar(2010, Calendar.MARCH,3).toZonedDateTime().toInstant());
-        List<House> houses = houseRepository.searchHouse(5,"Aveiro",fromTime,toTime);
+        List<House> houses = houseRepository.searchHouse(4,"Aveiro",fromTime,toTime);
         assertThat(houses.get(0)).isEqualToComparingFieldByField(house);
         assertThat(houses.get(0).getOwner()).isEqualToComparingFieldByField(user);
     }
@@ -65,13 +68,15 @@ class HouseRepositoryTest {
         User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999, Calendar.MARCH,10));
         testEntityManager.persistAndFlush(userRenting);
         // Create rent
-        Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,26).toZonedDateTime().toInstant());
-        Date toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,28).toZonedDateTime().toInstant());
+        Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,25).toZonedDateTime().toInstant());
+        Date toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,27).toZonedDateTime().toInstant());
         Rent rent = new Rent(house,userRenting,fromTime,toTime);
+        house.addRent(rent);
         testEntityManager.persistAndFlush(rent);
         fromTime = Date.from(new GregorianCalendar(2010, Calendar.MARCH,1).toZonedDateTime().toInstant());
         toTime = Date.from(new GregorianCalendar(2010, Calendar.MARCH,3).toZonedDateTime().toInstant());
         List<House> houses = houseRepository.searchHouse(5,"Aveiro",fromTime,toTime);
+
         // Should return the same house because it still is available
         assertThat(houses.get(0)).isEqualToComparingFieldByField(house);
         assertThat(houses.get(0).getOwner()).isEqualToComparingFieldByField(user);
@@ -86,7 +91,9 @@ class HouseRepositoryTest {
         Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.JANUARY,28).toZonedDateTime().toInstant());
         Date toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,3).toZonedDateTime().toInstant());
         Rent rent = new Rent(house,userRenting,fromTime,toTime);
-        testEntityManager.persistAndFlush(rent);
+        rent.setPending(false);
+        house.addRent(rent);
+        testEntityManager.persistAndFlush(house);
         fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,1).toZonedDateTime().toInstant());
         toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,4).toZonedDateTime().toInstant());
         List<House> houses = houseRepository.searchHouse(3,"Aveiro",fromTime,toTime);
@@ -97,13 +104,15 @@ class HouseRepositoryTest {
     @Test
     void searchForHouseWithCorrectValuesWithOnGoingRentWithAnotherHouseAvailable(){
         // Create user to rent the house
-        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,2,10));
+        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,Calendar.FEBRUARY,10));
         testEntityManager.persistAndFlush(userRenting);
         // Create rent
-        Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.JANUARY,28).toZonedDateTime().toInstant());
-        Date toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,3).toZonedDateTime().toInstant());
+        Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.JANUARY,31).toZonedDateTime().toInstant());
+        Date toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,4).toZonedDateTime().toInstant());
         Rent rent = new Rent(house,userRenting,fromTime,toTime);
-        testEntityManager.persistAndFlush(rent);
+        rent.setPending(false);
+        house.addRent(rent);
+        testEntityManager.persistAndFlush(house);
         house2 = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro V2",
@@ -117,12 +126,47 @@ class HouseRepositoryTest {
         testEntityManager.persistAndFlush(house2);
         fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,1).toZonedDateTime().toInstant());
         toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,4).toZonedDateTime().toInstant());
-        List<House> houses = houseRepository.searchHouse(3,"Aveiro",fromTime,toTime);
+        List<House> allHouses = houseRepository.searchHouse(3,"Aveiro",fromTime,toTime);
         // Should return house2 because it still is available, since house1 is not available
-        assertThat(houses.size()).isEqualTo(1);
-        assertThat(houses.get(0)).isEqualToComparingFieldByField(house2);
-        assertThat(houses.get(0).getOwner()).isEqualToComparingFieldByField(user);
+        assertThat(allHouses.size()).isEqualTo(1);
+        assertThat(allHouses.get(0)).isEqualToComparingFieldByField(house2);
+        assertThat(allHouses.get(0).getOwner()).isEqualToComparingFieldByField(user);
+
     }
+
+    @Test
+    void searchForHouseWithCorrectValuesWithPendingRentWithAnotherHouseAvailable() {
+        // Create user to rent the house
+        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,Calendar.FEBRUARY,10));
+        testEntityManager.persistAndFlush(userRenting);
+        // Create rent
+        Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,2).toZonedDateTime().toInstant());
+        Date toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,4).toZonedDateTime().toInstant());
+        Rent rent = new Rent(house,userRenting,fromTime,toTime);
+        house.addRent(rent);
+        testEntityManager.persistAndFlush(house);
+        house2 = new House(
+                "Aveiro",
+                "Incredible House near Ria de Aveiro V2",
+                4.0,
+                75.0,
+                2,
+                3,
+                "house3"
+        );
+        house2.setOwner(user);
+        testEntityManager.persistAndFlush(house2);
+        fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,1).toZonedDateTime().toInstant());
+        toTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,4).toZonedDateTime().toInstant());
+        List<House> allHouses = houseRepository.searchHouse(3,"Aveiro",fromTime,toTime);
+        // Should return house2 because it still is available, since house1 is not available
+        assertThat(allHouses.size()).isEqualTo(2);
+        assertThat(allHouses.get(0)).isEqualToComparingFieldByField(house);
+        assertThat(allHouses.get(0).getOwner()).isEqualToComparingFieldByField(user);
+        assertThat(allHouses.get(1)).isEqualToComparingFieldByField(house2);
+        assertThat(allHouses.get(1).getOwner()).isEqualToComparingFieldByField(user);
+    }
+
 
     @Test
     void searchForHouseByValidID(){

@@ -9,13 +9,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
+import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.services.UserService;
 import tqs.justlikehome.utils.ObjectJsonHelper;
+
 import java.util.*;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -84,7 +87,7 @@ class UserControllerTest {
                 .content(objectToJson(userDTO)))
                 .andExpect(status().is4xxClientError());
     }
-  
+
     @Test
     void whenAddNewUserWithInvalidUsername_thenThrowException() throws Exception {
         UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "19-12-1999");
@@ -95,22 +98,41 @@ class UserControllerTest {
                 .content(objectToJson(userDTO)))
                 .andExpect(status().is4xxClientError());
     }
-  
+
     @Test
     void whenAddUserValidHouse_returnHouse() throws Exception {
-        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0, "casa do bairro");
+        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0, "casa do bairro", Collections.emptySet());
 
         given(userService.addHouseToUser(any(HouseDTO.class))).willReturn(new House(houseDTO));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(houseDTO)))
-        .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
-        .andExpect(jsonPath("$.description").value(houseDTO.getDescription()));
+                .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
+                .andExpect(jsonPath("$.description").value(houseDTO.getDescription()))
+                .andExpect(jsonPath("$.comodities").isEmpty());
+        ;
+    }
+
+    @Test
+    void whenAddUserValidHouse_withNoEmptyComodities_returnHouse() throws Exception {
+        Set<Comodities> tempComodities = new HashSet<>();
+        tempComodities.add(new Comodities("bed", "very large"));
+        tempComodities.add(new Comodities("pool", "very wet"));
+
+        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 1, "casa do bairro", tempComodities);
+
+        given(userService.addHouseToUser(any(HouseDTO.class))).willReturn(new House(houseDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(houseDTO)))
+                .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
+                .andExpect(jsonPath("$.description").value(houseDTO.getDescription()))
+                .andExpect(jsonPath("$.comodities", hasSize(2)));
     }
 
     @Test
     void whenAddUserHouseWithInvalidParam_thenThrowException() throws Exception {
-        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0, "casa do bairro");
+        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, 0, "casa do bairro", Collections.emptySet());
 
         given(userService.addHouseToUser(any(HouseDTO.class))).willThrow(InvalidIdException.class);
 

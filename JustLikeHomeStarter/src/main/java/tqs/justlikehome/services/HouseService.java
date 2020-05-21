@@ -22,6 +22,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -40,7 +42,8 @@ public class HouseService {
             Date startDate = Date.from(LocalDate.parse(start, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date endDate = Date.from(LocalDate.parse(end, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             List<HouseSearchDTO> houses = new ArrayList<>();
-            for(House house:houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate)){
+            List<House> housesWithPastRents = houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate);
+            for(House house:housesWithPastRents){
                 Double rating = houseRepository.getRating(house.getId());
                 houses.add(new HouseSearchDTO(house,house.getOwner(),rating==null?0:rating));
             }
