@@ -17,7 +17,7 @@ public interface HouseRepository extends JpaRepository<House,Long> {
             "(" +
             "SELECT h FROM Rent tr LEFT JOIN tr.house h "+
             "WHERE h.maxNumberOfUsers >= :numberGuests and lower(h.city)=lower(:city) and " +
-            "(tr.pending=false and ((:begin  between tr.rentStart and :end) or (:end between :begin and tr.rentEnd)))" +
+            "(tr.pending=false and ((:begin  between tr.rentStart and tr.rentEnd) or (:end between tr.rentStart and tr.rentEnd)))" +
             ")")
     List<House> searchHouse(@Param("numberGuests") Integer numberGuests,
                             @Param("city") String city,
