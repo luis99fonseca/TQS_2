@@ -83,6 +83,8 @@ export default class House extends Component{
     }
 
     async updateHouse(data){
+        console.log("minha data")
+        console.log(data)
         const response = await fetch(url + '/updateHouse', {
             method: 'POST',
             headers: {
