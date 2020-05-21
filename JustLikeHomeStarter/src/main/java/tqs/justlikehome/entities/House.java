@@ -70,6 +70,10 @@ public class House {
         this.comodities.add(comodities);
     }
 
+    public Set<Rent> getTimesRented() {
+        return timesRented;
+    }
+
     public void addReview(HouseReviews houseReview){
         this.houseReviews.add(houseReview);
     }

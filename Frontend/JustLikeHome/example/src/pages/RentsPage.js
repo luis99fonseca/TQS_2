@@ -20,14 +20,17 @@ export default class RentsPage extends Component {
           this.user_obj = new User()
 
           this.get_rentsRequests = this.get_rentsRequests.bind(this)
+          this.get_onGoingRents = this.get_onGoingRents.bind(this)
+
           this.get_rentsRequests()
+          
+
           this.accept_rents = this.accept_rents.bind(this)
       //    this.get_onGoingRequests()
     }
 
 
     async get_rentsRequests(){
-        console.log("a tentar pegar rents")
         let response = await this.user_obj.get_rents_requests()
         let status = response[0]
         let rentsRequests = response[1]
@@ -37,17 +40,34 @@ export default class RentsPage extends Component {
           rents.push(askRent)
         ))
 
-        rents.map((r)=> (
-            console.log(r['house'].houseName)
+        this.setState({
+            rents_requests: rents
+        })
+
+        this.get_onGoingRents()
+    }
+
+    async get_onGoingRents(){
+        let response = await this.user_obj.get_rents_ongoing()
+        let status = response[0]
+        let onGoingRents = response[1]
+        let ogrents = []
+
+        onGoingRents.map((og) => (
+          ogrents.push(og)
         ))
 
         this.setState({
-            rents_requests: rents
+            onGoing_rents: onGoingRents
         })
     }
 
     async accept_rents(id){
-            console.log(id)
+        let data = {"rentID":id}
+        let response = await this.user_obj.accept_rents(data)
+        let status = response[0]
+        
+        this.get_rentsRequests()
     }
    
 
@@ -76,11 +96,36 @@ export default class RentsPage extends Component {
                                             <span> A partir de {rent.rentStart} a {rent.rentEnd}</span>
                                         </Table.Col>
                                         <Table.Col className="text-right">
-                                            <Button color="success" icon="check" />
+                                            <Button color="success" icon="check" onClick={() => this.accept_rents(rent.id)} />
                                             <span style={{padding:"5px"}}></span>
-                                            <Button color="danger" icon="trash" onClick />
+                                            <Button color="danger" icon="trash"  />
                                         </Table.Col>
 
+                                    </Table.Row>
+                                )
+                                )}
+                                    </Table.Body>
+                                </Table>
+                            </Card>
+
+                            <Card title="Em progresso">
+                                <Table className="card-table table-vcenter">
+                                    <Table.Body>
+                                    {this.state.onGoing_rents.map((rent) => (
+                                    <Table.Row>
+                                        <Table.Col>
+                                            <span>{rent['user'].firstName} {rent['user'].lastName}</span> <div></div>
+                                            <span>{rent['user'].username}</span>
+                                        </Table.Col>
+                                        <Table.Col className="text-right text-muted d-none d-md-table-cell text-nowrap">
+                                            <Icon prefix="fe" name="arrow-right"  /> 
+                                        </Table.Col>
+                                        <Table.Col> 
+                                            {rent['house'].houseName}
+                                        </Table.Col>
+                                        <Table.Col className="text-right text-muted d-none d-md-table-cell text-nowrap">
+                                            <span> De {rent.rentStart} a {rent.rentEnd}</span>
+                                        </Table.Col>
                                     </Table.Row>
                                 )
                                 )}
