@@ -4,12 +4,94 @@ import SimpleImageSlider from "react-simple-image-slider";
 import React, { Component, useCallback } from "react";
 import { Page, Grid, GalleryCard, Form, Button, Container, Text, Card} from "tabler-react";
 import SiteWrapper from "./SiteWrapper.react";
+import House from "./Rest/House"
+import User from "./Rest/User"
+import getDataForm from "./Rest/getDataForm"
+
+import DatePicker from "react-datepicker";
+
+import Rating from "react-rating";
+ 
+import "react-datepicker/dist/react-datepicker.css";
 
 export default class Property extends Component {
     constructor(props) {
         super(props);
+    
+        this.state = {
+            startDate : new Date(),
+            endDate : new Date(),
+            house: {
+                city: "",
+                description: "",
+                houseName: "",
+                kmFromCityCenter: 0,
+                pricePerNight: 0.0,
+                numberOfBeds: 0,
+                maxNumberOfUsers: 0,
+                rating: 0.0,
+                userRating: 0.0,
+                ownerName: ""
+            },
+            reviews:[],
+            feedback_askrent: "Pedido feito com sucesso",
+            pending: false
+        }
+
+        this.user_obj = new User()
+        this.house_obj = new House()
+
+        this.ask_rent = this.ask_rent.bind(this)
+        this.renderFeedbackRent = this.renderFeedbackRent.bind(this)
+        this.get_house()
     }
 
+
+    async ask_rent(event){
+        event.preventDefault();
+        let data = getDataForm(event.target);
+        data["userID"] = "1" // later use cache for id user
+        data["houseID"] = localStorage.getItem('house_id')
+
+        console.log(data)
+        let response = await this.user_obj.askRent_house(data)
+        let status = response[0]
+        let check_pending = response[1]
+
+        this.setState({
+            pending : check_pending['pending']
+        })
+    }
+        
+    
+
+    async get_house(){
+    let response = await this.house_obj.get_specificHouse()
+    // let status = response[0]
+    let house_rcv = response[1]
+
+    let response_review = await this.house_obj.get_reviews()
+    let reviews_rcv = response_review[1]
+
+    this.setState({
+        house : house_rcv,
+        reviews: reviews_rcv
+      })
+    }
+
+    handleChange(date, name){
+        this.setState({
+          [name]: date
+        })
+    
+      }
+
+    renderFeedbackRent() {
+        return (
+        <span style={{color: "green", marginLeft:"10px"}}>{this.state.feedback_askrent}</span>
+        )
+      }
+    
 
     render() {
         const images = [
@@ -18,21 +100,7 @@ export default class Property extends Component {
             { url: "demo/photos/example3-apart.jpg" },
         ];
         const avatarUrl = "demo/faces/female/7.jpg"
-        const nameOwner = "João Artur"
-        const numberOfPeople = "3";
-        const beds = "2";
-        const pricePerNight="300"
-        const city = "Rua de Ovar Aveiro"
-        const distanceCityCenter = "3km"
-        const description = "Apartamento T2 novo, no centro, a 200 metros da praia, em prédio acabado de construir, de ótima qualidade, 2 frentes com muita luz natural, excelente área útil, móveis de cozinha com acabamento em alto brilho, pré-instalação de aquecimento central com caldeira incluída. \
-        Localizado no centro da cidade, perto da praia e da estação, com tudo perto e bons acessos.\
-        Garagem para um carro."
-        const comedities = ["Garagem", "Piscina", "Internet 500mb/s de upload"]
-        const reviews = [
-            {reviewing:"João Baião", rating:"4", description:"Muito confortável, vista lindíssima!"},
-            {reviewing:"Pedro Carvalho", rating:"5", description:"Senhorio muito simpático, melhor sítio onde já estive!"}
-        ]
-        const listComedities = comedities.map((c) => <li>{c}</li>)
+        //const listComedities = comedities.map((c) => <li>{c}</li>)
 
         return(
             <SiteWrapper>
@@ -46,34 +114,49 @@ export default class Property extends Component {
                         />
                     </div>
             
-            <h1 style={{fontSize:"70px", marginTop:"50px"}}>{city}</h1>
+            <h1 style={{fontSize:"70px", marginTop:"50px", marginBottom:"0px"}}>{this.state.house.houseName}</h1>
+            <Rating 
+                initialRating={this.state.house.rating} 
+                readonly
+                emptySymbol="fa fa-star-o fa-2x"
+                fullSymbol="fa fa-star fa-2x"
+                fractions={2}
+             />
             
             
 
-            <div style={{ borderBottom:"1px solid"}}>
+            <div style={{ borderBottom:"1px solid", marginTop:"50px"}}>
                 <h2>Propriedades</h2>
-                 <p>Distância à cidade centro: {distanceCityCenter}</p> 
-                <p>Número de pessoas disponíveis: {numberOfPeople} </p>
-                <p>Número de quartos: {beds} </p>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>Cidade: {this.state.house.city}</p>
+                        <p>Distância à cidade centro: {this.state.house.kmFromCityCenter}</p> 
+                    </div>
+                    <div class="col-lg-6">
+                        <p>Número de pessoas disponíveis: {this.state.house.maxNumberOfUsers} </p>
+                        <p>Número de quartos: {this.state.house.numberOfBeds} </p>
+                    </div>
+                </div>
             </div>
             <div style={{ borderBottom:"1px solid", marginTop:"50px"}}>
                 <h2>Descrição</h2>
-                <p>{description}</p>
+                <p>{this.state.house.description}</p>
             </div>
             <div style={{ borderBottom:"1px solid",marginTop:"50px"}}>
                 <h2>Características</h2>
-                <ul>{listComedities}</ul>
+                <ul>{"Nenhuma"}</ul>
             </div>
             <div style={{ borderBottom:"1px solid",marginTop:"50px"}} class="row">
                 <div class="col-lg-12">
                     <h2>Últimas Reviews:</h2>
                 </div>
-                {reviews.map((rev)=>{
+                {this.state.reviews.map((rev, index)=>{
+                    console.log(index)
                     return(
                     <div class="col-lg-6">
-                        <Card key={rev.reviewing}>
+                        <Card key={rev.user.username}>
                             <Card.Header>
-                              <Card.Title>{rev.reviewing}</Card.Title>
+                              <Card.Title>{rev.user.firstName + " " +rev.user.lastName}</Card.Title>
                             </Card.Header>
                             <Card.Body>
                               {rev.description}
@@ -84,70 +167,43 @@ export default class Property extends Component {
                     )
                 })}
             </div>
-            <form>
+            <Form onSubmit={this.ask_rent}>
                 <div class="row" style={{marginTop:"50px"}}>
                 <div class="col-lg-2">
                     <GalleryCard.Details
                         avatarURL={avatarUrl}
-                        fullName={nameOwner}
+                        fullName={this.state.house.ownerName}
                     />
+                    <span>Rating do proprietário: {this.state.house.userRating}</span>
                 </div>
                
                     <div class="col-lg-3">
-                        <p>Data de Iníco:</p>
-                        <Form.DatePicker
-                    defaultDate={new Date("2020-05-13T16:06:07.669Z")}
-                    format="mm/dd/yyyy"
-                    required
-                    maxYear={2030}
-                    minYear={2020}
-                    monthLabels={[
-                      'Janeiro',
-                      'Fevereiro',
-                      'Março',
-                      'Abril',
-                      'Maio',
-                      'Junho',
-                      'Julho',
-                      'Agosto',
-                      'Setembro',
-                      'Outubro',
-                      'Novembro',
-                      'Dezembro'
-                    ]}
-                  />
+                        <p>Data de Início:</p>
+                        <DatePicker
+                          name="startDate"
+                           selected={this.state.startDate}
+                           dateFormat="dd-MM-yyyy"
+                           onChange={(date) => this.handleChange(date, "startDate")}
+                         />
                     </div>
                     <div class="col-lg-3">
                         <p>Data de Fim:</p>
-                        <Form.DatePicker
-                    defaultDate={new Date("2020-05-13T16:06:07.669Z")}
-                    format="mm/dd/yyyy"
-                    required
-                    maxYear={2030}
-                    minYear={2020}
-                    monthLabels={[
-                      'Janeiro',
-                      'Fevereiro',
-                      'Março',
-                      'Abril',
-                      'Maio',
-                      'Junho',
-                      'Julho',
-                      'Agosto',
-                      'Setembro',
-                      'Outubro',
-                      'Novembro',
-                      'Dezembro'
-                    ]}
-                  />
+                        <DatePicker
+                          name="endDate"
+                          selected={this.state.endDate}
+                          dateFormat="dd-MM-yyyy"
+                          min={this.state.startDate}
+                          onChange={(date) => this.handleChange(date, "endDate")}
+                        />
                     </div>
                     <div class="col-lg-4">
-                        <h3 style={{fontSize:"20px"}}><b style={{fontSize:"40px"}}>{pricePerNight}€</b>/por noite</h3>
-                        <button type="button" class="btn btn-primary" style={{size:"lg"}} >Alugar</button>
+                        <h3 style={{fontSize:"20px"}}><b style={{fontSize:"40px"}}>{this.state.house.pricePerNight}€</b>/por noite</h3>
+                        <Button type="submit" color="primary">Alugar</Button>
+                        {this.state.pending === true && this.renderFeedbackRent()}
                     </div>
                
                 </div>
-            </form>
+            </Form>
 
                     
                 </Container>

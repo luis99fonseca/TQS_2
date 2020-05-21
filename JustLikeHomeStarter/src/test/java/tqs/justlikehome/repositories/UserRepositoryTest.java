@@ -52,7 +52,7 @@ class UserRepositoryTest {
 
     @Test
     void getHouseFromUserWithNoHouse(){
-        List<House> houses = userRepository.getUserHouses(50);
+        List<House> houses = userRepository.getUserHouses(-1);
         assertThat(houses.size()).isEqualTo(0);
     }
 

@@ -136,9 +136,9 @@ class ReviewServiceTest {
         List<HouseReviews> hr= new ArrayList<>();
         hr.add(houseReview);
         Mockito.when(houseReviewRepository.findByReviewerAndHouse(user2, house)).thenReturn(hr);
-
+        HouseReviewDTO hreview = new HouseReviewDTO(this.user2.getId(), this.house.getId(),5,"topp");
         assertThrows(NoPermitionException.class,
-                ()->reviewService.addReview(new HouseReviewDTO(this.user2.getId(), this.house.getId(),5,"topp")));
+                ()->reviewService.addReview(hreview));
     }
 
     @Test
@@ -163,9 +163,9 @@ class ReviewServiceTest {
         List<UserReviews> ur= new ArrayList<>();
         ur.add(userReview);
         Mockito.when(userReviewRepository.findByUserReviewingAndUserReviewed(user1, user2)).thenReturn(ur);
-
+        UserReviewDTO ureview = new UserReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp");
         assertThrows(NoPermitionException.class,
-                ()->reviewService.addReview(new UserReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp")));
+                ()->reviewService.addReview(ureview));
     }
 
     @Test

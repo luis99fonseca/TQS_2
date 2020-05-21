@@ -31,8 +31,8 @@ export default class GalleryPage extends Component {
       this.property_obj = new Property();
   }
 
-  property_info() {
-    //localStorage.setItem('property_id', id);
+  property_info(id) {
+    localStorage.setItem('house_id', id);
     console.log("click here")
     window.location.href = '/property'
     return true;
@@ -63,10 +63,6 @@ export default class GalleryPage extends Component {
     })
 
   };
-
- 
-
-
 
 
   render(){
@@ -119,7 +115,7 @@ export default class GalleryPage extends Component {
   
           <Grid.Row className="row-cards">
             {this.state.houses.map((house, key) => (
-              <div class="col-lg-4" key={house.id} onClick={() => this.property_info()} >
+              <div class="col-lg-4" key={house.id} onClick={() => this.property_info(house.houseId)} >
                 <GalleryCard >
                   <GalleryCard.Image
                     src={"demo/photos/apart_example.jpg"}

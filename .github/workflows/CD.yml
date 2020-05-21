@@ -1,4 +1,10 @@
-on: [push,pull_request]
+on: 
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 name: Continuous Deployment
 jobs:
   CD:
@@ -16,7 +22,11 @@ jobs:
     - name: Server pull repository
       run: |
         git -C ~/TQS_2/ pull;
-    - name: CD for backend  
+    - name: CD for Spring-Boot Backend  
       run: |
         sudo docker build --tag "backend" ~/TQS_2/JustLikeHomeStarter;
         sudo docker run -p 8080:8080 -d backend;
+    - name: CD for React Frontend
+      run: |
+        sudo docker build --tag "frontend" ~/TQS_2/Frontend;
+        sudo docker run -p 80:3000 -d frontend;

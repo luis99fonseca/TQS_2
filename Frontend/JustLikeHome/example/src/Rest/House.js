@@ -24,6 +24,7 @@ export default class House extends Component{
     }
 
     async get_userHouse() {
+        // later use cache to get user id
         const response = await fetch(url + '/userHouses/user=1', {
             method: 'GET',
             headers: {
@@ -36,5 +37,35 @@ export default class House extends Component{
         const json = await response.json()
         return [status, json]
     }
+
+    async get_specificHouse() {
+        const response = await fetch(url + '/specificHouse/houseId=' + localStorage.getItem('house_id') , {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+                //'Authorization': 'Token ' + localStorage.getItem('token')
+            },
+        })
+
+        const status = await response.status
+        const json = await response.json()
+        return [status, json]
+    }
+
+    async get_reviews() {
+        const response = await fetch(url + '/houseReviews/house=' + localStorage.getItem('house_id'), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+                //'Authorization': 'Token ' + localStorage.getItem('token')
+            },
+        })
+
+        const status = await response.status
+        const json = await response.json()
+        return [status, json]
+    }
+
+   
 
 }
