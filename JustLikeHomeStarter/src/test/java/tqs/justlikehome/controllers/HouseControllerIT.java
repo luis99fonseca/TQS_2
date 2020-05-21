@@ -20,8 +20,7 @@ import java.util.GregorianCalendar;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
@@ -116,7 +115,7 @@ class HouseControllerIT {
     }
 
     @Test
-    void whenAddBookmark_ifValid_returnMarkedHouse() throws Exception {
+    void whenAddBookmark_ifValid_returnBookmark() throws Exception {
         BookMarkDTO bookMarkDTO = new BookMarkDTO(user.getId(), house.getId());
 
         mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
@@ -134,6 +133,29 @@ class HouseControllerIT {
 
         mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void whenDeleteBookmark_ifValid_returnBookmark() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(user.getId(), house.getId());
+
+        // adding a bookmark previously
+        mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/deleteBookmark/userId=" + user.getId() +"&houseId=" + house.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.houseId").value(house.getId()))
+                .andExpect(jsonPath("$.userId").value(user.getId()));
+
+        //TODO: check this, cause now there ain't a way to verify if the delete was actually done;
+    }
+
+    @Test
+    void whenDeleteBookmark_ifInvalid_thenThrowException() throws Exception {
+        mockMvc.perform(delete("/deleteBookmark/userId=" + (-1) +"&houseId=" + (-1)))
                 .andExpect(status().is4xxClientError());
     }
 }

@@ -46,4 +46,10 @@ public class HouseController {
     public BookMarkDTO addBookmark(@RequestBody BookMarkDTO bookmark) {
         return houseService.addBookmark(bookmark);
     }
+
+    @DeleteMapping(value = "/deleteBookmark/userId={userId}&houseId={houseId}")
+    public BookMarkDTO deleteBookmark(@PathVariable long userId, @PathVariable long houseId) {
+        return houseService.deleteBookmark(userId, houseId);
+    }
+
 }

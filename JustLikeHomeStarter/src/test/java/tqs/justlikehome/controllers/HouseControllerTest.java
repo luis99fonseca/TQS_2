@@ -25,8 +25,8 @@ import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
@@ -137,6 +137,28 @@ class HouseControllerTest {
 
         mockMvc.perform(post("/addBookmark").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(bookMarkDTO)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void whenDeleteBookmark_ifValid_returnBookmark() throws Exception {
+        BookMarkDTO bookMarkDTO = new BookMarkDTO(0, 0);
+
+        given(houseService.deleteBookmark(bookMarkDTO.getUserId(), bookMarkDTO.getHouseId())).willReturn(bookMarkDTO);
+
+        mockMvc.perform(delete("/deleteBookmark/userId=" + 0 +"&houseId=" + 0))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.houseId").value(bookMarkDTO.getHouseId()))
+                .andExpect(jsonPath("$.userId").value(bookMarkDTO.getUserId()));
+
+    }
+
+    @Test
+    void whenDeleteBookmark_ifInvalid_thenThrowException() throws Exception {
+        given(houseService.deleteBookmark(any(long.class), any(long.class))).willThrow(InvalidIdException.class);
+
+
+        mockMvc.perform(delete("/deleteBookmark/userId=" + (-1) +"&houseId=" + (-1)))
                 .andExpect(status().is4xxClientError());
     }
 

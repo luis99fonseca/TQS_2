@@ -84,4 +84,15 @@ public class HouseService {
         house.addBookmarkedBy(user);
         return bookmark;
     }
+
+    public BookMarkDTO deleteBookmark(long userId, long houseId) {
+        House house = houseRepository.findById(houseId);
+        User user = userRepository.findById(userId);
+        if (house == null || user == null){
+            throw new InvalidIdException();
+        }
+        user.getBookmarkedHouses().remove(house);
+        house.getBookmarkedBy().remove(user);
+        return new BookMarkDTO(userId, houseId);
+    }
 }
