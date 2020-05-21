@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.JustlikehomeApplication;
 import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
@@ -20,6 +21,7 @@ import java.util.GregorianCalendar;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -99,7 +101,13 @@ class HouseControllerIT {
     }
 
     @Test
-    public void whenGetSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
+    void whenGetSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
+
+        mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
+                .andExpect(jsonPath("$.userRating").value(0))
+                .andExpect(jsonPath("$.rating").value(0))
+                .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
 
         mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
@@ -156,6 +164,30 @@ class HouseControllerIT {
     @Test
     void whenDeleteBookmark_ifInvalid_thenThrowException() throws Exception {
         mockMvc.perform(delete("/deleteBookmark/userId=" + (-1) +"&houseId=" + (-1)))
+        .andExpect(status().is4xxClientError());
+    
+    @Test
+    void updateHouse() throws Exception {
+
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua");
+        housedto.setHouseId(house.getId());
+
+        mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+        .content(objectToJson(housedto)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.houseName").value("Casa de Tabua"));
+
+        assertEquals("Casa de Tabua",houseRepository.findById(house.getId()).getHouseName());
+
+    }
+
+    @Test
+    void updateHouse_Invalid() throws Exception {
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua");
+        housedto.setHouseId((long)50);
+
+        mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(housedto)))
                 .andExpect(status().is4xxClientError());
     }
 }

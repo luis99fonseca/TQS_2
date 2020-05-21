@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
@@ -95,4 +96,15 @@ public class HouseService {
         house.getBookmarkedBy().remove(user);
         return new BookMarkDTO(userId, houseId);
     }
+    public House updateHouse(HouseDTO houseDTO){
+        try{
+            House house = houseRepository.findById(houseDTO.getHouseId());
+            house.updateHouse(houseDTO);
+            houseRepository.save(house);
+            return house;
+        }catch(NullPointerException e){
+            throw new InvalidIdException();
+        }
+    }
+
 }

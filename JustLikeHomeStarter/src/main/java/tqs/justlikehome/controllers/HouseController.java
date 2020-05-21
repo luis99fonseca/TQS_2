@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.services.HouseService;
@@ -33,6 +34,12 @@ public class HouseController {
     @ResponseBody
     public House addComoditieToHouse(@RequestBody ComoditiesDTO comoditiesDTO){
         return houseService.addComoditieToHouse(comoditiesDTO);
+    }
+
+    @PutMapping(value = "/updateHouse")
+    @ResponseBody
+    public House updateHouse(@RequestBody HouseDTO houseDTO){   //need to do HouseDTO.setHouseID()
+        return houseService.updateHouse(houseDTO);
     }
 
     @GetMapping(value="/specificHouse/houseId={houseId}")

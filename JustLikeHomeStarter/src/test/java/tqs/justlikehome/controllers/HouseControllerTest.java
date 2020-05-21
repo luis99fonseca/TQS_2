@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
@@ -24,6 +25,7 @@ import tqs.justlikehome.utils.ObjectJsonHelper;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -68,6 +70,34 @@ class HouseControllerTest {
 
         mockMvc.perform(post("/addComoditie").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(comoditiesDto)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void updateHouse() throws Exception {
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50, 4, 6,(long)0 ,"Casa de Tabua");
+        housedto.setHouseId(house.getId());
+        house.updateHouse(housedto);
+
+        given(houseService.updateHouse(any(HouseDTO.class))).willReturn(house);
+        
+        mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+        .content(objectToJson(housedto)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.city").value("aveiro"))
+        .andExpect(jsonPath("$.pricePerNight").value(50));
+
+    }
+
+    @Test
+    void whenUpdateInvalid_thenThrowException() throws Exception {
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50, 4, 6,(long)0 ,"Casa de Tabua");
+        housedto.setHouseId(house.getId());
+
+        given(houseService.updateHouse(any(HouseDTO.class))).willThrow(InvalidIdException.class);
+
+        mockMvc.perform(post("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(housedto)))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -156,7 +186,6 @@ class HouseControllerTest {
     @Test
     void whenDeleteBookmark_ifInvalid_thenThrowException() throws Exception {
         given(houseService.deleteBookmark(any(long.class), any(long.class))).willThrow(InvalidIdException.class);
-
 
         mockMvc.perform(delete("/deleteBookmark/userId=" + (-1) +"&houseId=" + (-1)))
                 .andExpect(status().is4xxClientError());
