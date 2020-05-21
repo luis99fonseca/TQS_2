@@ -12,9 +12,10 @@ import {
   Error503,
   Empty,
   Email,
-  ProfilePage
+  ProfilePage,
+  
 } from "./pages";
-
+import ClientProfile from "./pages/ClientProfile"
 import AnnoucementPage from "./pages/AnnouncementPage"
 import RentsPage from "./pages/RentsPage"
 import HomePage from "./HomePage.react";
@@ -59,6 +60,7 @@ function App(props: Props): React.Node {
           <Route exact path="/maps" component={MapCardsPage} />
           <Route exact path="/pricing-cards" component={PricingCardsPage} />
           <Route exact path="/profile" component={ProfilePage} />
+          <Route exact path="/user/profile" component={ClientProfile} />
           <Route exact path="/register" component={RegisterPage} />
           <Route exact path="/store" component={StoreCardsPage} />
           <Route exact path="/property" component={Property} />

@@ -12,8 +12,10 @@ export default class AnnoucementPage extends Component{
         super(props);
         
         this.state = {
+            update : false,
             startDate : new Date(),
             endDate : new Date(),
+            id: -4,  rating:0, houseName: "", userId:"" , city:"", description:"", kmFromCityCenter:0, pricePerNight:0.0, numberOfBeds: 0, maxNumberOfUsers:0, comodities: [],
             houses : [
               {id: -4,  rating:0 ,ownerName:"" , city:"", description:"", kmFromCityCenter:0, pricePerNight:0.0, numberOfBeds: 0, maxNumberOfUsers:0, comodities: []}
             ]
@@ -22,7 +24,9 @@ export default class AnnoucementPage extends Component{
           this.house_obj = new House()
           this.get_userHouses()
           this.create_house = this.create_house.bind(this)
-  
+          this.render_update = this.render_update.bind(this)
+          this.choice_house_update = this.choice_house_update.bind(this)
+          this.updateProperty = this.updateProperty.bind(this)
     }
 
     async get_userHouses(){
@@ -37,6 +41,7 @@ export default class AnnoucementPage extends Component{
       )
 
       this.setState({
+        update : false,
         houses : state_houses
       })
     }
@@ -58,9 +63,50 @@ export default class AnnoucementPage extends Component{
         let response = await this.house_obj.post_house(data)
         let status = response[0]
         let houses = response[1]
-        
+        console.log(houses)
         this.get_userHouses()
     }
+
+    render_update = () => {
+      return(
+        <Button color="info" onClick={this.updateProperty}>Atualizar</Button>
+      )
+    }
+
+    choice_house_update(house){
+      console.log(house)
+      this.setState({
+        update: true,
+        id: house.id,
+        comodities: house.comodities,
+        numberOfBeds: house.numberOfBeds,
+        houseName : house.houseName,
+        city: house.city,
+        kmFromCityCenter : house.kmFromCityCenter,
+        maxNumberOfUsers : house.maxNumberOfUsers,
+        description: house.description,
+        pricePerNight: house.pricePerNight
+      })
+    }
+
+    async updateProperty(){
+        let data = {
+          id: this.state.id,
+          comodities: this.state.comodities,
+          numberOfBeds: this.state.numberOfBeds,
+          houseName : this.state.houseName,
+          city: this.state.city,
+          kmFromCityCenter : this.state.kmFromCityCenter,
+          maxNumberOfUsers : this.state.maxNumberOfUsers,
+          description: this.state.description,
+          pricePerNight: this.state.pricePerNight
+        }
+
+        let response = await this.house_obj.updateHouse(data)
+        this.get_userHouses()
+    }
+
+
 
     render(){
         return(
@@ -73,37 +119,37 @@ export default class AnnoucementPage extends Component{
                                 isRequired
                                 label="Título do anúncio"
                               >
-                                <Form.Input required  name="houseName" />
+                                <Form.Input required  name="houseName" value={this.state.houseName} onChange={(e) => this.setState({houseName: e.target.value})}  />
                               </Form.Group>
                             <Form.Group
                                 isRequired
                                 label="Cidade"
                               >
-                                <Form.Input required  name="city" />
+                                <Form.Input required  name="city" value={this.state.city} onChange={(e) => this.setState({city: e.target.value})} />
                               </Form.Group>
                               <Form.Group
                                 isRequired
                                 label="Distância da cidade centro(km)"
                               >
-                                <Form.Input type="number" required min="0" name="kmFromCityCenter" />
+                                <Form.Input type="number" required min="0" name="kmFromCityCenter" value={this.state.kmFromCityCenter} onChange={(e) => this.setState({kmFromCityCenter: e.target.value})}  />
                               </Form.Group>
                               <Form.Group
                                 isRequired
                                 label="Quartos"
                               >
-                                <Form.Input type="number"  required min="0" name="numberOfBeds" />
+                                <Form.Input type="number"  required min="0" name="numberOfBeds" value={this.state.numberOfBeds} onChange={(e) => this.setState({numberOfBeds: e.target.value})} />
                               </Form.Group>
                               <Form.Group
                                 isRequired
                                 label="Limite de pessoas disponíveis"
                               >
-                                <Form.Input type="number" min="0" required name="maxNumberOfUsers" />
+                                <Form.Input type="number" min="0" required name="maxNumberOfUsers" value={this.state.maxNumberOfUsers} onChange={(e) => this.setState({maxNumberOfUsers: e.target.value})}  />
                               </Form.Group>
                               <Form.Group
                                 className="mb-0"
                                 label="Descrição"
                               >
-                                <Form.Textarea required name="description" />
+                              <Form.Textarea required name="description" value={this.state.description} onChange={(e) => this.setState({description: e.target.value})} />
                               </Form.Group>
                               <Form.Group label="Extras" name="comedities">
                                     <Form.Checkbox
@@ -129,12 +175,14 @@ export default class AnnoucementPage extends Component{
                                 </Form.Group>
                               <Form.Group
                                 className="mb-0"
+                                isRequired
                                 label="Preço por noite (€)"
                               >
-                                <Form.Input required type="number" min="0" name="pricePerNight" />
+                                <Form.Input required type="number" min="0" name="pricePerNight"  value={this.state.pricePerNight} onChange={(e) => this.setState({pricePerNight: e.target.value})}/>
                               </Form.Group>
                               <div style={{paddingTop:"20px"}}></div>
-                              <Button type="submit" color="primary">Criar</Button>
+                              <Button type="submit" color="primary">Criar</Button> <span style={{marginRight:"5px"}}></span>
+                              {this.state.update === true && this.render_update()}
                           </Form>
                         </Grid.Col>
                         <Grid.Col lg={9}>
@@ -142,7 +190,7 @@ export default class AnnoucementPage extends Component{
                                 <Table className="card-table table-vcenter">
                                     <Table.Body>
                                     {this.state.houses.map((house) => (
-                                        <Table.Row>
+                                        <Table.Row onClick={() => this.choice_house_update(house)}>
                                             <Table.Col>
                                             <img
                                               alt=""
