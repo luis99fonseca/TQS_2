@@ -2,6 +2,7 @@ package tqs.justlikehome.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
@@ -66,6 +67,9 @@ public class HouseService {
 
     public HouseSearchDTO getSpecificHouse(long houseID){
         House house = houseRepository.findById(houseID);
+        if (house == null){
+            throw new InvalidIdException();
+        }
         User owner = house.getOwner();
         Double ratingHouse = houseRepository.getRating(houseID);
         HouseSearchDTO houseSearch = new HouseSearchDTO(house,owner,ratingHouse==null?0:ratingHouse);
@@ -74,6 +78,27 @@ public class HouseService {
         return houseSearch;
     }
 
+    public BookMarkDTO addBookmark(BookMarkDTO bookmark) {
+        House house = houseRepository.findById(bookmark.getHouseId());
+        User user = userRepository.findById(bookmark.getUserId());
+        if (house == null || user == null){
+            throw new InvalidIdException();
+        }
+        user.addBookmarkedHouse(house);
+        house.addBookmarkedBy(user);
+        return bookmark;
+    }
+
+    public BookMarkDTO deleteBookmark(long userId, long houseId) {
+        House house = houseRepository.findById(houseId);
+        User user = userRepository.findById(userId);
+        if (house == null || user == null){
+            throw new InvalidIdException();
+        }
+        user.getBookmarkedHouses().remove(house);
+        house.getBookmarkedBy().remove(user);
+        return new BookMarkDTO(userId, houseId);
+    }
     public House updateHouse(HouseDTO houseDTO){
         try{
             House house = houseRepository.findById(houseDTO.getHouseId());

@@ -35,10 +35,16 @@ public class House {
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
     @ManyToMany(mappedBy = "bookmarkedHouses")
+    @JsonIgnore
     private Set<User> bookmarkedBy = new HashSet<>();
 
     @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
     private Set<Comodities> comodities = new HashSet<>();
+
+    // TODO: for debugging, remove later
+    public Set<User> getBookmarkedBy() {
+        return bookmarkedBy;
+    }
 
     public House(){
 
@@ -88,6 +94,10 @@ public class House {
 
     public void addReview(HouseReviews houseReview){
         this.houseReviews.add(houseReview);
+    }
+
+    public void addBookmarkedBy(User user) {
+        this.bookmarkedBy.add(user);
     }
 
     public Set<HouseReviews> getHouseReviews() {
