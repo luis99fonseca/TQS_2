@@ -18,12 +18,12 @@ public interface RentRepository extends JpaRepository<Rent,Integer>{
                                   @Param("pending") boolean pending);
 
     @Query("SELECT r FROM Rent r LEFT JOIN r.user u LEFT JOIN r.house h " +
-        "WHERE u.id=:userID and h.id=:houseID")
+        "WHERE r.pending=false and u.id=:userID and h.id=:houseID")
     List<Rent> findByUserAndHouse(@Param("userID") long userID,
                                   @Param("houseID") long houseID);
     
     @Query("SELECT r FROM Rent r LEFT JOIN r.user u LEFT JOIN r.house h " +
-        "WHERE u.id=:userID and h.owner.id =:ownerID")
+        "WHERE r.pending=false and u.id=:userID and h.owner.id =:ownerID")
     List<Rent> findByUserAndOwner(@Param("userID") long userID,
                                   @Param("ownerID") long ownerID);
 

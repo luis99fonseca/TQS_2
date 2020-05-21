@@ -85,6 +85,7 @@ class ReviewControllerIT {
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         Rent rent = new Rent(house,user,start,end);
+        rent.setPending(false);
 
         house.addRent(rent);
         user.addPurchasedRent(rent);

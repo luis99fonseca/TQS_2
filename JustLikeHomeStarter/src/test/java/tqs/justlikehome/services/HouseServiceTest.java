@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
@@ -105,7 +106,28 @@ class HouseServiceTest {
     }
 
     @Test
-    public void whenSearchSpecificExistingHouse_returnHouseSearchDTO(){
+    void updateWithRightID(){
+        house = Mockito.spy(house);
+        Mockito.when(house.getId()).thenReturn((long) 0);
+        HouseDTO houseDTO = new HouseDTO("Aveiro", "desc", 3.0, 75, 2, 5,0,"casa das conchas");
+        houseDTO.setHouseId(house.getId());
+        House testHouse = houseService.updateHouse(houseDTO);
+        assertEquals("Aveiro",testHouse.getCity());
+        assertEquals("desc",testHouse.getDescription());
+        assertEquals(75,testHouse.getPricePerNight());
+        assertEquals(2,testHouse.getNumberOfBeds());
+    }
+
+    @Test
+    void updateWithWrongID(){
+        HouseDTO houseDTO = new HouseDTO("Aveiro", "desc", 3.0, 75, 2, 5, 0, "casa das conchas");
+        houseDTO.setHouseId((long) 50);
+        assertThrows(InvalidIdException.class,
+        ()->houseService.updateHouse(houseDTO));
+    }
+
+    @Test
+    void whenSearchSpecificExistingHouse_returnHouseSearchDTO(){
         HouseSearchDTO houseSearchDTO = houseService.getSpecificHouse(house.getId());
         assertThat(houseSearchDTO.getCity()).isEqualTo(house.getCity());
         assertThat(houseSearchDTO.getOwnerName()).isEqualTo(user.getUsername());
@@ -114,7 +136,7 @@ class HouseServiceTest {
     }
 
     @Test
-    public void whenSearchSpecificExistingHouse_withNoRatings_returnHouseSearchDTO(){
+    void whenSearchSpecificExistingHouse_withNoRatings_returnHouseSearchDTO(){
         Mockito.when(houseRepository.getRating(house.getId())).thenReturn(null);
         Mockito.when(userRepository.getUserAvgRating(user.getId())).thenReturn(null);
 

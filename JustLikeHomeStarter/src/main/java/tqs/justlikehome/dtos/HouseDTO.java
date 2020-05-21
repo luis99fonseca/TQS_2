@@ -9,6 +9,7 @@ public class HouseDTO {
     private int maxNumberOfUsers;
     private long userId;
     private String houseName;
+    private long houseId;
 
     public HouseDTO(String city, String description, double kmFromCityCenter, double pricePerNight, int numberOfBeds, int maxNumberOfUsers,long userId,String houseName) {
         this.city = city;
@@ -19,6 +20,15 @@ public class HouseDTO {
         this.maxNumberOfUsers = maxNumberOfUsers;
         this.userId=userId;
         this.houseName=houseName;
+    }
+
+    public void setHouseId(long houseId){
+        this.houseId = houseId;
+
+    }
+
+    public long getHouseId(){
+        return houseId;
     }
 
     public String getHouseName() {
