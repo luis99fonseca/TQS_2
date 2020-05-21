@@ -71,7 +71,7 @@ class HouseControllerTest {
 
     @Test
     void updateHouse() throws Exception {
-        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50, 4, 6,(long)0 ,"Casa de Tabua");
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50, 4, 6,(long)0 ,"Casa de Tabua",Collections.emptySet());
         housedto.setHouseId(house.getId());
         house.updateHouse(housedto);
 
@@ -87,7 +87,7 @@ class HouseControllerTest {
 
     @Test
     void whenUpdateInvalid_thenThrowException() throws Exception {
-        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50, 4, 6,(long)0 ,"Casa de Tabua");
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50, 4, 6,(long)0 ,"Casa de Tabua",Collections.emptySet());
         housedto.setHouseId(house.getId());
 
         given(houseService.updateHouse(any(HouseDTO.class))).willThrow(InvalidIdException.class);

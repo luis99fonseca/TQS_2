@@ -109,7 +109,7 @@ class HouseServiceTest {
     void updateWithRightID(){
         house = Mockito.spy(house);
         Mockito.when(house.getId()).thenReturn((long) 0);
-        HouseDTO houseDTO = new HouseDTO("Aveiro", "desc", 3.0, 75, 2, 5,0,"casa das conchas");
+        HouseDTO houseDTO = new HouseDTO("Aveiro", "desc", 3.0, 75, 2, 5,0,"casa das conchas",Collections.emptySet());
         houseDTO.setHouseId(house.getId());
         House testHouse = houseService.updateHouse(houseDTO);
         assertEquals("Aveiro",testHouse.getCity());
@@ -120,7 +120,7 @@ class HouseServiceTest {
 
     @Test
     void updateWithWrongID(){
-        HouseDTO houseDTO = new HouseDTO("Aveiro", "desc", 3.0, 75, 2, 5, 0, "casa das conchas");
+        HouseDTO houseDTO = new HouseDTO("Aveiro", "desc", 3.0, 75, 2, 5, 0, "casa das conchas",Collections.emptySet());
         houseDTO.setHouseId((long) 50);
         assertThrows(InvalidIdException.class,
         ()->houseService.updateHouse(houseDTO));

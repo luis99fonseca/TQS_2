@@ -15,6 +15,7 @@ import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -115,7 +116,7 @@ class HouseControllerIT {
     @Test
     void updateHouse() throws Exception {
 
-        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua");
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua", Collections.emptySet());
         housedto.setHouseId(house.getId());
 
         mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
@@ -129,7 +130,7 @@ class HouseControllerIT {
 
     @Test
     void updateHouse_Invalid() throws Exception {
-        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua");
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua",Collections.emptySet());
         housedto.setHouseId((long)50);
 
         mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
