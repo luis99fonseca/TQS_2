@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tqs.justlikehome.dtos.ComoditiesDTO;
+import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
@@ -21,6 +22,7 @@ import tqs.justlikehome.utils.ObjectJsonHelper;
 
 import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -69,6 +71,34 @@ class HouseControllerTest {
     }
 
     @Test
+    void updateHouse() throws Exception {
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50, 4, 6,(long)0 ,"Casa de Tabua");
+        housedto.setHouseId(house.getId());
+        house.updateHouse(housedto);
+
+        given(houseService.updateHouse(any(HouseDTO.class))).willReturn(house);
+        
+        mockMvc.perform(post("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+        .content(objectToJson(housedto)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.city").value("aveiro"))
+        .andExpect(jsonPath("$.pricePerNight").value(50));
+
+    }
+
+    @Test
+    void whenUpdateInvalid_thenThrowException() throws Exception {
+        HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50, 4, 6,(long)0 ,"Casa de Tabua");
+        housedto.setHouseId(house.getId());
+
+        given(houseService.updateHouse(any(HouseDTO.class))).willThrow(InvalidIdException.class);
+
+        mockMvc.perform(post("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(housedto)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     void whenGetHouseByParameters_thenReturnOfMatchingHouses() throws Exception {
         List<HouseSearchDTO> searchDTOList = new ArrayList<>();
         searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5));
@@ -106,7 +136,6 @@ class HouseControllerTest {
     }
 
     // TODO: something for then the houseId doesn't exist, which @mota didnt verify yet; as can't verify those ternary operator conditions here
-
 
     private String objectToJson(Object obj) {
         try {

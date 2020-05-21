@@ -80,7 +80,23 @@ export default class House extends Component{
         const json = await response.json()
         return [status, json]
       
-       }
+    }
+
+    async updateHouse(data){
+        const response = await fetch(url + '/updateHouse', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                //'Authorization': 'Token ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify(data)
+        })
+    
+        const status = await response.status
+        const json = await response.json()
+        return [status, json]
+      
+    }
    
 
 }

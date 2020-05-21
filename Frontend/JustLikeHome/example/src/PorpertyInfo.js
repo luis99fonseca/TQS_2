@@ -138,8 +138,9 @@ export default class Property extends Component {
   
     my_button =() => {
         return(
+            <div style={{marginBottom:"10px"}}>
           <Button icon="plus" color="success" onClick={() => this.setState({form_review: true, msg_error: [false, "Nunca esteve em nenhum dos seus bens imóveis"] }) }/>
-  
+          </div>
         )
     }
 
@@ -233,9 +234,9 @@ export default class Property extends Component {
                     console.log(index)
                     return(
                     <div class="col-lg-6">
-                        <Card key={rev.user.username}>
+                        <Card key={rev.reviewer.username}>
                             <Card.Header>
-                              <Card.Title>{rev.user.firstName + " " +rev.user.lastName}</Card.Title>
+                              <Card.Title>{rev.reviewer.firstName + " " +rev.reviewer.lastName}</Card.Title>
                             </Card.Header>
                             <Card.Body>
                               {rev.description}
