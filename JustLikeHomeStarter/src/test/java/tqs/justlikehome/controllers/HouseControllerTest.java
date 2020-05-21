@@ -24,8 +24,7 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
@@ -78,7 +77,7 @@ class HouseControllerTest {
 
         given(houseService.updateHouse(any(HouseDTO.class))).willReturn(house);
         
-        mockMvc.perform(post("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
         .content(objectToJson(housedto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.city").value("aveiro"))

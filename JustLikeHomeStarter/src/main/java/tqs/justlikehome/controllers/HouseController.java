@@ -35,7 +35,7 @@ public class HouseController {
         return houseService.addComoditieToHouse(comoditiesDTO);
     }
 
-    @PostMapping(value = "/updateHouse")
+    @PutMapping(value = "/updateHouse")
     @ResponseBody
     public House updateHouse(@RequestBody HouseDTO houseDTO){   //need to do HouseDTO.setHouseID()
         return houseService.updateHouse(houseDTO);

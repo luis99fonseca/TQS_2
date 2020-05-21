@@ -19,6 +19,7 @@ public interface HouseRepository extends JpaRepository<House,Long> {
                             @Param("city") String city,
                             @Param("begin") Date begin,
                             @Param("end") Date end);
+
     House findById(long houseId);
 
     // FOR SOME REASON THIS DOESNT WORK WITH THE QUERY ABOVE

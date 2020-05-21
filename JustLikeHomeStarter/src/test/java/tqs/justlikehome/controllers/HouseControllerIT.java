@@ -18,8 +18,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static tqs.justlikehome.utils.ObjectJsonHelper.objectToJson;
@@ -119,7 +118,7 @@ class HouseControllerIT {
         HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua");
         housedto.setHouseId(house.getId());
 
-        mockMvc.perform(post("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
         .content(objectToJson(housedto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.houseName").value("Casa de Tabua"));
@@ -133,7 +132,7 @@ class HouseControllerIT {
         HouseDTO housedto = new HouseDTO("aveiro", "boa casa", 2.0, 50.0, 4, 6, user.getId(), "Casa de Tabua");
         housedto.setHouseId((long)50);
 
-        mockMvc.perform(post("/updateHouse").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(housedto)))
                 .andExpect(status().is4xxClientError());
     }
