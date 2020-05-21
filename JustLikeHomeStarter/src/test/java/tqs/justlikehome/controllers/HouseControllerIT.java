@@ -164,9 +164,10 @@ class HouseControllerIT {
 
     @Test
     void whenDeleteBookmark_ifInvalid_thenThrowException() throws Exception {
-        mockMvc.perform(delete("/deleteBookmark/userId=" + (-1) +"&houseId=" + (-1)))
-        .andExpect(status().is4xxClientError());
-    
+        mockMvc.perform(delete("/deleteBookmark/userId=" + (-1) + "&houseId=" + (-1)))
+                .andExpect(status().is4xxClientError());
+    }
+
     @Test
     void updateHouse() throws Exception {
 
