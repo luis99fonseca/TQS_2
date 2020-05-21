@@ -37,15 +37,6 @@ public class HouseDTO {
         return houseId;
     }
 
-    public void setHouseId(long houseId){
-        this.houseId = houseId;
-
-    }
-
-    public long getHouseId(){
-        return houseId;
-    }
-
     public String getHouseName() {
         return houseName;
     }
