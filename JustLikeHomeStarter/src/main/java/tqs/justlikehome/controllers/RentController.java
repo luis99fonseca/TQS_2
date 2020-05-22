@@ -17,31 +17,26 @@ public class RentController {
     private RentService rentService;
 
     @PostMapping(value="/askToRent")
-    @ResponseBody
     public Rent askToRent(@RequestBody RentDTO rentDTO){
         return rentService.askToRent(rentDTO);
     }
 
     @PutMapping(value="/acceptRent")
-    @ResponseBody
     public Rent acceptRent(@RequestBody Map<String,Long> rentID){
         return rentService.acceptRent(rentID);
     }
 
     @PutMapping(value="/denyRent")
-    @ResponseBody
     public Rent denyRent(@RequestBody Map<String, Long> rentID){
         return rentService.denyRent(rentID);
     }
 
     @GetMapping(value="/pendingRents/user={userID}")
-    @ResponseBody
     public List<Rent> pendingRents(@PathVariable long userID){
         return rentService.pendingRents(userID);
     }
 
     @GetMapping(value="/onGoingRents/user={userID}")
-    @ResponseBody
     public List<Rent> onGoingRents(@PathVariable long userID){
         return rentService.onGoingRents(userID);
     }
