@@ -9,10 +9,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
+import tqs.justlikehome.dtos.UserInfoDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
+import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
+import tqs.justlikehome.exceptions.InvalidIdException;
 import tqs.justlikehome.repositories.UserRepository;
 
 import java.util.*;
@@ -31,6 +34,8 @@ class UserServiceTest {
 
     private User user;
     private HouseDTO houseDTO;
+    private House bookmarked;
+    private Rent rent;
 
     @BeforeEach
     void setup(){
@@ -46,9 +51,24 @@ class UserServiceTest {
                 "house2",
                 Collections.emptySet()
         );
+        bookmarked = new House("Aveiro",
+                "Incredible House near Ria de Aveiro",
+                3.0,
+                50.0,
+                2,
+                5,
+                "Hello", //We are testing so default value is always 0
+                Collections.emptySet());
+        Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
+        Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
+        rent = new Rent(bookmarked,user,start,end);
+        user.addPurchasedRent(rent);
+        user.addBookmarkedHouse(bookmarked);
         Mockito.when(userRepository.findById((long) 0)).thenReturn(user);
         Mockito.when(userRepository.findById((long) 1)).thenThrow(InvalidDateInputException.class);
         Mockito.when(userRepository.save(user)).thenReturn(user);
+        Mockito.when(userRepository.findById(-1)).thenThrow(InvalidIdException.class);
+        Mockito.when(userRepository.getUserAvgRating((long) 0)).thenReturn((double)5);
     }
 
     @Test
@@ -93,6 +113,22 @@ class UserServiceTest {
         UserDTO userDTO = new UserDTO("josi","Joao","Silva","2019-10-02");
         assertThrows(InvalidDateInputException.class,
                 ()->userService.createUser(userDTO));
+    }
+
+    @Test
+    void getUserInfoInvalidID(){
+        assertThrows(InvalidIdException.class,
+                ()->userService.getUserInfo(-1));
+    }
+
+    @Test
+    void getUserInfoValidId(){
+        UserInfoDTO userInfo = userService.getUserInfo(0);
+        assertThat(userInfo.getBirthDate()).isEqualTo(user.getBirthDate());
+        assertThat((House) userInfo.getBookmarkedHouses().toArray()[0]).isEqualToComparingFieldByField(bookmarked);
+        assertThat((Rent) userInfo.getPurchasedRents().toArray()[0]).isEqualToComparingFieldByField(rent);
+        assertThat(userInfo.getId()).isEqualTo(user.getId());
+        assertThat(userInfo.getRating()).isEqualTo(5);
     }
 
 }

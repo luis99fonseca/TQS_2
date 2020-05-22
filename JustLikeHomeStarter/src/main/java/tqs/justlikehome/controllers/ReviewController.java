@@ -19,37 +19,31 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @PostMapping(value = "/newHouseReview")
-    @ResponseBody
     public HouseReviews newHouseReview(@RequestBody HouseReviewDTO houseReviewDTO){
         return reviewService.addReview(houseReviewDTO);
     }
 
     @PostMapping(value = "/newUserReview")
-    @ResponseBody
     public UserReviews newUserReview(@RequestBody UserReviewDTO userReviewDTO){
         return reviewService.addReview(userReviewDTO);
     }
 
     @GetMapping(value = "/houseReviews/house={houseID}")
-    @ResponseBody
     public List<HouseReviews> getHouseReviews(@PathVariable long houseID){
         return reviewService.getReviewsForHouse(houseID);
     }
 
     @GetMapping(value = "/userReviews/user={userID}")
-    @ResponseBody
     public List<UserReviews> getuserReviewedReviews(@PathVariable long userID){
         return reviewService.getReviewsForUser(userID);
     }
 
     @GetMapping(value = "/UserReviewsFromUser/user={userID}")
-    @ResponseBody
     public List<UserReviews> getuserAsReviewerUserReviews(@PathVariable long userID){
         return reviewService.getUserReviewsFromUser(userID);
     }
     
     @GetMapping(value = "/HouseReviewsFromUser/user={userID}")
-    @ResponseBody
     public List<HouseReviews> getuserAsReviewerHouseReviews(@PathVariable long userID){
         return reviewService.getHouseReviewsFromUser(userID);
     }

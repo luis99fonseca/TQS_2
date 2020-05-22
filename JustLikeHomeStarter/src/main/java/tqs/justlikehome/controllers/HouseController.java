@@ -22,7 +22,6 @@ public class HouseController {
     }
 
     @GetMapping(value = "/houses/city={city}&start={start}&end={end}&guests={guests}")
-    @ResponseBody
     public List<HouseSearchDTO> getHouse(@PathVariable String city,
                                          @PathVariable String start,
                                          @PathVariable String end,
@@ -31,13 +30,11 @@ public class HouseController {
     }
 
     @PostMapping(value = "/addComoditie")
-    @ResponseBody
     public House addComoditieToHouse(@RequestBody ComoditiesDTO comoditiesDTO){
         return houseService.addComoditieToHouse(comoditiesDTO);
     }
 
     @PutMapping(value = "/updateHouse")
-    @ResponseBody
     public House updateHouse(@RequestBody HouseDTO houseDTO){   //need to do HouseDTO.setHouseID()
         return houseService.updateHouse(houseDTO);
     }
@@ -49,7 +46,6 @@ public class HouseController {
 
     // maybe change pa PUT as it is idempotent
     @PostMapping(value = "/addBookmark")
-    @ResponseBody
     public BookMarkDTO addBookmark(@RequestBody BookMarkDTO bookmark) {
         return houseService.addBookmark(bookmark);
     }
