@@ -112,6 +112,8 @@ public class User {
         this.userReviews.add(userReview);
     }
 
+    public void addBookmarkedHouse(House house) {this.bookmarkedHouses.add(house);}
+
     public void addReview(UserReviews userReview){
         this.userReviewed.add(userReview);
     }

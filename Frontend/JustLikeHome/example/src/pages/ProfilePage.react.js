@@ -14,6 +14,7 @@ import {
   Media,
   Text,
   Comment,
+  Table
 } from "tabler-react";
 import User from "../Rest/User"
 import SiteWrapper from "../SiteWrapper.react";
@@ -86,6 +87,24 @@ export default class ProfilePage extends Component {
                     />
                   ))}
                 </Comment.List>
+              </Card>
+              <Card
+                title="Favoritos"
+              >
+                <Table className="card-table table-vcenter">
+                  <Table.Body>
+                      <Table.Row>
+                          <Table.Col>
+                          <img
+                            alt=""
+                            src={"demo/photos/apart_example.jpg"}
+                            className="h-8"
+                          />
+                          </Table.Col>
+                      
+                      </Table.Row>
+                  </Table.Body>
+                </Table>
               </Card>
             </Grid.Col>
           </Grid.Row>

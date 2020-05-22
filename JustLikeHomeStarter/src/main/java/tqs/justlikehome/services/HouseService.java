@@ -2,6 +2,7 @@ package tqs.justlikehome.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
@@ -21,6 +22,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -39,7 +42,8 @@ public class HouseService {
             Date startDate = Date.from(LocalDate.parse(start, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             Date endDate = Date.from(LocalDate.parse(end, parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
             List<HouseSearchDTO> houses = new ArrayList<>();
-            for(House house:houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate)){
+            List<House> housesWithPastRents = houseRepository.searchHouse(numberOfGuests, cityName, startDate, endDate);
+            for(House house:housesWithPastRents){
                 Double rating = houseRepository.getRating(house.getId());
                 houses.add(new HouseSearchDTO(house,house.getOwner(),rating==null?0:rating));
             }
@@ -63,6 +67,9 @@ public class HouseService {
 
     public HouseSearchDTO getSpecificHouse(long houseID){
         House house = houseRepository.findById(houseID);
+        if (house == null){
+            throw new InvalidIdException();
+        }
         User owner = house.getOwner();
         Double ratingHouse = houseRepository.getRating(houseID);
         HouseSearchDTO houseSearch = new HouseSearchDTO(house,owner,ratingHouse==null?0:ratingHouse);
@@ -71,6 +78,27 @@ public class HouseService {
         return houseSearch;
     }
 
+    public BookMarkDTO addBookmark(BookMarkDTO bookmark) {
+        House house = houseRepository.findById(bookmark.getHouseId());
+        User user = userRepository.findById(bookmark.getUserId());
+        if (house == null || user == null){
+            throw new InvalidIdException();
+        }
+        user.addBookmarkedHouse(house);
+        house.addBookmarkedBy(user);
+        return bookmark;
+    }
+
+    public BookMarkDTO deleteBookmark(long userId, long houseId) {
+        House house = houseRepository.findById(houseId);
+        User user = userRepository.findById(userId);
+        if (house == null || user == null){
+            throw new InvalidIdException();
+        }
+        user.getBookmarkedHouses().remove(house);
+        house.getBookmarkedBy().remove(user);
+        return new BookMarkDTO(userId, houseId);
+    }
     public House updateHouse(HouseDTO houseDTO){
         try{
             House house = houseRepository.findById(houseDTO.getHouseId());
