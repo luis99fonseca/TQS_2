@@ -57,9 +57,9 @@ function Home() {
             <div class="col-lg-5 offset-lg-1"  style={{"paddingTop":"300px"}}>
               <Icon prefix="fa" name="quote-left"></Icon>
               <h3>
-                {"Just Like Home fez com que meus apartamentos ganhassem visibilidade, fazendo com que aumentasse a aderência! "}
+                {"Just Like Home fez com que os meus apartamentos ganhassem visibilidade, fazendo com que aumentasse a aderência! "}
               </h3>
-              {"Joana Ferreira membro à 2 anos."}
+              {"Joana Ferreira membro hà 2 anos."}
             </div>
 
 

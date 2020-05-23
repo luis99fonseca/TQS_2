@@ -173,4 +173,52 @@ export default class User extends Component{
    }
 
 
+   async getInfoUser(){
+    // later use cache for dynamic id user
+     const response = await fetch(url + '/userInfo/user=1', {
+         method: 'GET',
+         headers: {
+             'Content-Type': 'application/json'
+             //'Authorization': 'Token ' + localStorage.getItem('token')
+         },
+     })
+
+     const status = await response.status
+     const json = await response.json()
+     return [status, json]
+
+    }
+
+    async getOtherUser(id){
+        // later use cache for dynamic id user
+         const response = await fetch(url + '/userInfo/user='+id, {
+             method: 'GET',
+             headers: {
+                 'Content-Type': 'application/json'
+                 //'Authorization': 'Token ' + localStorage.getItem('token')
+             },
+         })
+    
+         const status = await response.status
+         const json = await response.json()
+         return [status, json]
+    
+        }
+
+    async deleteBookMarker(houseId){
+        // later use cache for dynamic id user
+     const response = await fetch(url + '/deleteBookmark/userId=1&houseId=' + houseId, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+            //'Authorization': 'Token ' + localStorage.getItem('token')
+        },
+    })
+
+    const status = await response.status
+    const json = await response.json()
+    return [status, json]
+    }
+
+
 }
