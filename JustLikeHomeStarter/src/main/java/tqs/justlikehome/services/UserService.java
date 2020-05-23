@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
+import tqs.justlikehome.dtos.UserInfoDTO;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
@@ -58,5 +59,14 @@ public class UserService {
 
     public List<House> getUserHouses(long userId){
         return userRepository.getUserHouses(userId);
+    }
+
+    public UserInfoDTO getUserInfo(long userId){
+        User user = userRepository.findById(userId);
+        if(user==null){
+            throw new InvalidIdException();
+        }
+        Double rating = userRepository.getUserAvgRating(userId);
+        return new UserInfoDTO(user,rating==null?0:rating);
     }
 }
