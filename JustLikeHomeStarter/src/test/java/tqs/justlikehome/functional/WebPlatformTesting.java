@@ -23,7 +23,7 @@ import static org.awaitility.Awaitility.await;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class CheckBdWorkingOnTesting {
+public class WebPlatformTesting {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -86,12 +86,13 @@ public class CheckBdWorkingOnTesting {
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div")).click();
     driver.findElement(By.name("city")).click();
     driver.findElement(By.name("city")).clear();
-    driver.findElement(By.name("city")).sendKeys("porto");
+    driver.findElement(By.name("city")).sendKeys("aveiro");
     driver.findElement(By.name("guests")).click();
     driver.findElement(By.name("guests")).clear();
     driver.findElement(By.name("guests")).sendKeys("1");
     driver.findElement(By.xpath("//button[@type='submit']")).click();
-    assertEquals("porto", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/div/div/div")).getText());
+    Thread.sleep(5000);
+    assertEquals("aveiro", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/div/div/div")).getText());
   }
 
   @AfterEach
