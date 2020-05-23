@@ -59,4 +59,8 @@ public class UserService {
     public List<House> getUserHouses(long userId){
         return userRepository.getUserHouses(userId);
     }
+
+    public List<User> getAll(){
+        return userRepository.findAll();
+    }
 }
