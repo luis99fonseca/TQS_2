@@ -54,15 +54,15 @@ export default class AnnoucementPage extends Component{
         let comodities = []
         for (var param in data){
           if(extras.includes(param)){
-            comodities.push(param)
+            comodities.push({"type": param, "description": ""})
             delete data[param]
           }   
         }
+        console.log(comodities)
         data["userId"] = 1 // DEFAULT, DPS E PRECISO IR BUSCAR A CACHE O ID DO USER LOGADO
+        data["comodities"] = comodities
+        await this.house_obj.post_house(data)
 
-        let response = await this.house_obj.post_house(data)
-        let status = response[0]
-        let houses = response[1]
         this.get_userHouses()
     }
 

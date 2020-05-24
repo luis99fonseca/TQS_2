@@ -34,7 +34,8 @@ export default class Property extends Component {
                 maxNumberOfUsers: 0,
                 rating: 0.0,
                 userRating: 0.0,
-                ownerName: ""
+                ownerName: "",
+                comodities: []
             },
             reviews:[],
             feedback_askrent: "Pedido feito com sucesso",
@@ -85,7 +86,7 @@ export default class Property extends Component {
 
     let response_review = await this.house_obj.get_reviews()
     let reviews_rcv = response_review[1]
-
+    console.log(house_rcv)
     this.setState({
         house : house_rcv,
         reviews: reviews_rcv
@@ -252,7 +253,9 @@ export default class Property extends Component {
             </div>
             <div style={{ borderBottom:"1px solid",marginTop:"50px"}}>
                 <h2>Características</h2>
-                <ul>{"Nenhuma"}</ul>
+                <ul>
+                    Nenhuma
+                </ul>
             </div>
             <div style={{ borderBottom:"1px solid",marginTop:"50px"}} class="row">
                 <div class="col-lg-12">
