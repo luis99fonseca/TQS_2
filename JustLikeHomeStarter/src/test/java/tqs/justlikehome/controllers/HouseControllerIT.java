@@ -117,7 +117,7 @@ class HouseControllerIT {
     }
 
     @Test
-    public void whenGetInvalidSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
+    void whenGetInvalidSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
 
         mockMvc.perform(get("/specificHouse/houseId="+(-1))).andExpect(status().is4xxClientError());
     }
