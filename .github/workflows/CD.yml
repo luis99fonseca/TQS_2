@@ -13,20 +13,20 @@ jobs:
     steps:
     - name: Docker clean
       run: |
-        sudo docker ps -aq;
-        sudo docker kill $(docker ps -aq) || true;
-        sudo docker rm $(docker ps -aq) || true;
-        sudo docker volume ls -qf dangling=true;
-        sudo docker volume rm $(docker volume ls -qf dangling=true) || true;
-        sudo docker rmi $(docker image ls) || true;
+        docker ps -aq;
+        docker kill $(docker ps -aq) || true;
+        docker rm $(docker ps -aq) || true;
+        docker volume ls -qf dangling=true;
+        docker volume rm $(docker volume ls -qf dangling=true) || true;
+        docker rmi $(docker image ls) || true;
     - name: Server pull repository
       run: |
         git -C ~/TQS_2/ pull;
     - name: CD for Spring-Boot Backend  
       run: |
-        sudo docker build --tag "backend" ~/TQS_2/JustLikeHomeStarter;
-        sudo docker run -p 8080:8080 -d backend;
+        docker build --tag "backend" ~/TQS_2/JustLikeHomeStarter;
+        docker run -p 8080:8080 -d backend;
     - name: CD for React Frontend
       run: |
-        sudo docker build --tag "frontend" ~/TQS_2/Frontend;
-        sudo docker run -p 80:3000 -d frontend;
+        docker build --tag "frontend" ~/TQS_2/Frontend;
+        docker run -p 80:3000 -d frontend;
