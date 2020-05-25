@@ -1,7 +1,10 @@
 package tqs.justlikehome.dtos;
 
+import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
+
+import java.util.Set;
 
 public class HouseSearchDTO {
     private long houseId;
@@ -14,10 +17,11 @@ public class HouseSearchDTO {
     private int maxNumberOfUsers;
     private double rating;
     private double userRating;
+    private Set<Comodities> comodities;
     private long userId;
     private String ownerName;
 
-    public HouseSearchDTO(House house, User owner,double rating) {
+    public HouseSearchDTO(House house, User owner, double rating) {
         this.houseId=house.getId();
         this.city = house.getCity();
         this.description = house.getDescription();
@@ -28,6 +32,7 @@ public class HouseSearchDTO {
         this.maxNumberOfUsers = house.getMaxNumberOfUsers();
         this.userId=owner.getId();
         this.rating=rating;
+        this.comodities=house.getComodities();
         this.ownerName=owner.getUsername();
         this.houseName=house.getHouseName();
     }
@@ -59,6 +64,11 @@ public class HouseSearchDTO {
     public long getHouseId() {
         return houseId;
     }
+
+    public Set<Comodities> getComodities() {
+        return comodities;
+    }
+
 
     public int getNumberOfBeds() {
         return numberOfBeds;

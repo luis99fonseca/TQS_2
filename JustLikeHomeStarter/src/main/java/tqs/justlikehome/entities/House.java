@@ -34,11 +34,15 @@ public class House {
     @JsonIgnore
     private Set<HouseReviews> houseReviews = new HashSet<>();
 
+    public void setComodities(Set<Comodities> comodities) {
+        this.comodities = comodities;
+    }
+
     @ManyToMany(mappedBy = "bookmarkedHouses")
     @JsonIgnore
     private Set<User> bookmarkedBy = new HashSet<>();
 
-    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "house",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Comodities> comodities = new HashSet<>();
 
     // TODO: for debugging, remove later
@@ -59,7 +63,10 @@ public class House {
         this.houseName=house.getHouseName();
         this.numberOfBeds=house.getNumberOfBeds();
         this.maxNumberOfUsers=house.getMaxNumberOfUsers();
-        this.comodities = house.getComodities();
+        for(Comodities c:house.getComodities()){
+            c.setHouse(this);
+            this.addComoditieToHouse(c);
+        }
     }
 
 
@@ -113,7 +120,7 @@ public class House {
     }
 
     public Set<Comodities> getComodities() {
-        return comodities;
+        return this.comodities;
     }
 
     public long getId() {

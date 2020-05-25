@@ -55,6 +55,7 @@ export default class Property extends Component {
         this.review_house = this.review_house.bind(this)
         this.renderFeedbackBookmarker = this.renderFeedbackBookmarker.bind(this)
         this.add_house_to_bookmarker = this.add_house_to_bookmarker.bind(this)
+        this.go_profileUser = this.go_profileUser.bind(this)
 
         this.get_house()
     }
@@ -86,7 +87,7 @@ export default class Property extends Component {
 
     let response_review = await this.house_obj.get_reviews()
     let reviews_rcv = response_review[1]
-    console.log(house_rcv)
+    
     this.setState({
         house : house_rcv,
         reviews: reviews_rcv
@@ -156,6 +157,11 @@ export default class Property extends Component {
         )
     }
 
+    go_profileUser(){
+        localStorage.setItem('client_id', this.state.house.userId)
+        window.location.href = '/user/profile'
+    }
+
     render_formReview = () => {
         return(
           
@@ -168,6 +174,7 @@ export default class Property extends Component {
                   </Form.Group>
                   <Form.Group label="Avaliação">
                       <Rating
+                          id="stars2"
                           initialRating={this.state.review_rating}
                           onChange={(value)=>this.change_rating(value)}
                           name="rating" 
@@ -225,6 +232,7 @@ export default class Property extends Component {
             
             <h1 style={{fontSize:"70px", marginTop:"50px", marginBottom:"0px"}}>{this.state.house.houseName}</h1>
             <Rating 
+                id="stars"
                 initialRating={this.state.house.rating} 
                 readonly
                 emptySymbol="fa fa-star-o fa-2x"
@@ -254,7 +262,9 @@ export default class Property extends Component {
             <div style={{ borderBottom:"1px solid",marginTop:"50px"}}>
                 <h2>Características</h2>
                 <ul>
-                    Nenhuma
+                    {this.state.house.comodities.map((com)=>(
+                        <li>{com.type}</li>
+                    ))}
                 </ul>
             </div>
             <div style={{ borderBottom:"1px solid",marginTop:"50px"}} class="row">
@@ -282,14 +292,15 @@ export default class Property extends Component {
             </div>
             <Form onSubmit={this.ask_rent}>
                 <div class="row" style={{marginTop:"60px"}}>
-                <div class="col-lg-2">
+                <div class="col-lg-2"  onClick={() => this.go_profileUser()}>
                     <GalleryCard.Details
                         avatarURL={avatarUrl}
                         fullName={this.state.house.ownerName}
                     />
                     <span>Rating do proprietário: {this.state.house.userRating}</span>
+                
                 </div>
-               
+                
                     <div class="col-lg-3">
                         <p>Data de Início:</p>
                         <DatePicker
@@ -317,9 +328,9 @@ export default class Property extends Component {
                         {this.state.pending === true && this.renderFeedbackRent()}
                         {this.state.status_bookmarker === true && this.renderFeedbackBookmarker()}
                     </div>
-               
+                    
                 </div>
-            </Form>
+                </Form>
 
                     
                 </Container>

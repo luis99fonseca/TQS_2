@@ -123,6 +123,7 @@ export default class ClientProfile extends Component {
                 </Form.Group>
                 <Form.Group label="Avaliação">
                     <Rating
+                        id="stars2"
                         initialRating={this.state.rating}
                         onChange={(value)=>this.change_rating(value)}
                         name="rating" 
@@ -153,6 +154,7 @@ export default class ClientProfile extends Component {
               <p>{this.state.user.username}</p>
               <p>{this.state.user.birthDate}</p>
               <Rating 
+                id="stars"
                 initialRating={this.state.user.rating} 
                 readonly
                 emptySymbol="fa fa-star-o fa-2x"
