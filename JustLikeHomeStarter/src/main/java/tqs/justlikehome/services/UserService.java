@@ -36,7 +36,9 @@ public class UserService {
             // because i'm a framework of a framework and i do whatever I want and you have to find a way don't you
             // because you need this don't you, go ahead and ruin the performance of your database
             List<House> list = (List<House>)(Object) Arrays.asList(user.getOwnedHouses().toArray());
-            list.sort((o1, o2)-> (int) (((House) o2).getId()-((House) o1).getId()));
+            list.sort((o1, o2)-> (int) ((o2).getId()-(o1).getId()));
+            System.out.println(list.get(0).getId());
+            System.out.println(list.get(0).getComodities());
             return list.get(0);
         }catch (NullPointerException e){
             throw new InvalidIdException();

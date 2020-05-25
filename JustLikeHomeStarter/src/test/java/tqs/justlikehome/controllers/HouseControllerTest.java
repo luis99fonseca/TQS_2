@@ -139,7 +139,7 @@ class HouseControllerTest {
     }
 
     @Test
-    public void whenGetInvalidSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
+    void whenGetInvalidSpecificHouse_withNoRatings_thenReturnHouseSearchDTO() throws Exception {
 
         given(houseService.getSpecificHouse(-1)).willThrow(InvalidIdException.class);
 

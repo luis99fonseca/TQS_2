@@ -154,6 +154,20 @@ class UserControllerIT {
         tempComodities.add(new Comodities("pool", "very wet"));
 
         HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, user.getId(), "casa do bairro", tempComodities);
+        mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
+                .content(objectToJson(houseDTO)))
+                .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
+                .andExpect(jsonPath("$.description").value(houseDTO.getDescription()))
+                .andExpect(jsonPath("$.comodities").isEmpty());
+    }
+
+    @Test
+    void whenAddUserValidHouse_withNoEmptyComodities_returnHouse() throws Exception {
+        Set<Comodities> tempComodities = new HashSet<>();
+        tempComodities.add(new Comodities("bed", "very large"));
+        tempComodities.add(new Comodities("pool", "very wet"));
+
+        HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, user.getId(), "casa do bairro", tempComodities);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(houseDTO)))
