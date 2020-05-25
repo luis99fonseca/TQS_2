@@ -158,7 +158,7 @@ class UserControllerIT {
                 .content(objectToJson(houseDTO)))
                 .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
                 .andExpect(jsonPath("$.description").value(houseDTO.getDescription()))
-                .andExpect(jsonPath("$.comodities", hasSize(2)));
+                .andExpect(jsonPath("$.comodities.length()").value(2));
     }
 
 

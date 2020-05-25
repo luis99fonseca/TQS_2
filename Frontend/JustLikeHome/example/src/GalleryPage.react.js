@@ -33,7 +33,6 @@ export default class GalleryPage extends Component {
 
   property_info(id) {
     localStorage.setItem('house_id', id);
-    console.log("click here")
     window.location.href = '/property'
     return true;
   }
