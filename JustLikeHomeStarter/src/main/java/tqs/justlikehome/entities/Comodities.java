@@ -14,7 +14,7 @@ public class Comodities {
     private String type;
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="house_id")
     @JsonIgnore
     private House house;
@@ -35,6 +35,14 @@ public class Comodities {
 
     public String getType() {
         return type;
+    }
+
+    public House getHouse() {
+        return house;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
     }
 
     public void setType(String type) {

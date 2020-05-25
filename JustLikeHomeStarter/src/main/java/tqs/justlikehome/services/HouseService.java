@@ -11,6 +11,7 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.repositories.ComoditiesRepository;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
 
@@ -31,6 +32,9 @@ public class HouseService {
 
     @Autowired
     public HouseRepository houseRepository;
+
+    @Autowired
+    public ComoditiesRepository comoditiesRepository;
 
     @Autowired
     public UserRepository userRepository;
@@ -55,8 +59,9 @@ public class HouseService {
         try{
             Comodities comoditie = new Comodities(comoditiesDTO);
             House house = houseRepository.findById(comoditiesDTO.getHouse());
+            comoditie.setHouse(house);
             house.addComoditieToHouse(comoditie);
-            houseRepository.save(house);
+            house = houseRepository.save(house);
             return house;
         }catch(NullPointerException e){
            throw new InvalidIdException();
