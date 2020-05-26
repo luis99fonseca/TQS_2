@@ -11,6 +11,8 @@ import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.services.ReviewService;
 
+import javax.validation.Valid;
+
 @RestController
 @CrossOrigin("http://localhost:3000")
 public class ReviewController {
@@ -20,37 +22,37 @@ public class ReviewController {
 
     @PostMapping(value = "/newHouseReview")
     @ResponseBody
-    public HouseReviews newHouseReview(@RequestBody HouseReviewDTO houseReviewDTO){
+    public HouseReviews newHouseReview(@Valid  @RequestBody HouseReviewDTO houseReviewDTO){
         return reviewService.addReview(houseReviewDTO);
     }
 
     @PostMapping(value = "/newUserReview")
     @ResponseBody
-    public UserReviews newUserReview(@RequestBody UserReviewDTO userReviewDTO){
+    public UserReviews newUserReview(@Valid @RequestBody UserReviewDTO userReviewDTO){
         return reviewService.addReview(userReviewDTO);
     }
 
     @GetMapping(value = "/houseReviews/house={houseID}")
     @ResponseBody
-    public List<HouseReviews> getHouseReviews(@PathVariable long houseID){
+    public List<HouseReviews> getHouseReviews(@Valid @PathVariable long houseID){
         return reviewService.getReviewsForHouse(houseID);
     }
 
     @GetMapping(value = "/userReviews/user={userID}")
     @ResponseBody
-    public List<UserReviews> getuserReviewedReviews(@PathVariable long userID){
+    public List<UserReviews> getuserReviewedReviews(@Valid @PathVariable long userID){
         return reviewService.getReviewsForUser(userID);
     }
 
     @GetMapping(value = "/UserReviewsFromUser/user={userID}")
     @ResponseBody
-    public List<UserReviews> getuserAsReviewerUserReviews(@PathVariable long userID){
+    public List<UserReviews> getuserAsReviewerUserReviews(@Valid @PathVariable long userID){
         return reviewService.getUserReviewsFromUser(userID);
     }
     
     @GetMapping(value = "/HouseReviewsFromUser/user={userID}")
     @ResponseBody
-    public List<HouseReviews> getuserAsReviewerHouseReviews(@PathVariable long userID){
+    public List<HouseReviews> getuserAsReviewerHouseReviews(@Valid @PathVariable long userID){
         return reviewService.getHouseReviewsFromUser(userID);
     }
 }

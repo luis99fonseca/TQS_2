@@ -13,8 +13,11 @@ import {
   List,
   Media,
   Text,
+  Icon,
   Comment,
+  Table
 } from "tabler-react";
+import Rating from "react-rating";
 import User from "../Rest/User"
 import SiteWrapper from "../SiteWrapper.react";
 import CardTitle from "../components/Card/CardTitle.react";
@@ -25,13 +28,21 @@ export default class ProfilePage extends Component {
 
       this.state= {
           user_id : 1,
-          reviews_user : []
+          reviews_user : [],
+          user: {
+            bookmarkedHouses: [],
+            purchasedRents : []
+          }
       }
 
       this.user_obj = new User()
       this.get_userReviews = this.get_userReviews.bind(this)
+      this.get_info = this.get_info.bind(this)
+      this.get_deny_bookmarker = this.get_deny_bookmarker.bind(this)
+      this.property_info = this.property_info.bind(this)
 
       this.get_userReviews()
+      this.get_info()
   }
 
   async get_userReviews(){
@@ -49,12 +60,30 @@ export default class ProfilePage extends Component {
   }
 
 
+  async get_info(){
+    let response = await this.user_obj.getInfoUser()
+    let status = response[0]
+    let data = response[1]
+
+    this.setState({
+        user: data
+    })
+  }
+
+  property_info(id) {
+    localStorage.setItem('house_id', id);
+    window.location.href = '/property'
+    return true;
+  }
+
+
+  async get_deny_bookmarker(id){
+    await this.user_obj.deleteBookMarker(id)
+    this.get_info()
+  }
+
+
   render() {
-  const username = "andryz"
-  const firstName = "André"
-  const lastName = "Baião"
-  const name = firstName + " " + lastName
-  const birthDate = "01/07/1999"
 
   return (
     <SiteWrapper>
@@ -63,18 +92,25 @@ export default class ProfilePage extends Component {
           <Grid.Row>
             <Grid.Col lg={4}>
               <Profile
-                name={name}
+                name={`${this.state.user.firstName} ${this.state.user.lastName}`}
                 backgroundURL="demo/photos/eberhard-grossgasteiger-311213-500.jpg"
                 avatarURL="demo/faces/male/16.jpg"
               >
-              <p>{username}</p>
-              <p>{birthDate}</p>
+              <p>{this.state.user.username}</p>
+              <p>{this.state.user.birthDate}</p>
+              <Rating 
+                initialRating={this.state.user.rating} 
+                readonly
+                emptySymbol="fa fa-star-o fa-2x"
+                fullSymbol="fa fa-star fa-2x"
+                fractions={2}
+             />
               </Profile>
             </Grid.Col>
             <Grid.Col lg={8}>
               <Card>
                 <Card.Header>
-                  <CardTitle>Últimas reviews feitas a {username}</CardTitle>                    
+                  <CardTitle>Últimas reviews feitas a si</CardTitle>                    
                 </Card.Header>
                 <Comment.List>
                   {this.state.reviews_user.map((review)=> (
@@ -86,6 +122,69 @@ export default class ProfilePage extends Component {
                     />
                   ))}
                 </Comment.List>
+              </Card>
+              <Card
+                title="Favoritos"
+              >
+                <Table className="card-table table-vcenter">
+                  <Table.Body>
+                    {this.state.user.bookmarkedHouses.map((rent)=>(
+                      <Table.Row >
+                        <Table.Col>
+                        <img
+                          alt=""
+                          src={"demo/photos/apart_example.jpg"}
+                          className="h-8"
+                        />
+                        </Table.Col>
+                        <Table.Col>
+                          {rent.houseName}
+                        </Table.Col>
+                        <Table.Col>
+                          {rent.city}
+                        </Table.Col>
+                        <Table.Col>
+                          <strong>{rent.pricePerNight}€</strong> /por noite
+                        </Table.Col>
+                        <Table.Col>
+                          <Button color="secondary"  onClick={() => this.property_info(rent.id)}><Icon prefix="fa" name="eye" /></Button>
+                            <span style={{marginLeft:"5px"}}></span>
+                          <Button color="danger" icon="trash" onClick={() => this.get_deny_bookmarker(rent.id)} />
+                        </Table.Col>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table>
+              </Card>
+
+              <Card
+                title="Suas ultímas experiências"
+              >
+                <Table className="card-table table-vcenter">
+                  <Table.Body>
+                    {this.state.user.purchasedRents.map((rent)=>(
+                      <Table.Row >
+                        <Table.Col>
+                        <img
+                          alt=""
+                          src={"demo/photos/apart_example.jpg"}
+                          className="h-8"
+                        />
+                        </Table.Col>
+                        <Table.Col>
+                          {rent.house.houseName}
+                        </Table.Col>
+                        <Table.Col>
+                        <span> De {rent.rentStart} a {rent.rentEnd}</span>
+                        </Table.Col>
+            
+                        <Table.Col>
+                          <Button color="secondary"  onClick={() => this.property_info(rent.id)}><Icon prefix="fa" name="eye" /></Button>
+                        </Table.Col>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table>
               </Card>
             </Grid.Col>
           </Grid.Row>

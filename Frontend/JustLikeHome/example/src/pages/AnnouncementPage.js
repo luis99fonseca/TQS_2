@@ -15,7 +15,7 @@ export default class AnnoucementPage extends Component{
             update : false,
             startDate : new Date(),
             endDate : new Date(),
-            id: -4,  rating:0, houseName: "", userId:"" , city:"", description:"", kmFromCityCenter:0, pricePerNight:0.0, numberOfBeds: 0, maxNumberOfUsers:0, comodities: [],
+            houseId: -4,  rating:0, houseName: "", userId:"" , city:"", description:"", kmFromCityCenter:0, pricePerNight:0.0, numberOfBeds: 0, maxNumberOfUsers:0, comodities: [],
             houses : [
               {id: -4,  rating:0 ,ownerName:"" , city:"", description:"", kmFromCityCenter:0, pricePerNight:0.0, numberOfBeds: 0, maxNumberOfUsers:0, comodities: []}
             ]
@@ -33,13 +33,13 @@ export default class AnnoucementPage extends Component{
 
       let response = await this.house_obj.get_userHouse()
       let status = response[0]
-      let houses = response[1]
+      let houses_data = response[1]
       let state_houses = []
-      houses.map((home) => (
+      houses_data.map((home) => (
         state_houses.push(home)
       )
       )
-
+      
       this.setState({
         update : false,
         houses : state_houses
@@ -49,35 +49,34 @@ export default class AnnoucementPage extends Component{
     async create_house(event){
         event.preventDefault();
         let data = getDataForm(event.target);
-        console.log(data)
+       
         let extras = ["Piscina", "Spa", "Campo de futebol", "Ginásio"]
         let comodities = []
         for (var param in data){
           if(extras.includes(param)){
-            comodities.push(param)
+            comodities.push({"type": param, "description": ""})
             delete data[param]
           }   
         }
+        console.log(comodities)
         data["userId"] = 1 // DEFAULT, DPS E PRECISO IR BUSCAR A CACHE O ID DO USER LOGADO
-        // console.log(data)
-        let response = await this.house_obj.post_house(data)
-        let status = response[0]
-        let houses = response[1]
-        console.log(houses)
+        data["comodities"] = comodities
+        await this.house_obj.post_house(data)
+
         this.get_userHouses()
     }
 
     render_update = () => {
       return(
-        <Button color="info" onClick={this.updateProperty}>Atualizar</Button>
+        <Button color="info"  type="button" onClick={this.updateProperty}>Atualizar</Button>
       )
     }
 
     choice_house_update(house){
-      console.log(house)
+
       this.setState({
         update: true,
-        id: house.id,
+        houseId: house.id,
         comodities: house.comodities,
         numberOfBeds: house.numberOfBeds,
         houseName : house.houseName,
@@ -91,8 +90,7 @@ export default class AnnoucementPage extends Component{
 
     async updateProperty(){
         let data = {
-          id: this.state.id,
-          comodities: this.state.comodities,
+          houseId: this.state.houseId,
           numberOfBeds: this.state.numberOfBeds,
           houseName : this.state.houseName,
           city: this.state.city,
@@ -103,6 +101,8 @@ export default class AnnoucementPage extends Component{
         }
 
         let response = await this.house_obj.updateHouse(data)
+        let msg = response[1]
+
         this.get_userHouses()
     }
 
@@ -181,7 +181,7 @@ export default class AnnoucementPage extends Component{
                                 <Form.Input required type="number" min="0" name="pricePerNight"  value={this.state.pricePerNight} onChange={(e) => this.setState({pricePerNight: e.target.value})}/>
                               </Form.Group>
                               <div style={{paddingTop:"20px"}}></div>
-                              <Button type="submit" color="primary">Criar</Button> <span style={{marginRight:"5px"}}></span>
+                              <Button color="primary">Criar</Button> <span style={{marginRight:"5px"}}></span>
                               {this.state.update === true && this.render_update()}
                           </Form>
                         </Grid.Col>

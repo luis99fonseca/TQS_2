@@ -26,6 +26,7 @@ export default class RentsPage extends Component {
           
 
           this.accept_rents = this.accept_rents.bind(this)
+          this.deny_rent = this.deny_rent.bind(this)
     }
 
 
@@ -69,6 +70,14 @@ export default class RentsPage extends Component {
         this.get_rentsRequests()
     }
 
+    async deny_rent(id){
+        let data = {"rentID": id}
+        let response = await this.user_obj.deny_rents(data)
+        let status = response[0]
+        
+        this.get_rentsRequests()
+    }
+
    
     go_profileUser(id){
         localStorage.setItem('client_id', id)
@@ -103,7 +112,7 @@ export default class RentsPage extends Component {
                                         <Table.Col className="text-right">
                                             <Button color="success" icon="check" onClick={() => this.accept_rents(rent.id)} />
                                             <span style={{padding:"5px"}}></span>
-                                            <Button color="danger" icon="trash"  />
+                                            <Button color="danger" icon="trash" onClick={() => this.deny_rent(rent.id)} />
                                         </Table.Col>
                                     </Table.Row>
                                 )

@@ -93,6 +93,7 @@ class HouseServiceTest {
         // Spy because we need to make sure the ID is correct
         house = Mockito.spy(house);
         Mockito.when(house.getId()).thenReturn((long) 0);
+        Mockito.when(houseRepository.save(any(House.class))).thenReturn(house);
         ComoditiesDTO comoditiesDTO = new ComoditiesDTO("Pool","Pool 20m by 30m",house.getId());
         House testHouse = houseService.addComoditieToHouse(comoditiesDTO);
         assertThat(testHouse.getComodities().size()).isEqualTo(1);
