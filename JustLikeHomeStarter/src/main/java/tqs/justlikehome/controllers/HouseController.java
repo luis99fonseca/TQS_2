@@ -51,6 +51,7 @@ public class HouseController {
     // maybe change pa PUT as it is idempotent
     @PostMapping(value = "/addBookmark")
     @ResponseBody
+
     public BookMarkDTO addBookmark(@Valid @RequestBody BookMarkDTO bookmark) {
         return houseService.addBookmark(bookmark);
     }

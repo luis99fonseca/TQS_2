@@ -139,7 +139,6 @@ class UserControllerIT {
     @Test
     void whenAddUserValidHouse_returnHouse() throws Exception {
         HouseDTO houseDTO = new HouseDTO("viseu", "very as house", 3.0, 23, 2, 2, user.getId(), "casa do bairro", Collections.emptySet());
-
         mockMvc.perform(MockMvcRequestBuilders.post("/newHouse").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(houseDTO)))
                 .andExpect(jsonPath("$.city").value(houseDTO.getCity()))
@@ -160,6 +159,7 @@ class UserControllerIT {
                 .andExpect(jsonPath("$.description").value(houseDTO.getDescription()))
                 .andExpect(jsonPath("$.comodities.length()").value(2));
     }
+
 
 
     @Test

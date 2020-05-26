@@ -71,4 +71,7 @@ public class UserService {
         Double rating = userRepository.getUserAvgRating(userId);
         return new UserInfoDTO(user,rating==null?0:rating);
     }
+    public List<User> getAll(){
+        return userRepository.findAll();
+    }
 }

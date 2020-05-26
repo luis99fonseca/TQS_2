@@ -40,4 +40,13 @@ public class UserController {
     public UserInfoDTO getUserInfo(@PathVariable long userId){
         return userService.getUserInfo(userId);
     }
+
+    public List<House> getUserHouses(@PathVariable long userId){
+        System.out.println(">> " + userService.getUserHouses(userId));
+        return userService.getUserHouses(userId);
+    }
+
+    // TODO: remove, here for debugging porpuses
+    @GetMapping(value = "/getAll")
+    public List<User> getAll() { return userService.getAll();}
 }
