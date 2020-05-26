@@ -34,11 +34,14 @@ export default class Property extends Component {
                 maxNumberOfUsers: 0,
                 rating: 0.0,
                 userRating: 0.0,
-                ownerName: ""
+                ownerName: "",
+                comodities: []
             },
             reviews:[],
             feedback_askrent: "Pedido feito com sucesso",
-            pending: false
+            pending: false,
+            feedback_bookmarker: "Adicionado aos favoritos",
+            status_bookmarker: false
         }
 
         this.user_obj = new User()
@@ -50,6 +53,9 @@ export default class Property extends Component {
         this.my_button = this.my_button.bind(this)
         this.change_rating = this.change_rating.bind(this)
         this.review_house = this.review_house.bind(this)
+        this.renderFeedbackBookmarker = this.renderFeedbackBookmarker.bind(this)
+        this.add_house_to_bookmarker = this.add_house_to_bookmarker.bind(this)
+        this.go_profileUser = this.go_profileUser.bind(this)
 
         this.get_house()
     }
@@ -67,6 +73,7 @@ export default class Property extends Component {
         let check_pending = response[1]
 
         this.setState({
+            status_bookmarker: false,
             pending : check_pending['pending']
         })
     }
@@ -80,7 +87,7 @@ export default class Property extends Component {
 
     let response_review = await this.house_obj.get_reviews()
     let reviews_rcv = response_review[1]
-
+    
     this.setState({
         house : house_rcv,
         reviews: reviews_rcv
@@ -122,7 +129,13 @@ export default class Property extends Component {
         return (
         <span style={{color: "green", marginLeft:"10px"}}>{this.state.feedback_askrent}</span>
         )
-      }
+    }
+
+    renderFeedbackBookmarker() {
+        return (
+        <span style={{color: "green", marginLeft:"10px"}}>{this.state.feedback_bookmarker}</span>
+        )
+    }
     
     change_rating(value){
         this.setState({
@@ -144,6 +157,11 @@ export default class Property extends Component {
         )
     }
 
+    go_profileUser(){
+        localStorage.setItem('client_id', this.state.house.userId)
+        window.location.href = '/user/profile'
+    }
+
     render_formReview = () => {
         return(
           
@@ -156,6 +174,7 @@ export default class Property extends Component {
                   </Form.Group>
                   <Form.Group label="Avaliação">
                       <Rating
+                          id="stars2"
                           initialRating={this.state.review_rating}
                           onChange={(value)=>this.change_rating(value)}
                           name="rating" 
@@ -170,6 +189,23 @@ export default class Property extends Component {
           
                 
         )
+    }
+
+    async add_house_to_bookmarker(){
+        //use later cache to dynamic id user
+        let data = {
+            "userId": 1,
+            "houseId": localStorage.getItem('house_id')
+        }
+        let response = await this.user_obj.addHouseToBookmarker(data)
+        let status = response[0]
+        if(status === 200){
+            this.setState({
+                pending: false,
+                status_bookmarker: true
+            })
+        }
+        console.log(response[1])
     }
 
 
@@ -196,6 +232,7 @@ export default class Property extends Component {
             
             <h1 style={{fontSize:"70px", marginTop:"50px", marginBottom:"0px"}}>{this.state.house.houseName}</h1>
             <Rating 
+                id="stars"
                 initialRating={this.state.house.rating} 
                 readonly
                 emptySymbol="fa fa-star-o fa-2x"
@@ -224,7 +261,11 @@ export default class Property extends Component {
             </div>
             <div style={{ borderBottom:"1px solid",marginTop:"50px"}}>
                 <h2>Características</h2>
-                <ul>{"Nenhuma"}</ul>
+                <ul>
+                    {this.state.house.comodities.map((com)=>(
+                        <li>{com.type}</li>
+                    ))}
+                </ul>
             </div>
             <div style={{ borderBottom:"1px solid",marginTop:"50px"}} class="row">
                 <div class="col-lg-12">
@@ -251,14 +292,15 @@ export default class Property extends Component {
             </div>
             <Form onSubmit={this.ask_rent}>
                 <div class="row" style={{marginTop:"60px"}}>
-                <div class="col-lg-2">
+                <div class="col-lg-2"  onClick={() => this.go_profileUser()}>
                     <GalleryCard.Details
                         avatarURL={avatarUrl}
                         fullName={this.state.house.ownerName}
                     />
                     <span>Rating do proprietário: {this.state.house.userRating}</span>
+                
                 </div>
-               
+                
                     <div class="col-lg-3">
                         <p>Data de Início:</p>
                         <DatePicker
@@ -281,11 +323,14 @@ export default class Property extends Component {
                     <div class="col-lg-4">
                         <h3 style={{fontSize:"20px"}}><b style={{fontSize:"40px"}}>{this.state.house.pricePerNight}€</b>/por noite</h3>
                         <Button type="submit" color="primary">Alugar</Button>
+                        <span style={{marginLeft:"5px"}}></span>
+                        <Button type="button" icon="star" color="warning" onClick={this.add_house_to_bookmarker} />
                         {this.state.pending === true && this.renderFeedbackRent()}
+                        {this.state.status_bookmarker === true && this.renderFeedbackBookmarker()}
                     </div>
-               
+                    
                 </div>
-            </Form>
+                </Form>
 
                     
                 </Container>

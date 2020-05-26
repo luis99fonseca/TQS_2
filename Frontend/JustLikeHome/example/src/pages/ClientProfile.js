@@ -28,17 +28,22 @@ export default class ClientProfile extends Component {
           form_review : false,
           msg_error: [false, "Nunca esteve em nenhum dos seus bens imóveis"],
           user_id: localStorage.getItem('client_id'),
-          reviews_user : []
+          reviews_user : [],
+          user: {
+            bookmarkedHouses: [],
+            purchasedRents : []
+          }
       }
 
       this.user_obj = new User()
       this.get_userReviews = this.get_userReviews.bind(this)
       this.review_user = this.review_user.bind(this)
       this.render_formReview = this.render_formReview.bind(this)
-      
+      this.get_info = this.get_info.bind(this)
       this.my_button = this.my_button.bind(this)
       
       this.get_userReviews()
+      this.get_info()
   }
 
   async get_userReviews(){
@@ -54,6 +59,15 @@ export default class ClientProfile extends Component {
     })    
   }
 
+  async get_info(){
+    let response = await this.user_obj.getOtherUser(localStorage.getItem('client_id'))
+    let status = response[0]
+    let data = response[1]
+
+    this.setState({
+        user: data
+    })
+  }
 
   async review_user(event){
     event.preventDefault();
@@ -109,6 +123,7 @@ export default class ClientProfile extends Component {
                 </Form.Group>
                 <Form.Group label="Avaliação">
                     <Rating
+                        id="stars2"
                         initialRating={this.state.rating}
                         onChange={(value)=>this.change_rating(value)}
                         name="rating" 
@@ -125,31 +140,33 @@ export default class ClientProfile extends Component {
   }
 
   render() {
-  const username = "andryz"
-  const firstName = "André"
-  const lastName = "Baião"
-  const name = firstName + " " + lastName
-  const birthDate = "01/07/1999"
-
   return (
     <SiteWrapper>
       <div className="my-3 my-md-5">
         <Container>
           <Grid.Row>
             <Grid.Col lg={4}>
-              <Profile
-                name={name}
-                backgroundURL={"/demo/photos/eberhard-grossgasteiger-311213-500.jpg"}
+            <Profile
+                name={`${this.state.user.firstName} ${this.state.user.lastName}`}
+                backgroundURL="/demo/photos/eberhard-grossgasteiger-311213-500.jpg"
                 avatarURL="/demo/faces/male/16.jpg"
               >
-              <p>{username}</p>
-              <p>{birthDate}</p>
+              <p>{this.state.user.username}</p>
+              <p>{this.state.user.birthDate}</p>
+              <Rating 
+                id="stars"
+                initialRating={this.state.user.rating} 
+                readonly
+                emptySymbol="fa fa-star-o fa-2x"
+                fullSymbol="fa fa-star fa-2x"
+                fractions={2}
+             />
               </Profile>
             </Grid.Col>
             <Grid.Col lg={8}>
               <Card>
                 <Card.Header>
-                  <CardTitle>Últimas reviews feitas a {username}</CardTitle>                    
+                  <CardTitle>Últimas reviews feitas a {this.state.user.username}</CardTitle>                    
                 </Card.Header>
                 <Comment.List>
                   {this.state.reviews_user.map((review, index)=> (
