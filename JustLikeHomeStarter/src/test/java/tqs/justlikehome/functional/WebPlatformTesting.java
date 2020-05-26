@@ -1,5 +1,8 @@
 package tqs.justlikehome.functional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import java.util.concurrent.TimeUnit;
@@ -22,6 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import static org.awaitility.Awaitility.await;
+import org.awaitility.Duration;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -179,28 +183,7 @@ public class WebPlatformTesting {
   }
 
   @Test
-  public void makeInvalidHouseReview() throws Exception {
-    driver.get("http://localhost:3000/");
-    driver.findElement(By.linkText("Imóveis")).click();
-    driver.findElement(By.name("city")).click();
-    driver.findElement(By.name("city")).clear();
-    driver.findElement(By.name("city")).sendKeys("viseu");
-    driver.findElement(By.name("guests")).clear();
-    driver.findElement(By.name("guests")).sendKeys("1");
-    driver.findElement(By.xpath("//button[@type='submit']")).click();
-    Thread.sleep(1500);
-    driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
-    driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button")).click();
-    driver.findElement(By.name("description")).click();
-    driver.findElement(By.name("description")).clear();
-    driver.findElement(By.name("description")).sendKeys("bad reviewed house :(");
-    driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/form/div[2]/span/span[4]/span[2]/span")).click();
-    driver.findElement(By.xpath("//button[@type='submit']")).click();
-    assertEquals("Nunca esteve em nenhum dos seus bens imóveis", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/span")).getText());
-  }
-
-  @Test
-  public void testMakeInvalidHouseReview2() throws Exception {
+  public void testMakeInvalidHouseReview() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.name("city")).click();
@@ -209,15 +192,24 @@ public class WebPlatformTesting {
     driver.findElement(By.name("guests")).clear();
     driver.findElement(By.name("guests")).sendKeys("1");
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div[3]/button/i")).click();
-    Thread.sleep(2500);
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
-    driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button/i")).click();
+    await().atMost(Duration.TEN_SECONDS).until(awaitTTL(LocalDateTime.now(),8));
+    driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button")).click();
     driver.findElement(By.name("description")).click();
     driver.findElement(By.name("description")).clear();
-    driver.findElement(By.name("description")).sendKeys("Bad invalid review");
-    driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/form/div[2]/span/span[4]/span[2]/span")).click();
+    await().atMost(Duration.TEN_SECONDS).until(awaitTTL(LocalDateTime.now(),8));
+    driver.findElement(By.name("description")).sendKeys("ma casa spam");
+    driver.findElement(By.xpath("//span[@id='stars2']/span[4]/span[2]/span")).click();
     driver.findElement(By.xpath("//button[@type='submit']")).click();
     assertEquals("Nunca esteve em nenhum dos seus bens imóveis", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/span")).getText());
+  }
+
+  private Callable<Boolean> awaitTTL(LocalDateTime ldt, int waitTime) {
+    return new Callable<Boolean>() {
+      public Boolean call() throws Exception {
+        return ChronoUnit.SECONDS.between(ldt, LocalDateTime.now()) > waitTime;
+      }
+    };
   }
 
   @AfterEach
