@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -18,12 +19,14 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.awaitility.Awaitility.await;
 import org.awaitility.Duration;
 
@@ -35,28 +38,29 @@ public class WebPlatformTesting {
   private String baseUrl;
   private boolean acceptNextAlert = true;
   private StringBuffer verificationErrors = new StringBuffer();
-
+  private WebDriverWait wait;
 
   @BeforeEach
   public void setUp() throws Exception {
-    driver = new ChromeDriver();
-    baseUrl = "https://www.google.com/";
-    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+    System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("--start-maximized");
+    driver = new ChromeDriver(options);
+    driver.get("http://localhost:3000/");
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    wait = new WebDriverWait(driver,12);
   }
 
   @Test
-  public void checkPersonalHousesDetails() throws Exception {
-    driver.get("http://localhost:3000/");
+  void checkPersonalHousesDetails() throws Exception {
     driver.findElement(By.linkText("Seus anúncios")).click();
-    Thread.sleep(2500);
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div[2]/div/table/tbody/tr/td")).click();
     assertEquals("house by the beach", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div[2]/div/table/tbody/tr/td[2]")).getText());
     assertEquals("nice house", driver.findElement(By.name("description")).getText());
   }
 
   @Test
-  public void addNewHouse() throws Exception {
-    driver.get("http://localhost:3000/");
+  void addNewHouse() throws Exception {
     driver.findElement(By.linkText("Seus anúncios")).click();
     driver.findElement(By.name("houseName")).click();
     driver.findElement(By.name("houseName")).clear();
@@ -82,14 +86,13 @@ public class WebPlatformTesting {
     driver.findElement(By.name("pricePerNight")).clear();
     driver.findElement(By.name("pricePerNight")).sendKeys("30");
     driver.findElement(By.xpath("//button[@type='submit']")).click();
-    Thread.sleep(2500);
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div[2]/div/table/tbody/tr[3]/td[2]")));
     assertEquals("house by the pool", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div[2]/div/table/tbody/tr[3]/td[2]")).getText());
     assertEquals("30€", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div[2]/div/table/tbody/tr[3]/td[5]/strong")).getText());
   }
 
   @Test
   public void searchForHouse() throws Exception {
-    driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div")).click();
     driver.findElement(By.name("city")).click();
@@ -99,13 +102,12 @@ public class WebPlatformTesting {
     driver.findElement(By.name("guests")).clear();
     driver.findElement(By.name("guests")).sendKeys("1");
     driver.findElement(By.xpath("//button[@type='submit']")).click();
-    Thread.sleep(5000);
-    assertEquals("aveiro", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/div/div/div")).getText());
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/div/div/div")));
+    assertThat(driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/div/div/div")).getText()).isEqualToIgnoringCase("aveiro");
   }
 
   @Test
   public void acceptRentRequest() throws Exception {
-    driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Arrendamentos")).click();
     assertEquals("house by the desert", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).getText());
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button/i")).click();
@@ -115,7 +117,6 @@ public class WebPlatformTesting {
 
   @Test
   public void makeRentRequest() throws Exception {
-    driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.name("city")).click();
     driver.findElement(By.name("city")).clear();
@@ -124,7 +125,7 @@ public class WebPlatformTesting {
     driver.findElement(By.name("guests")).clear();
     driver.findElement(By.name("guests")).sendKeys("1");
     driver.findElement(By.xpath("//button[@type='submit']")).click();
-    Thread.sleep(1500);
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")));
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
     driver.findElement(By.xpath("//button[@type='submit']")).click();
     assertEquals("Pedido feito com sucesso", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/form/div/div[4]/span")).getText());
@@ -132,36 +133,43 @@ public class WebPlatformTesting {
 
   @Test
   public void makeHouseReview() throws Exception {
-    driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.name("city")).click();
     driver.findElement(By.name("city")).clear();
     driver.findElement(By.name("city")).sendKeys("coimbra");
     driver.findElement(By.name("guests")).clear();
     driver.findElement(By.name("guests")).sendKeys("1");
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div[3]/button/i")
+    ));
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div[3]/button/i")).click();
-    Thread.sleep(1500);
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")
+    ));
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button/i")
+    ));
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button/i")).click();
     driver.findElement(By.name("description")).click();
     driver.findElement(By.name("description")).clear();
     driver.findElement(By.name("description")).sendKeys("Bonita casa");
+    wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button/i")
+    ));
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/form/div[2]/span/span[4]/span[2]/span")).click();
     driver.findElement(By.xpath("//button[@type='submit']")).click();
-    Thread.sleep(1500);
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[3]/button/i")).click();
     driver.findElement(By.name("description")).click();
     driver.findElement(By.name("description")).clear();
     driver.findElement(By.name("description")).sendKeys("Spammar reviews :D");
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/form/div[2]/span/span[2]/span[2]/span")).click();
     driver.findElement(By.xpath("//button[@type='submit']")).click();
-    Thread.sleep(1500);
     assertEquals("Nunca esteve em nenhum dos seus bens imóveis", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/span")).getText());
   }
 
   @Test
   public void makeUserReview() throws Exception {
-    driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Arrendamentos")).click();
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div[2]/table/tbody/tr/td/span")).click();
     assertEquals("André Baião", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/div/div[2]/h3")).getText());
@@ -171,7 +179,6 @@ public class WebPlatformTesting {
     driver.findElement(By.name("description")).sendKeys("Muito simpático :)");
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/form/div[2]/span/span/span[2]/span")).click();
     driver.findElement(By.xpath("//button[@type='submit']")).click();
-    Thread.sleep(1500);
     assertEquals("Avaliação: 0.5", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div/div[2]/a/div/div[2]/div/small")).getText());
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/button/i")).click();
     driver.findElement(By.name("description")).click();
@@ -184,7 +191,6 @@ public class WebPlatformTesting {
 
   @Test
   public void testMakeInvalidHouseReview() throws Exception {
-    driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.name("city")).click();
     driver.findElement(By.name("city")).clear();
@@ -192,12 +198,14 @@ public class WebPlatformTesting {
     driver.findElement(By.name("guests")).clear();
     driver.findElement(By.name("guests")).sendKeys("1");
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div[3]/button/i")).click();
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")));
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
-    await().atMost(Duration.TEN_SECONDS).until(awaitTTL(LocalDateTime.now(),8));
+    wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button")
+    ));
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button")).click();
     driver.findElement(By.name("description")).click();
     driver.findElement(By.name("description")).clear();
-    await().atMost(Duration.TEN_SECONDS).until(awaitTTL(LocalDateTime.now(),8));
     driver.findElement(By.name("description")).sendKeys("ma casa spam");
     driver.findElement(By.xpath("//span[@id='stars2']/span[4]/span[2]/span")).click();
     driver.findElement(By.xpath("//button[@type='submit']")).click();
