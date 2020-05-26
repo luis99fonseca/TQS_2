@@ -30,6 +30,7 @@ public class UserController {
 
     @GetMapping(value="/userHouses/user={userId}")
     public List<House> getUserHouses(@PathVariable long userId){
+        System.out.println(">> " + userService.getUserHouses(userId));
         return userService.getUserHouses(userId);
     }
 
