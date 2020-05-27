@@ -17,12 +17,15 @@ import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.InvalidPasswordException;
 import tqs.justlikehome.services.UserService;
 import tqs.justlikehome.utils.ObjectJsonHelper;
 
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -71,7 +74,7 @@ class UserControllerTest {
 
     @Test
     void whenAddNewValidUser_thenReturnUser() throws Exception {
-        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "20-12-1999");
+        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "20-12-1999","dummie");
 
         given(userService.createUser(any(UserDTO.class))).willReturn(new User(userDTO));
 
@@ -83,7 +86,7 @@ class UserControllerTest {
 
     @Test
     void whenAddNewUserWithInvalidDate_thenThrowException() throws Exception {
-        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "1999-12-12");
+        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "1999-12-12","dummie");
 
         given(userService.createUser(any(UserDTO.class))).willThrow(InvalidDateInputException.class);
 
@@ -94,7 +97,7 @@ class UserControllerTest {
 
     @Test
     void whenAddNewUserWithInvalidUsername_thenThrowException() throws Exception {
-        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "19-12-1999");
+        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "19-12-1999","dummie");
 
         given(userService.createUser(any(UserDTO.class))).willThrow(InvalidIdException.class);
 
@@ -154,7 +157,7 @@ class UserControllerTest {
 
     @Test
     void getUserInfoValidID() throws Exception{
-        User user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        User user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         House bookmarked = new House("Aveiro",
                 "Incredible House near Ria de Aveiro",
                 3.0,
@@ -181,4 +184,38 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.purchasedRents[0].pending").value(true))
                 .andExpect(jsonPath("$.rating").value(5));
     }
+
+
+
+    @Test
+    void loginWithRightPassword() throws Exception {
+        Map<String,Long> userID = new HashMap<>();
+        userID.put("userID",(long) 0);
+        given(userService.login(0,"dummy")).willReturn(userID);
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",0)
+                .header("password","dummy"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userID").value(0));
+    }
+
+    @Test
+    void loginWithWrongPassword() throws Exception {
+        Map<String,Long> userID = new HashMap<>();
+        userID.put("userID",(long) 0);
+        given(userService.login(0,"dummy")).willThrow(InvalidPasswordException.class);
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",0)
+                .header("password","dummy"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void loginWithInvalidID() throws Exception {
+        Map<String,Long> userID = new HashMap<>();
+        userID.put("userID",(long) 0);
+        given(userService.login(0,"dummy")).willThrow(InvalidIdException.class);
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",0)
+                .header("password","dummy"))
+                .andExpect(status().is4xxClientError());
+    }
+
 }

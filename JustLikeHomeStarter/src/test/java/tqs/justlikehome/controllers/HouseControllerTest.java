@@ -104,7 +104,7 @@ class HouseControllerTest {
     @Test
     void whenGetHouseByParameters_thenReturnOfMatchingHouses() throws Exception {
         List<HouseSearchDTO> searchDTOList = new ArrayList<>();
-        searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5));
+        searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20),"dummie"), 5));
         given(houseService.getHouse("aveiro", "12-10-1999", "12-10-1999", 4))
                 .willReturn(searchDTOList);
 
@@ -117,7 +117,7 @@ class HouseControllerTest {
     @Test
     void whenGetHouseByInvalidDate_thenThrowException() throws Exception {
         List<HouseSearchDTO> searchDTOList = new ArrayList<>();
-        searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5));
+        searchDTOList.add(new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20),"dummie"), 5));
         given(houseService.getHouse("aveiro", "1999-10-14", "1999-10-20", 4))
                 .willThrow(InvalidDateInputException.class);
 
@@ -127,7 +127,7 @@ class HouseControllerTest {
 
     @Test
     void whenGetSpecificHouse_thenReturnHouseSearchDTO() throws Exception {
-        HouseSearchDTO houseSearchDTO = new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20)), 5);
+        HouseSearchDTO houseSearchDTO = new HouseSearchDTO(house, new User("Fonsequini", "Luis", "Fonseca", new GregorianCalendar(1999, Calendar.JULY, 20),"dummie"), 5);
         houseSearchDTO.setUserRating(10);
         given(houseService.getSpecificHouse(house.getId())).willReturn(houseSearchDTO);
 

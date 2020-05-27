@@ -11,6 +11,7 @@ import tqs.justlikehome.services.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -39,5 +40,10 @@ public class UserController {
     @GetMapping(value="/userInfo/user={userId}")
     public UserInfoDTO getUserInfo(@PathVariable long userId){
         return userService.getUserInfo(userId);
+    }
+
+    @GetMapping(value="/login")
+    public Map<String,Long> login(@RequestHeader("id") long userId,@RequestHeader("password") String password){
+        return userService.login(userId,password);
     }
 }

@@ -5,12 +5,14 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String birthDate;
+    private String password;
 
-    public UserDTO(String username, String firstName, String lastName, String birthDate) {
+    public UserDTO(String username, String firstName, String lastName, String birthDate, String password) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -28,4 +30,9 @@ public class UserDTO {
     public String getBirthDate() {
         return birthDate;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
 }

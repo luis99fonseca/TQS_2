@@ -65,9 +65,9 @@ class ReviewControllerIT {
         userRepository.deleteAll();
         houseRepository.deleteAll();
         
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
-        owner = new User("JaoSiuba", "Joao", "Silva", new GregorianCalendar(1999, Calendar.OCTOBER,25));
-        user2 = new User("Dummy","dummy","dummy",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
+        owner = new User("JaoSiuba", "Joao", "Silva", new GregorianCalendar(1999, Calendar.OCTOBER,25),"dummie");
+        user2 = new User("Dummy","dummy","dummy",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
 
         house = new House(
                 "Aveiro",

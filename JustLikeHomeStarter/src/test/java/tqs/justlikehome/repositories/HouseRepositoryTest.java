@@ -30,7 +30,7 @@ class HouseRepositoryTest {
     @BeforeEach
     void setup(){
         testEntityManager.clear();
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         testEntityManager.persistAndFlush(user);
         Comodities comoditie = new Comodities("fun","Pool with jacuzzi");
         testEntityManager.persistAndFlush(comoditie);
@@ -65,7 +65,7 @@ class HouseRepositoryTest {
     @Test
     void searchForHouseWithCorrectValuesWithPastRent(){
         // Create user to rent the house
-        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999, Calendar.MARCH,10));
+        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999, Calendar.MARCH,10),"dummie");
         testEntityManager.persistAndFlush(userRenting);
         // Create rent
         Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,25).toZonedDateTime().toInstant());
@@ -85,7 +85,7 @@ class HouseRepositoryTest {
     @Test
     void searchForHouseWithCorrectValuesWithOnGoingRent(){
         // Create user to rent the house
-        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,2,10));
+        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,2,10),"dummie");
         testEntityManager.persistAndFlush(userRenting);
         // Create rent
         Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.JANUARY,28).toZonedDateTime().toInstant());
@@ -104,7 +104,7 @@ class HouseRepositoryTest {
     @Test
     void searchForHouseWithCorrectValuesWithOnGoingRentWithAnotherHouseAvailable(){
         // Create user to rent the house
-        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,Calendar.FEBRUARY,10));
+        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,Calendar.FEBRUARY,10),"dummie");
         testEntityManager.persistAndFlush(userRenting);
         // Create rent
         Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.JANUARY,31).toZonedDateTime().toInstant());
@@ -137,7 +137,7 @@ class HouseRepositoryTest {
     @Test
     void searchForHouseWithCorrectValuesWithPendingRentWithAnotherHouseAvailable() {
         // Create user to rent the house
-        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,Calendar.FEBRUARY,10));
+        User userRenting = new User("Motita","Miguel","Mota",new GregorianCalendar(1999,Calendar.FEBRUARY,10),"dummie");
         testEntityManager.persistAndFlush(userRenting);
         // Create rent
         Date fromTime = Date.from(new GregorianCalendar(2010, Calendar.FEBRUARY,2).toZonedDateTime().toInstant());
