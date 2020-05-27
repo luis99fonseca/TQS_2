@@ -197,7 +197,7 @@ class UserControllerIT {
 
     @Test
     void loginWithRightPassword() throws Exception {
-        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",user.getId())
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("username",user.getUsername())
                 .header("password",user.getPassword()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userID").value(user.getId()));
@@ -216,7 +216,6 @@ class UserControllerIT {
                 .header("password",user.getPassword()))
                 .andExpect(status().is4xxClientError());
     }
-
 
 
 }

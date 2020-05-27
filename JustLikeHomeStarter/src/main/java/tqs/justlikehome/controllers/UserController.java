@@ -47,7 +47,7 @@ public class UserController {
     public List<User> getAll() { return userService.getAll();}
 
     @GetMapping(value="/login")
-    public Map<String,Long> login(@Valid @RequestHeader("id") long userId,@Valid @RequestHeader("password") String password){
-        return userService.login(userId,password);
+    public Map<String,Long> login(@Valid @RequestHeader("username") String username,@Valid @RequestHeader("password") String password){
+        return userService.login(username,password);
     }
 }
