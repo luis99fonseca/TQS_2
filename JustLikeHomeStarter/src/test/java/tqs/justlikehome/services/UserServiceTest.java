@@ -68,7 +68,8 @@ class UserServiceTest {
         Mockito.when(userRepository.findById((long) 0)).thenReturn(user);
         Mockito.when(userRepository.findById((long) 1)).thenThrow(InvalidDateInputException.class);
         Mockito.when(userRepository.save(user)).thenReturn(user);
-        Mockito.when(userRepository.findById(-1)).thenReturn(null);
+        Mockito.when(userRepository.findByUsername("Fonsequini")).thenReturn(user);
+        Mockito.when(userRepository.findByUsername("WrongUser")).thenReturn(null);
         Mockito.when(userRepository.getUserAvgRating((long) 0)).thenReturn((double)5);
     }
 
@@ -134,7 +135,7 @@ class UserServiceTest {
 
     @Test
     void loginWithRightPassword(){
-        Map<String,Long> logged = userService.login(0,"dummie");
+        Map<String,Long> logged = userService.login("Fonsequini","dummie");
         assertThat(logged.size()).isEqualTo(1);
         assertThat(logged.get("userID")).isEqualTo(0);
     }
@@ -142,13 +143,13 @@ class UserServiceTest {
     @Test
     void loginWithWrongPassword(){
         assertThrows(InvalidPasswordException.class,
-                ()->userService.login(0,"bla"));
+                ()->userService.login("Fonsequini","bla"));
     }
 
     @Test
     void loginWithInvalidID(){
         assertThrows(InvalidIdException.class,
-                ()->userService.login(-1,"bla"));
+                ()->userService.login("WrongUser","bla"));
     }
 
 }

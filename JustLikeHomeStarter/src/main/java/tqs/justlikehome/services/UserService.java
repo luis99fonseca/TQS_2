@@ -74,9 +74,12 @@ public class UserService {
         Double rating = userRepository.getUserAvgRating(userId);
         return new UserInfoDTO(user,rating==null?0:rating);
     }
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
 
-    public Map<String,Long> login(long id, String password){
-        User user = userRepository.findById(id);
+    public Map<String,Long> login (String username, String password){
+        User user = userRepository.findByUsername(username);
         if(user==null){
             throw new InvalidIdException();
         }

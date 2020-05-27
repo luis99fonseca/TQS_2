@@ -191,8 +191,8 @@ class UserControllerTest {
     void loginWithRightPassword() throws Exception {
         Map<String,Long> userID = new HashMap<>();
         userID.put("userID",(long) 0);
-        given(userService.login(0,"dummy")).willReturn(userID);
-        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",0)
+        given(userService.login("Fonsequini","dummy")).willReturn(userID);
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("username","Fonsequini")
                 .header("password","dummy"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userID").value(0));
@@ -200,20 +200,16 @@ class UserControllerTest {
 
     @Test
     void loginWithWrongPassword() throws Exception {
-        Map<String,Long> userID = new HashMap<>();
-        userID.put("userID",(long) 0);
-        given(userService.login(0,"dummy")).willThrow(InvalidPasswordException.class);
-        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",0)
+        given(userService.login("Fonsequini","dummy")).willThrow(InvalidPasswordException.class);
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("username","Fonsequini")
                 .header("password","dummy"))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     void loginWithInvalidID() throws Exception {
-        Map<String,Long> userID = new HashMap<>();
-        userID.put("userID",(long) 0);
-        given(userService.login(0,"dummy")).willThrow(InvalidIdException.class);
-        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",0)
+        given(userService.login("WrongUser","dummy")).willThrow(InvalidIdException.class);
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("username","WrongUser")
                 .header("password","dummy"))
                 .andExpect(status().is4xxClientError());
     }

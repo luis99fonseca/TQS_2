@@ -38,12 +38,16 @@ public class UserController {
     }
 
     @GetMapping(value="/userInfo/user={userId}")
-    public UserInfoDTO getUserInfo(@PathVariable long userId){
+    public UserInfoDTO getUserInfo(@Valid @PathVariable long userId){
         return userService.getUserInfo(userId);
     }
 
+    // TODO: remove, here for debugging porpuses
+    @GetMapping(value = "/getAll")
+    public List<User> getAll() { return userService.getAll();}
+
     @GetMapping(value="/login")
-    public Map<String,Long> login(@RequestHeader("id") long userId,@RequestHeader("password") String password){
-        return userService.login(userId,password);
+    public Map<String,Long> login(@Valid @RequestHeader("username") String username,@Valid @RequestHeader("password") String password){
+        return userService.login(username,password);
     }
 }
