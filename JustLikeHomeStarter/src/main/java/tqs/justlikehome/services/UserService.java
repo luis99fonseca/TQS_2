@@ -9,12 +9,15 @@ import tqs.justlikehome.entities.House;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.InvalidPasswordException;
 import tqs.justlikehome.repositories.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -73,5 +76,15 @@ public class UserService {
     }
     public List<User> getAll(){
         return userRepository.findAll();
+
+    public Map<String,Long> login(long id, String password){
+        User user = userRepository.findById(id);
+        if(user==null){
+            throw new InvalidIdException();
+        }
+        if(user.getPassword().equals(password)){
+            return Map.of("userID",user.getId());
+        }
+        throw new InvalidPasswordException();
     }
 }

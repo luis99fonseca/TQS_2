@@ -16,6 +16,7 @@ import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.InvalidPasswordException;
 import tqs.justlikehome.repositories.UserRepository;
 
 import java.util.*;
@@ -39,7 +40,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setup(){
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         houseDTO = new HouseDTO(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -67,7 +68,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findById((long) 0)).thenReturn(user);
         Mockito.when(userRepository.findById((long) 1)).thenThrow(InvalidDateInputException.class);
         Mockito.when(userRepository.save(user)).thenReturn(user);
-        Mockito.when(userRepository.findById(-1)).thenThrow(InvalidIdException.class);
+        Mockito.when(userRepository.findById(-1)).thenReturn(null);
         Mockito.when(userRepository.getUserAvgRating((long) 0)).thenReturn((double)5);
     }
 
@@ -100,7 +101,7 @@ class UserServiceTest {
 
     @Test
     void createUserValidDTO(){
-        UserDTO userDTO = new UserDTO("josi","Joao","Silva","02-10-2019");
+        UserDTO userDTO = new UserDTO("josi","Joao","Silva","02-10-2019","dummie");
         User newUser = userService.createUser(userDTO);
         // Not comparing birthday because if it fails it throws exception
         assertThat(newUser.getUsername()).isEqualTo(userDTO.getUsername());
@@ -110,7 +111,7 @@ class UserServiceTest {
 
     @Test
     void createUserInvalidDTO(){
-        UserDTO userDTO = new UserDTO("josi","Joao","Silva","2019-10-02");
+        UserDTO userDTO = new UserDTO("josi","Joao","Silva","2019-10-02","dummie");
         assertThrows(InvalidDateInputException.class,
                 ()->userService.createUser(userDTO));
     }
@@ -129,6 +130,25 @@ class UserServiceTest {
         assertThat((Rent) userInfo.getPurchasedRents().toArray()[0]).isEqualToComparingFieldByField(rent);
         assertThat(userInfo.getId()).isEqualTo(user.getId());
         assertThat(userInfo.getRating()).isEqualTo(5);
+    }
+
+    @Test
+    void loginWithRightPassword(){
+        Map<String,Long> logged = userService.login(0,"dummie");
+        assertThat(logged.size()).isEqualTo(1);
+        assertThat(logged.get("userID")).isEqualTo(0);
+    }
+
+    @Test
+    void loginWithWrongPassword(){
+        assertThrows(InvalidPasswordException.class,
+                ()->userService.login(0,"bla"));
+    }
+
+    @Test
+    void loginWithInvalidID(){
+        assertThrows(InvalidIdException.class,
+                ()->userService.login(-1,"bla"));
     }
 
 }

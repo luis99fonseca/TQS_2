@@ -11,6 +11,7 @@ import tqs.justlikehome.services.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -37,16 +38,16 @@ public class UserController {
     }
 
     @GetMapping(value="/userInfo/user={userId}")
-    public UserInfoDTO getUserInfo(@PathVariable long userId){
+    public UserInfoDTO getUserInfo(@Valid @PathVariable long userId){
         return userService.getUserInfo(userId);
-    }
-
-    public List<House> getUserHouses(@PathVariable long userId){
-        System.out.println(">> " + userService.getUserHouses(userId));
-        return userService.getUserHouses(userId);
     }
 
     // TODO: remove, here for debugging porpuses
     @GetMapping(value = "/getAll")
     public List<User> getAll() { return userService.getAll();}
+
+    @GetMapping(value="/login")
+    public Map<String,Long> login(@Valid @RequestHeader("id") long userId,@Valid @RequestHeader("password") String password){
+        return userService.login(userId,password);
+    }
 }
