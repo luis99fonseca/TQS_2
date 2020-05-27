@@ -15,7 +15,6 @@ import tqs.justlikehome.repositories.UserRepository;
 import javax.transaction.Transactional;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,8 +39,6 @@ public class UserService {
             // because you need this don't you, go ahead and ruin the performance of your database
             List<House> list = (List<House>)(Object) Arrays.asList(user.getOwnedHouses().toArray());
             list.sort((o1, o2)-> (int) ((o2).getId()-(o1).getId()));
-            System.out.println(list.get(0).getId());
-            System.out.println(list.get(0).getComodities());
             return list.get(0);
         }catch (NullPointerException e){
             throw new InvalidIdException();
