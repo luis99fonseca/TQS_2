@@ -12,11 +12,8 @@ jobs:
     runs-on: [self-hosted]
     steps:
       - name: Pull repository
-        working-directory: ~/TQS_2/
         run: |
-          ls;
-          git checkout master;
-          git pull;
+          git -C ~/TQS_2/ pull;
       - name: Unit and Integration
         run: 
           mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
