@@ -23,7 +23,7 @@ jobs:
         run: 
           mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
       - name: Functional Test
-        working-directory: ~/TQS/Frontend/JustLikeHome/example
+        working-directory: ~/TQS_2/Frontend/JustLikeHome/example
         run: |
           npm ci;
           npm start;
