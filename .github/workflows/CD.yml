@@ -22,10 +22,17 @@ jobs:
       - name: Unit and Integration
         run: 
           mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.6'
       - name: Functional Test
         working-directory:  ~/TQS_2/Frontend/JustLikeHome/example
         run: |
-          ls;
+          npm ci;
+          npm start;
+          mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=WebPlatformTesting;
   CD:
     needs: [Tests]
     name: Continuous Deployment for React and Java Project
