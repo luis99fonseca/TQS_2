@@ -6,6 +6,7 @@ import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.dtos.UserInfoDTO;
 import tqs.justlikehome.entities.House;
+import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
@@ -17,6 +18,8 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -69,8 +72,10 @@ public class UserService {
             throw new InvalidIdException();
         }
         Double rating = userRepository.getUserAvgRating(userId);
-        return new UserInfoDTO(user,rating==null?0:rating);
+        Set<Rent> rents = user.getPurchasedRents().stream().filter(r -> !r.getPending()).collect(Collectors.toSet());
+        return new UserInfoDTO(user,rating==null?0:rating,rents);
     }
+
     public List<User> getAll() {
         return userRepository.findAll();
     }
