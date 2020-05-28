@@ -16,9 +16,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.6'
-      - name: Pull repository
-        run: |
-          git -C pull;
       - name: Unit and Integration
         run: 
           mvn -f ./JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
