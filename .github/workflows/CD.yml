@@ -12,7 +12,7 @@ jobs:
     runs-on: [self-hosted]
     steps:
       - name: Pull repository
-        working-directory: ~/TQS_2
+        working-directory: ~/TQS_2/
         run: |
           git checkout master;
           git pull;
