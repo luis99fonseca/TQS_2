@@ -15,7 +15,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '12.6'
       - name: Pull repository
         run: |
           git -C ~/TQS_2/ pull;
@@ -24,7 +24,7 @@ jobs:
           mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
       - name: Functional Test
         run: |
-          npm ci;
+          npm --prefix ~/TQS_2/Frontend/JustLikeHome/example ci;
           npm start;
           mvn -f ~/TQS_2/JustLikeHomeStart verify -Dtest=WebPlatformTesting
   CD:
