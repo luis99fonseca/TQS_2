@@ -14,6 +14,7 @@ jobs:
       - name: Pull repository
         working-directory: ~/TQS_2/
         run: |
+          ls;
           git checkout master;
           git pull;
       - name: Unit and Integration
