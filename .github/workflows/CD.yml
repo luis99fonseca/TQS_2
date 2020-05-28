@@ -19,12 +19,14 @@ jobs:
       - name: Unit and Integration
         run: 
           mvn -f ./JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
-      - name: Functional Test
+      - name: Start frontend
         run: |
           npm ci;
-          npm start;
-          mvn -f ./JustLikeHomeStarter verify -Dtest=WebPlatformTesting;
+          npm start &;
         working-directory: ./Frontend/JustLikeHome/example
+      - name: Functional Testing
+        run: |
+           mvn -f ./JustLikeHomeStarter verify -Dtest=WebPlatformTesting;
   CD:
     needs: [Tests]
     name: Continuous Deployment for React and Java Project
