@@ -18,16 +18,16 @@ jobs:
           node-version: '12.6'
       - name: Pull repository
         run: |
-          git -C ~/TQS_2/ pull;
+          git -C pull;
       - name: Unit and Integration
         run: 
-          mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
+          mvn -f ./JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
       - name: Functional Test
         run: |
           npm ci;
           npm start;
-          mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=WebPlatformTesting;
-        working-directory:  ~/TQS_2/Frontend/JustLikeHome/example
+          mvn -f ./JustLikeHomeStarter verify -Dtest=WebPlatformTesting;
+        working-directory: ./Frontend/JustLikeHome/example
   CD:
     needs: [Tests]
     name: Continuous Deployment for React and Java Project
