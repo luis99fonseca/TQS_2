@@ -22,7 +22,7 @@ jobs:
       - name: Start frontend
         run: |
           npm ci;
-          npm start &;
+          npm start &
         working-directory: ./Frontend/JustLikeHome/example
       - name: Functional Testing
         run: |
