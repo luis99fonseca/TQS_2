@@ -18,7 +18,7 @@ jobs:
           node-version: '12.6'
       - name: Unit and Integration
         run: 
-          mvn -f ./JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
+          mvn -f ./JustLikeHomeStarter verify -Dtest=!WebPlatformTesting;
       - name: Start frontend
         run: |
           npm ci;
