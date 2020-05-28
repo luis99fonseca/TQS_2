@@ -11,9 +11,20 @@ jobs:
     name: Running unit,integration and web tests
     runs-on: [self-hosted]
     steps:
-      - name: Maven Test
+      - name: Pull repository
+        working-directory: ~/TQS_2
+        run: |
+          git checkout master;
+          git pull;
+      - name: Unit and Integration
         run: 
           mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
+      - name: Functional Test
+        working-directory: ~/TQS_2/Frontend/JustLikeHome/example
+        run: |
+          npm ci;
+          npm start;
+          mvn -f ~/TQS_2/JustLikeHomeStart verify -Dtest=WebPlatformTesting
   CD:
     needs: [Tests]
     name: Continuous Deployment for React and Java Project
