@@ -29,7 +29,7 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setup(){
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -82,7 +82,7 @@ class UserRepositoryTest {
 
     @Test
     void getUserReviewedAveragedRating(){
-        User tempUser01 = new User("Motinhas","Migalhas","Motas",new GregorianCalendar(1980, Calendar.MARCH,20));
+        User tempUser01 = new User("Motinhas","Migalhas","Motas",new GregorianCalendar(1980, Calendar.MARCH,20),"dummie");
         testEntityManager.persistAndFlush(tempUser01);
 
         UserReviews uRev01 = new UserReviews(tempUser01, user, 4, "Bom Hospede");
@@ -103,7 +103,7 @@ class UserRepositoryTest {
 
     @Test
     void checkUserReviews_whenHasReviews(){
-        User tempUser01 = new User("Motinhas","Migalhas","Motas",new GregorianCalendar(1980, Calendar.MARCH,20));
+        User tempUser01 = new User("Motinhas","Migalhas","Motas",new GregorianCalendar(1980, Calendar.MARCH,20),"dummie");
         testEntityManager.persistAndFlush(tempUser01);
 
         UserReviews uRev01 = new UserReviews(user, tempUser01, 4, "Bom Hospede");

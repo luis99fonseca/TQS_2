@@ -33,9 +33,9 @@ class UserReviewRepositoryTest {
 
     @BeforeEach
     void setup(){
-        user1 = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
-        user2 = new User("JaoSiuba","Joao","Silva",new GregorianCalendar(1999, Calendar.OCTOBER,25));
-        user3 = new User("Dummy","Dummy","Dummy",new GregorianCalendar(1999, Calendar.OCTOBER,25));
+        user1 = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
+        user2 = new User("JaoSiuba","Joao","Silva",new GregorianCalendar(1999, Calendar.OCTOBER,25),"dummie");
+        user3 = new User("Dummy","Dummy","Dummy",new GregorianCalendar(1999, Calendar.OCTOBER,25),"dummie");
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",

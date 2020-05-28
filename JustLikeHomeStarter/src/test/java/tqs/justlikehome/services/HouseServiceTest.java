@@ -42,7 +42,7 @@ class HouseServiceTest {
 
     @BeforeEach
     void setup(){
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         Comodities comoditie = new Comodities("fun","Pool with jacuzzi");
         comodities.add(comoditie);
         house = new House(

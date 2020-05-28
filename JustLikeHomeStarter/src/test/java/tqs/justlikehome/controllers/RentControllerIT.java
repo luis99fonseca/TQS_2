@@ -63,7 +63,7 @@ class RentControllerIT {
         userRepository.deleteAll();
         houseRepository.deleteAll();
         rentRepository.deleteAll();
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",

@@ -42,7 +42,7 @@ async create_user(event){
   let user = response[1]
 
   localStorage.setItem('user_id', user.id);
-
+  localStorage.setItem("username", user.username);
   this.initial_page()
 }
 

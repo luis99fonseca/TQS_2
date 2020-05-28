@@ -51,8 +51,8 @@ class ReviewControllerTest {
 
     @BeforeEach
     void setup(){
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
-        owner = new User("JaoSiuba", "Joao", "Silva", new GregorianCalendar(1999, Calendar.OCTOBER,25));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
+        owner = new User("JaoSiuba", "Joao", "Silva", new GregorianCalendar(1999, Calendar.OCTOBER,25),"dummie");
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
