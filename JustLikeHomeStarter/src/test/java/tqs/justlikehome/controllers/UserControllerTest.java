@@ -171,7 +171,9 @@ class UserControllerTest {
         Rent rent = new Rent(bookmarked,user,start,end);
         user.addPurchasedRent(rent);
         user.addBookmarkedHouse(bookmarked);
-        UserInfoDTO userInfo = new UserInfoDTO(user,5);
+        Set<Rent> rents = new HashSet();
+        rents.add(rent);
+        UserInfoDTO userInfo = new UserInfoDTO(user,5,rents);
         given(userService.getUserInfo(any(long.class))).willReturn(userInfo);
         mockMvc.perform(get("/userInfo/user=0").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

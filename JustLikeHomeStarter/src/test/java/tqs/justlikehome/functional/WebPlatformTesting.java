@@ -23,7 +23,7 @@ import static org.awaitility.Awaitility.await;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class WebPlatformTesting {
+class WebPlatformTesting {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -31,14 +31,14 @@ public class WebPlatformTesting {
 
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     driver = new ChromeDriver();
     baseUrl = "https://www.google.com/";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
   }
 
   @Test
-  public void checkPersonalHousesDetails() throws Exception {
+  void checkPersonalHousesDetails() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Seus anúncios")).click();
     Thread.sleep(2500);
@@ -48,7 +48,7 @@ public class WebPlatformTesting {
   }
 
   @Test
-  public void addNewHouse() throws Exception {
+  void addNewHouse() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Seus anúncios")).click();
     driver.findElement(By.name("houseName")).click();
@@ -81,7 +81,7 @@ public class WebPlatformTesting {
   }
 
   @Test
-  public void searchForHouse() throws Exception {
+  void searchForHouse() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div")).click();
@@ -97,7 +97,7 @@ public class WebPlatformTesting {
   }
 
   @Test
-  public void acceptRentRequest() throws Exception {
+  void acceptRentRequest() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Arrendamentos")).click();
     assertEquals("house by the desert", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).getText());
@@ -107,7 +107,7 @@ public class WebPlatformTesting {
 
 
   @Test
-  public void makeRentRequest() throws Exception {
+  void makeRentRequest() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.name("city")).click();
@@ -124,7 +124,7 @@ public class WebPlatformTesting {
   }
 
   @Test
-  public void makeHouseReview() throws Exception {
+  void makeHouseReview() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.name("city")).click();
@@ -153,7 +153,7 @@ public class WebPlatformTesting {
   }
 
   @Test
-  public void makeUserReview() throws Exception {
+  void makeUserReview() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Arrendamentos")).click();
     driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div[2]/table/tbody/tr/td/span")).click();
@@ -176,7 +176,7 @@ public class WebPlatformTesting {
   }
 
   @Test
-  public void makeInvalidHouseReview() throws Exception {
+  void makeInvalidHouseReview() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.name("city")).click();
@@ -197,7 +197,7 @@ public class WebPlatformTesting {
   }
 
   @Test
-  public void testMakeInvalidHouseReview2() throws Exception {
+  void testMakeInvalidHouseReview2() throws Exception {
     driver.get("http://localhost:3000/");
     driver.findElement(By.linkText("Imóveis")).click();
     driver.findElement(By.name("city")).click();
@@ -218,7 +218,7 @@ public class WebPlatformTesting {
   }
 
   @AfterEach
-  public void tearDown() throws Exception {
+  void tearDown() throws Exception {
     driver.quit();
     String verificationErrorString = verificationErrors.toString();
     if (!"".equals(verificationErrorString)) {

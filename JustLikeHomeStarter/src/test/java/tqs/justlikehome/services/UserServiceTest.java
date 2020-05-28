@@ -128,7 +128,7 @@ class UserServiceTest {
         UserInfoDTO userInfo = userService.getUserInfo(0);
         assertThat(userInfo.getBirthDate()).isEqualTo(user.getBirthDate());
         assertThat((House) userInfo.getBookmarkedHouses().toArray()[0]).isEqualToComparingFieldByField(bookmarked);
-        assertThat((Rent) userInfo.getPurchasedRents().toArray()[0]).isEqualToComparingFieldByField(rent);
+        assertThat(userInfo.getPurchasedRents().size()).isEqualTo(0);
         assertThat(userInfo.getId()).isEqualTo(user.getId());
         assertThat(userInfo.getRating()).isEqualTo(5);
     }

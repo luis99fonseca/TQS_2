@@ -6,6 +6,7 @@ import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.UserDTO;
 import tqs.justlikehome.dtos.UserInfoDTO;
 import tqs.justlikehome.entities.House;
+import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
@@ -15,9 +16,10 @@ import tqs.justlikehome.repositories.UserRepository;
 import javax.transaction.Transactional;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -40,8 +42,6 @@ public class UserService {
             // because you need this don't you, go ahead and ruin the performance of your database
             List<House> list = (List<House>)(Object) Arrays.asList(user.getOwnedHouses().toArray());
             list.sort((o1, o2)-> (int) ((o2).getId()-(o1).getId()));
-            System.out.println(list.get(0).getId());
-            System.out.println(list.get(0).getComodities());
             return list.get(0);
         }catch (NullPointerException e){
             throw new InvalidIdException();
@@ -72,8 +72,10 @@ public class UserService {
             throw new InvalidIdException();
         }
         Double rating = userRepository.getUserAvgRating(userId);
-        return new UserInfoDTO(user,rating==null?0:rating);
+        Set<Rent> rents = user.getPurchasedRents().stream().filter(r -> !r.getPending()).collect(Collectors.toSet());
+        return new UserInfoDTO(user,rating==null?0:rating,rents);
     }
+
     public List<User> getAll() {
         return userRepository.findAll();
     }

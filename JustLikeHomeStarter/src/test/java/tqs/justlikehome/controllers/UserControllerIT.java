@@ -187,11 +187,8 @@ class UserControllerIT {
                 .andExpect(jsonPath("$.bookmarkedHouses[0].city").value(bookmark.getCity()))
                 .andExpect(jsonPath("$.bookmarkedHouses[0].description").value(bookmark.getDescription()))
                 .andExpect(jsonPath("$.bookmarkedHouses[0].houseName").value(bookmark.getHouseName()))
-                .andExpect(jsonPath("$.purchasedRents.length()").value(1))
-                .andExpect(jsonPath("$.purchasedRents[0].pending").value(true))
-                .andExpect(jsonPath("$.purchasedRents[0].house.id").value(bookmark.getId()))
-                .andExpect(jsonPath("$.rating").value(0))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(jsonPath("$.purchasedRents.length()").value(0))
+                .andExpect(jsonPath("$.rating").value(0));
     }
 
 

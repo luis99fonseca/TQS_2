@@ -27,7 +27,7 @@ export default class ProfilePage extends Component {
       super(props);
 
       this.state= {
-          user_id : 1,
+          user_id : localStorage.getItem("user_id"),
           reviews_user : [],
           user: {
             bookmarkedHouses: [],
