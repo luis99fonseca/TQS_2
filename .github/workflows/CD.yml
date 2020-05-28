@@ -7,7 +7,15 @@ on:
     - master
 name: Continuous Deployment
 jobs:
+  Tests:
+    name: Running unit,integration and web tests
+    runs-on: [self-hosted]
+    steps:
+      - name: Maven Test
+        run: 
+          mvn -f ~/TQS_2/JustLikeHomeStarter verify -Dtest=!WebPlatformTesting
   CD:
+    needs: [Tests]
     name: Continuous Deployment for React and Java Project
     runs-on: [self-hosted]
     steps:
