@@ -33,8 +33,8 @@ class RentRepositoryTest {
 
     @BeforeEach
     void setup(){
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
-        owner = new User("Owner","Luis","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
+        owner = new User("Owner","Luis","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
 
         testEntityManager.persistAndFlush(user);
         house = new House(
@@ -126,7 +126,7 @@ class RentRepositoryTest {
 
     @Test
     void searchByUserAndHouseShouldBeEmpty(){
-        User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
+        User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         List<Rent> rents = rentRepository.findByUserAndHouse(user2.getId(), house.getId());
         assertEquals(0,rents.size());
     }
@@ -134,7 +134,7 @@ class RentRepositoryTest {
     
     @Test
     void searchByUserAndOwnerShouldBeEmpty(){
-        User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20));
+        User user2 = new User("Fonsequini2","Luis2","Fonseca2",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         List<Rent> rents = rentRepository.findByUserAndOwner(user2.getId(), owner.getId());
         assertEquals(0, rents.size());
     }

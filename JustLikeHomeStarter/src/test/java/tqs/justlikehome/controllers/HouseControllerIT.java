@@ -47,7 +47,7 @@ class HouseControllerIT {
     void resetDb(){
         userRepository.deleteAll();
         houseRepository.deleteAll();
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         house = new House(
                 "aveiro",
                 "Incredible House near Ria de Aveiro",

@@ -17,14 +17,14 @@ public class UserInfoDTO {
 
 
 
-    public UserInfoDTO(User user, double rating) {
+    public UserInfoDTO(User user, double rating,Set<Rent> rents) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.birthDate = user.getBirthDate();
         this.bookmarkedHouses = user.getBookmarkedHouses();
-        this.purchasedRents = user.getPurchasedRents();
+        this.purchasedRents = rents;
         this.rating = rating;
     }
 

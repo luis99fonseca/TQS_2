@@ -40,8 +40,8 @@ export default class House extends Component{
     }
 
     async get_userHouse() {
-        // later use cache to get user id
-        const response = await fetch(url + '/userHouses/user=1', {
+    
+        const response = await fetch(url + '/userHouses/user=' + localStorage.getItem('user_id') , {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -99,10 +99,8 @@ export default class House extends Component{
     }
 
     async updateHouse(data){
-        console.log("minha data")
-        console.log(data)
         const response = await fetch(url + '/updateHouse', {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
                 //'Authorization': 'Token ' + localStorage.getItem('token')

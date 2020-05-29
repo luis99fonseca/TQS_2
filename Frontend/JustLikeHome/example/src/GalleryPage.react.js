@@ -26,10 +26,12 @@ export default class GalleryPage extends Component {
           {id: -4,  rating:5 ,ownerName:"arturmns" , city:"Lisboa", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:500.0, numberOfBeds: 3, maxNumberOfUsers:1, comodities: []}
         ]
       }
+  
       this.property_info = this.property_info.bind(this);
       this.query_searchProperty = this.query_searchProperty.bind(this);
       this.property_obj = new Property();
   }
+
 
   property_info(id) {
     localStorage.setItem('house_id', id);

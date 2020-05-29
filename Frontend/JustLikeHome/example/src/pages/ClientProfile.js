@@ -42,8 +42,16 @@ export default class ClientProfile extends Component {
       this.get_info = this.get_info.bind(this)
       this.my_button = this.my_button.bind(this)
       
+      this.check_login = this.check_login.bind(this)
       this.get_userReviews()
       this.get_info()
+  }
+
+  check_login(){
+    if (localStorage.getItem("user_id") === null || localStorage.getItem("user_id") === "" ){
+      window.location.href = '/login'
+    }
+
   }
 
   async get_userReviews(){
@@ -70,9 +78,10 @@ export default class ClientProfile extends Component {
   }
 
   async review_user(event){
+    this.check_login()
     event.preventDefault();
     let data = getDataForm(event.target);
-    data['reviewerId'] = 1 //use cache later
+    data['reviewerId'] = localStorage.getItem('user_id')
     data['reviewedId'] = localStorage.getItem('client_id')
     data['rating'] = this.state.rating
     let response = await this.user_obj.makeReview_otherUser(data)

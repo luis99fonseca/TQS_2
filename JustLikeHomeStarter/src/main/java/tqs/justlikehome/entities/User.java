@@ -20,6 +20,8 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
+    private String password;
+
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
@@ -62,6 +64,15 @@ public class User {
         this.firstName = userDTO.getFirstName();
         this.lastName = userDTO.getLastName();
         this.birthDate = Date.from(LocalDate.parse(userDTO.getBirthDate(), parser).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        this.password=userDTO.getPassword();
+    }
+
+    public User(String username, String firstName, String lastName, GregorianCalendar birthDate,String password) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = Date.from(birthDate.toZonedDateTime().toInstant());
+        this.password=password;
     }
 
     public Date getBirthDate() {
@@ -92,14 +103,9 @@ public class User {
         return houseReviews;
     }
 
-    public User(String username, String firstName, String lastName, GregorianCalendar birthDate) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = Date.from(birthDate.toZonedDateTime().toInstant());
+    public String getPassword() {
+        return password;
     }
-
-
     public void addPurchasedRent(Rent rent){
         this.purchasedRents.add(rent);
     }

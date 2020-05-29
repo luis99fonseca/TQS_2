@@ -22,11 +22,21 @@ export default class AnnoucementPage extends Component{
           }
 
           this.house_obj = new House()
+
+          this.check_login()
           this.get_userHouses()
           this.create_house = this.create_house.bind(this)
           this.render_update = this.render_update.bind(this)
           this.choice_house_update = this.choice_house_update.bind(this)
           this.updateProperty = this.updateProperty.bind(this)
+    }
+
+    check_login(){
+      console.log(localStorage.getItem("user_id"))
+      if (localStorage.getItem("user_id") === null || localStorage.getItem("user_id") === "" ){
+        window.location.href = '/login'
+      }
+  
     }
 
     async get_userHouses(){
@@ -58,8 +68,8 @@ export default class AnnoucementPage extends Component{
             delete data[param]
           }   
         }
-        console.log(comodities)
-        data["userId"] = 1 // DEFAULT, DPS E PRECISO IR BUSCAR A CACHE O ID DO USER LOGADO
+        
+        data["userId"] = localStorage.getItem('user_id')
         data["comodities"] = comodities
         await this.house_obj.post_house(data)
 
@@ -99,7 +109,6 @@ export default class AnnoucementPage extends Component{
           description: this.state.description,
           pricePerNight: this.state.pricePerNight
         }
-
         let response = await this.house_obj.updateHouse(data)
         let msg = response[1]
 

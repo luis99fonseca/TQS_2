@@ -18,6 +18,7 @@ import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.InvalidPasswordException;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
 import tqs.justlikehome.utils.ObjectJsonHelper;
@@ -55,8 +56,8 @@ class UserControllerIT {
     void setUp(){
         userRepository.deleteAll();
         houseRepository.deleteAll();
-        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20));
-        dummy = new User("Mota","Mota","Mota",new GregorianCalendar(1999, Calendar.JULY,20));
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
+        dummy = new User("Mota","Mota","Mota",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         house = new House(
                 "aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -110,7 +111,7 @@ class UserControllerIT {
 
     @Test
     void whenAddNewValidUser_thenReturnUser() throws Exception {
-        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "20-12-1999");
+        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "20-12-1999","dummie");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(userDTO)))
@@ -120,7 +121,7 @@ class UserControllerIT {
 
     @Test
     void whenAddNewUserWithInvalidDate_thenThrowException() throws Exception {
-        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "1999-12-12");
+        UserDTO userDTO = new UserDTO("joao123", "joao", "miguel", "1999-12-12","dummie");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(userDTO)))
@@ -129,7 +130,7 @@ class UserControllerIT {
 
     @Test
     void whenAddNewUserWithInvalidUsername_thenThrowException() throws Exception {
-        UserDTO userDTO = new UserDTO(user.getUsername(), "joao", "miguel", "19-12-1999");
+        UserDTO userDTO = new UserDTO(user.getUsername(), "joao", "miguel", "19-12-1999","dummie");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/createUser").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(userDTO)))
@@ -186,11 +187,32 @@ class UserControllerIT {
                 .andExpect(jsonPath("$.bookmarkedHouses[0].city").value(bookmark.getCity()))
                 .andExpect(jsonPath("$.bookmarkedHouses[0].description").value(bookmark.getDescription()))
                 .andExpect(jsonPath("$.bookmarkedHouses[0].houseName").value(bookmark.getHouseName()))
-                .andExpect(jsonPath("$.purchasedRents.length()").value(1))
-                .andExpect(jsonPath("$.purchasedRents[0].pending").value(true))
-                .andExpect(jsonPath("$.purchasedRents[0].house.id").value(bookmark.getId()))
-                .andExpect(jsonPath("$.rating").value(0))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(jsonPath("$.purchasedRents.length()").value(0))
+                .andExpect(jsonPath("$.rating").value(0));
     }
+
+
+    @Test
+    void loginWithRightPassword() throws Exception {
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("username",user.getUsername())
+                .header("password",user.getPassword()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userID").value(user.getId()));
+    }
+
+    @Test
+    void loginWithWrongPassword() throws Exception {
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",user.getId())
+                .header("password","notright"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void loginWithInvalidID() throws Exception {
+        mockMvc.perform(get("/login").contentType(MediaType.APPLICATION_JSON).header("id",user.getId()+1)
+                .header("password",user.getPassword()))
+                .andExpect(status().is4xxClientError());
+    }
+
 
 }

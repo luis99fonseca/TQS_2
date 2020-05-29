@@ -40,7 +40,23 @@ type navItem = {|
   +useExact?: boolean,
 |};
 
-const navBarItems: Array<navItem> = [
+const navBarItems: Array<navItem> = (localStorage.getItem("username")=== "") ? 
+  [
+    {
+      value: "Página Inicial",
+      to: "/",
+      icon: "square",
+      LinkComponent: withRouter(NavLink),
+      useExact: true,
+    },
+    {
+      value: "Imóveis",
+      to: "/imoveis",
+      icon: "home",
+      LinkComponent: withRouter(NavLink),
+    },
+  ] 
+  : [
   {
     value: "Página Inicial",
     to: "/",
@@ -77,17 +93,10 @@ const navBarItems: Array<navItem> = [
 
 const accountDropdownProps = {
   avatarURL: "/demo/faces/female/25.jpg",
-  name: "André Baião",
-  description: "Administrador",
-  options: [
-    { icon: "user", value: "Profile" },
-    { icon: "settings", value: "Settings" },
-    { icon: "mail", value: "Inbox", badge: "6" },
-    { icon: "send", value: "Message" },
-    { isDivider: true },
-    { icon: "help-circle", value: "Need help?" },
-    { icon: "log-out", value: "Sign out" },
-  ],
+  name: (localStorage.getItem('username') === "") ? "Visitante" : localStorage.getItem('username'),
+  options: (localStorage.getItem('username') === "") ? [{ icon: "log-in", value: "Login", to: "/login" }] :[
+    { icon: "user", value: "Profile", to: "/profile" },
+    { icon: "log-out", value: "Sign out", to: "/logout"},] ,
 };
 
 class SiteWrapper extends React.Component<Props, State> {
@@ -139,28 +148,6 @@ class SiteWrapper extends React.Component<Props, State> {
           href: "/",
           alt: "Just Like Home",
           imageURL: "./demo/logojhl.png",
-          notificationsTray: {
-            notificationsObjects,
-            markAllAsRead: () =>
-              this.setState(
-                () => ({
-                  notificationsObjects: this.state.notificationsObjects.map(
-                    v => ({ ...v, unread: false })
-                  ),
-                }),
-                () =>
-                  setTimeout(
-                    () =>
-                      this.setState({
-                        notificationsObjects: this.state.notificationsObjects.map(
-                          v => ({ ...v, unread: true })
-                        ),
-                      }),
-                    5000
-                  )
-              ),
-            unread: unreadCount,
-          },
           accountDropdown: accountDropdownProps,
         }}
         navProps={{ itemsObjects: navBarItems }}

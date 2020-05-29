@@ -22,6 +22,8 @@ export default class RentsPage extends Component {
           this.get_rentsRequests = this.get_rentsRequests.bind(this)
           this.get_onGoingRents = this.get_onGoingRents.bind(this)
           this.go_profileUser = this.go_profileUser.bind(this)
+
+          this.check_login()
           this.get_rentsRequests()
           
 
@@ -29,6 +31,12 @@ export default class RentsPage extends Component {
           this.deny_rent = this.deny_rent.bind(this)
     }
 
+    check_login(){
+        if (localStorage.getItem("user_id") === null || localStorage.getItem("user_id") === "" ){
+          window.location.href = '/login'
+        }
+    
+      }
 
     async get_rentsRequests(){
         let response = await this.user_obj.get_rents_requests()
