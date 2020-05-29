@@ -77,16 +77,10 @@ const navBarItems: Array<navItem> = [
 
 const accountDropdownProps = {
   avatarURL: "/demo/faces/female/25.jpg",
-  name: "André Baião",
-  description: "Administrador",
+  name: localStorage.getItem('username'),
   options: [
-    { icon: "user", value: "Profile" },
-    { icon: "settings", value: "Settings" },
-    { icon: "mail", value: "Inbox", badge: "6" },
-    { icon: "send", value: "Message" },
-    { isDivider: true },
-    { icon: "help-circle", value: "Need help?" },
-    { icon: "log-out", value: "Sign out" },
+    { icon: "user", value: "Profile", to: "/profile" },
+    { icon: "log-out", value: "Sign out", to: "/logout"},
   ],
 };
 
@@ -139,28 +133,6 @@ class SiteWrapper extends React.Component<Props, State> {
           href: "/",
           alt: "Just Like Home",
           imageURL: "./demo/logojhl.png",
-          notificationsTray: {
-            notificationsObjects,
-            markAllAsRead: () =>
-              this.setState(
-                () => ({
-                  notificationsObjects: this.state.notificationsObjects.map(
-                    v => ({ ...v, unread: false })
-                  ),
-                }),
-                () =>
-                  setTimeout(
-                    () =>
-                      this.setState({
-                        notificationsObjects: this.state.notificationsObjects.map(
-                          v => ({ ...v, unread: true })
-                        ),
-                      }),
-                    5000
-                  )
-              ),
-            unread: unreadCount,
-          },
           accountDropdown: accountDropdownProps,
         }}
         navProps={{ itemsObjects: navBarItems }}

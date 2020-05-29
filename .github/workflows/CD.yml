@@ -7,7 +7,28 @@ on:
     - master
 name: Continuous Deployment
 jobs:
+  Tests:
+    name: Running unit,integration and web tests
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.6'
+      - name: Unit and Integration
+        run: 
+          mvn -f ./JustLikeHomeStarter verify -Dtest=!WebPlatformTesting;
+      - name: Start frontend
+        run: |
+          npm ci;
+          npm start &
+        working-directory: ./Frontend/JustLikeHome/example
+      - name: Functional Testing
+        run: |
+           mvn -f ./JustLikeHomeStarter verify -Dtest=WebPlatformTesting;
   CD:
+    needs: [Tests]
     name: Continuous Deployment for React and Java Project
     runs-on: [self-hosted]
     steps:

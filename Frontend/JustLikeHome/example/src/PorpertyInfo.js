@@ -57,14 +57,22 @@ export default class Property extends Component {
         this.add_house_to_bookmarker = this.add_house_to_bookmarker.bind(this)
         this.go_profileUser = this.go_profileUser.bind(this)
 
+        this.check_login()
         this.get_house()
     }
+
+    check_login(){
+        if (localStorage.getItem("user_id") === null || localStorage.getItem("user_id") === "" ){
+          window.location.href = '/login'
+        }
+    
+      }
 
 
     async ask_rent(event){
         event.preventDefault();
         let data = getDataForm(event.target);
-        data["userID"] = "1" // later use cache for id user
+        data["userID"] = localStorage.getItem('user_id')
         data["houseID"] = localStorage.getItem('house_id')
 
         console.log(data)
@@ -98,7 +106,7 @@ export default class Property extends Component {
         event.preventDefault();
         let data = getDataForm(event.target);
         
-        data['reviewerId'] = 1 //use cache later
+        data['reviewerId'] = localStorage.getItem('user_id')
         data['houseId'] = localStorage.getItem('house_id')
         data['rating'] = this.state.review_rating
         let response = await this.house_obj.makeReview_house(data)
@@ -192,9 +200,9 @@ export default class Property extends Component {
     }
 
     async add_house_to_bookmarker(){
-        //use later cache to dynamic id user
+       
         let data = {
-            "userId": 1,
+            "userId": localStorage.getItem('user_id'),
             "houseId": localStorage.getItem('house_id')
         }
         let response = await this.user_obj.addHouseToBookmarker(data)
