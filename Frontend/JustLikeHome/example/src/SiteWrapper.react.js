@@ -40,7 +40,7 @@ type navItem = {|
   +useExact?: boolean,
 |};
 
-const navBarItems: Array<navItem> = (localStorage.getItem("username")=== "") ? 
+const navBarItems: Array<navItem> = (localStorage.getItem("username")=== "" || localStorage.getItem('username') === null) ? 
   [
     {
       value: "Página Inicial",
@@ -93,8 +93,8 @@ const navBarItems: Array<navItem> = (localStorage.getItem("username")=== "") ?
 
 const accountDropdownProps = {
   avatarURL: "/demo/faces/female/25.jpg",
-  name: (localStorage.getItem('username') === "") ? "Visitante" : localStorage.getItem('username'),
-  options: (localStorage.getItem('username') === "") ? [{ icon: "log-in", value: "Login", to: "/login" }] :[
+  name: (localStorage.getItem('username') === "" || localStorage.getItem('username') === null) ? "Visitante" : localStorage.getItem('username'),
+  options: (localStorage.getItem('username') === "" || localStorage.getItem('username') === null) ? [{ icon: "log-in", value: "Login", to: "/login" }] :[
     { icon: "user", value: "Profile", to: "/profile" },
     { icon: "log-out", value: "Sign out", to: "/logout"},] ,
 };
