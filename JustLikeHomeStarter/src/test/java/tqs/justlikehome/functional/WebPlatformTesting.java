@@ -52,6 +52,7 @@ public class WebPlatformTesting {
     wait = new WebDriverWait(driver,12);
 
     // login
+    TimeUnit.SECONDS.sleep(5);
     driver.findElement(By.cssSelector(".avatar")).click();
     driver.findElement(By.linkText("Login")).click();
     driver.findElement(By.name("username")).click();
@@ -71,6 +72,15 @@ public class WebPlatformTesting {
     assertEquals("nice house", driver.findElement(By.name("description")).getText());
   }
 
+  @Test
+  void logout() throws Exception{
+    driver.findElement(By.cssSelector(".text-default")).click();
+    driver.findElement(By.linkText("Sign out")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.cssSelector(".card-title"));
+      assert(elements.size() > 0);
+    }
+  }
   @Test
   void addNewHouse() throws Exception {
     driver.findElement(By.linkText("Seus anúncios")).click();
@@ -234,12 +244,6 @@ public class WebPlatformTesting {
 
   @AfterEach
   void tearDown() throws Exception {
-    driver.findElement(By.cssSelector(".text-default")).click();
-    driver.findElement(By.linkText("Sign out")).click();
-    {
-      List<WebElement> elements = driver.findElements(By.cssSelector(".card-title"));
-      assert(elements.size() > 0);
-    }
 
     driver.quit();
     String verificationErrorString = verificationErrors.toString();
