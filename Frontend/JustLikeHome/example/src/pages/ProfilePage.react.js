@@ -27,7 +27,7 @@ export default class ProfilePage extends Component {
       super(props);
 
       this.state= {
-          user_id : 1,
+          user_id : localStorage.getItem("user_id"),
           reviews_user : [],
           user: {
             bookmarkedHouses: [],
@@ -41,8 +41,18 @@ export default class ProfilePage extends Component {
       this.get_deny_bookmarker = this.get_deny_bookmarker.bind(this)
       this.property_info = this.property_info.bind(this)
 
+      this.check_login()
       this.get_userReviews()
       this.get_info()
+  }
+
+
+  check_login(){
+    
+    if (localStorage.getItem("user_id") === null || localStorage.getItem("user_id") === "" ){
+      window.location.href = '/login'
+    }
+
   }
 
   async get_userReviews(){

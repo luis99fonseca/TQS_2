@@ -43,8 +43,7 @@ export default class User extends Component{
 
 
    async get_rents_requests(data){
-    // USE LATER CACHE TO GET ID DYNAMIC
-    const response = await fetch(url + '/pendingRents/user=1', {
+    const response = await fetch(url + '/pendingRents/user=' + localStorage.getItem('user_id'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -60,8 +59,8 @@ export default class User extends Component{
    }
 
    async get_rents_ongoing(data){
-    // USE LATER CACHE TO GET ID DYNAMIC
-    const response = await fetch(url + '/onGoingRents/user=1', {
+    
+    const response = await fetch(url + '/onGoingRents/user=' + localStorage.getItem('user_id'), {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -158,7 +157,7 @@ export default class User extends Component{
 
    async deleteHouseFromBookmarker(id){
        // later use cache for dynamic id user
-    const response = await fetch(url + '/deleteBookmark/userId=1&houseId=' + id, {
+    const response = await fetch(url + '/deleteBookmark/userId='+ localStorage.getItem('user_id') + '&houseId=' + id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -174,8 +173,7 @@ export default class User extends Component{
 
 
    async getInfoUser(){
-    // later use cache for dynamic id user
-     const response = await fetch(url + '/userInfo/user=1', {
+     const response = await fetch(url + '/userInfo/user='+ localStorage.getItem('user_id'), {
          method: 'GET',
          headers: {
              'Content-Type': 'application/json'
@@ -190,7 +188,7 @@ export default class User extends Component{
     }
 
     async getOtherUser(id){
-        // later use cache for dynamic id user
+       
          const response = await fetch(url + '/userInfo/user='+id, {
              method: 'GET',
              headers: {
@@ -206,8 +204,8 @@ export default class User extends Component{
         }
 
     async deleteBookMarker(houseId){
-        // later use cache for dynamic id user
-     const response = await fetch(url + '/deleteBookmark/userId=1&houseId=' + houseId, {
+       
+     const response = await fetch(url + '/deleteBookmark/userId='+ localStorage.getItem('user_id') +'&houseId=' + houseId, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -219,6 +217,24 @@ export default class User extends Component{
     const json = await response.json()
     return [status, json]
     }
+
+
+    async loginUser(data){
+         const response = await fetch(url + '/login', {
+             method: 'GET',
+             headers: {
+                 'Content-Type': 'application/json',
+                 'username' :  data['username'],
+                 'password': data['password']
+                 
+             },
+         })
+    
+         const status = await response.status
+         const json = await response.json()
+         return [status, json]
+    
+        }
 
 
 }
