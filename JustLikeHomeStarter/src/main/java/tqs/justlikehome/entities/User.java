@@ -67,13 +67,18 @@ public class User {
         this.password=userDTO.getPassword();
     }
 
-    public User(String username, String firstName, String lastName, GregorianCalendar birthDate,String password) {
+    public User(String username, String firstName, String lastName, GregorianCalendar birthDate, String password) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = Date.from(birthDate.toZonedDateTime().toInstant());
         this.password=password;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
     public Date getBirthDate() {
         return birthDate;

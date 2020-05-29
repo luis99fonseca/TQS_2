@@ -12,6 +12,7 @@ import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.NoPermissionException;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
@@ -33,6 +34,11 @@ public class RentService {
         try{
             User user = userRepository.findById(rentDTO.getUserID());
             House house = houseRepository.findById(rentDTO.getHouseID());
+            System.out.println(user.getId());
+            System.out.println(house.getOwner().getId());
+            if(user.getId()==house.getOwner().getId()){
+                throw new NoPermissionException();
+            }
             Rent newRent = new Rent(house,user,rentDTO);
             user.addPurchasedRent(newRent);
             userRepository.save(user);

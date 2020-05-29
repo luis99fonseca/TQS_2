@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import tqs.justlikehome.dtos.HouseReviewDTO;
 import tqs.justlikehome.dtos.UserReviewDTO;
@@ -23,7 +22,7 @@ import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.exceptions.InvalidIdException;
-import tqs.justlikehome.exceptions.NoPermitionException;
+import tqs.justlikehome.exceptions.NoPermissionException;
 import tqs.justlikehome.services.ReviewService;
 import static org.mockito.BDDMockito.given;
 import org.springframework.http.MediaType;
@@ -92,7 +91,7 @@ class ReviewControllerTest {
     @Test
     void newHouseReviewNoPermission() throws Exception{
         HouseReviewDTO hrdto = new HouseReviewDTO(0, 0, 5, "topp");
-        given(reviewService.addReview(any(HouseReviewDTO.class))).willThrow(NoPermitionException.class);
+        given(reviewService.addReview(any(HouseReviewDTO.class))).willThrow(NoPermissionException.class);
         mockMvc.perform(post("/newHouseReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(hrdto)))
         .andExpect(status().is4xxClientError());
     }
@@ -120,7 +119,7 @@ class ReviewControllerTest {
     @Test
     void newUserReviewNoPermission() throws Exception{
         UserReviewDTO urdto = new UserReviewDTO(0, 0, 5, "topp");
-        given(reviewService.addReview(any(UserReviewDTO.class))).willThrow(NoPermitionException.class);
+        given(reviewService.addReview(any(UserReviewDTO.class))).willThrow(NoPermissionException.class);
         mockMvc.perform(post("/newUserReview").contentType(MediaType.APPLICATION_JSON).content(objectToJson(urdto)))
         .andExpect(status().is4xxClientError());
     }

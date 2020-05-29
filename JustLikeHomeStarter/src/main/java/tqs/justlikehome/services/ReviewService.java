@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 import tqs.justlikehome.exceptions.InvalidIdException;
-import tqs.justlikehome.exceptions.NoPermitionException;
+import tqs.justlikehome.exceptions.NoPermissionException;
 
 
 @Service
@@ -48,7 +48,7 @@ public class ReviewService {
         List<HouseReviews> housereviews = houseReviewRepository.findByReviewerAndHouse(user, house);
 
         if (housereviews.size() >= rent.size()){
-            throw new NoPermitionException();
+            throw new NoPermissionException();
         }
 
         HouseReviews houseReview = new HouseReviews(houseReviewDTO);
@@ -77,7 +77,7 @@ public class ReviewService {
         List<UserReviews> usereviews = userReviewRepository.findByUserReviewingAndUserReviewed(reviwerUser, reviwedUser);
 
         if (usereviews.size() >= rent.size()){
-            throw new NoPermitionException();
+            throw new NoPermissionException();
         }
 
         UserReviews userReview = new UserReviews(userReviewDTO);

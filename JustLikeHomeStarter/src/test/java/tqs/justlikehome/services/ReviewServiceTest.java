@@ -17,7 +17,7 @@ import tqs.justlikehome.entities.User;
 import tqs.justlikehome.entities.Rent;
 import tqs.justlikehome.entities.UserReviews;
 import tqs.justlikehome.exceptions.InvalidIdException;
-import tqs.justlikehome.exceptions.NoPermitionException;
+import tqs.justlikehome.exceptions.NoPermissionException;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.HouseReviewRepository;
 import tqs.justlikehome.repositories.RentRepository;
@@ -137,7 +137,7 @@ class ReviewServiceTest {
         hr.add(houseReview);
         Mockito.when(houseReviewRepository.findByReviewerAndHouse(user2, house)).thenReturn(hr);
         HouseReviewDTO hreview = new HouseReviewDTO(this.user2.getId(), this.house.getId(),5,"topp");
-        assertThrows(NoPermitionException.class,
+        assertThrows(NoPermissionException.class,
                 ()->reviewService.addReview(hreview));
     }
 
@@ -164,7 +164,7 @@ class ReviewServiceTest {
         ur.add(userReview);
         Mockito.when(userReviewRepository.findByUserReviewingAndUserReviewed(user1, user2)).thenReturn(ur);
         UserReviewDTO ureview = new UserReviewDTO(this.user1.getId(), this.user2.getId(),5,"topp");
-        assertThrows(NoPermitionException.class,
+        assertThrows(NoPermissionException.class,
                 ()->reviewService.addReview(ureview));
     }
 
@@ -213,7 +213,7 @@ class ReviewServiceTest {
 
         HouseReviewDTO houseReviewDTO = new HouseReviewDTO(this.user3.getId(), this.house.getId(), 5, "topp");
 
-        assertThrows(NoPermitionException.class,
+        assertThrows(NoPermissionException.class,
                 ()->reviewService.addReview(houseReviewDTO));
     }
 
@@ -222,7 +222,7 @@ class ReviewServiceTest {
 
         UserReviewDTO userReviewDTO = new UserReviewDTO(this.user1.getId(), this.user3.getId(), 5, "topp");
 
-        assertThrows(NoPermitionException.class,
+        assertThrows(NoPermissionException.class,
                 ()->reviewService.addReview(userReviewDTO));
     }
 

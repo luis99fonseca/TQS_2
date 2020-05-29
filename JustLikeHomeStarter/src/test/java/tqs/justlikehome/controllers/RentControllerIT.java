@@ -56,6 +56,7 @@ class RentControllerIT {
     private RentRepository rentRepository;
 
     private User user;
+    private User userRenting;
     private House house;
 
     @BeforeEach
@@ -64,6 +65,7 @@ class RentControllerIT {
         houseRepository.deleteAll();
         rentRepository.deleteAll();
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
+        userRenting = new User("Mota","Mota","Mota",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -76,17 +78,18 @@ class RentControllerIT {
         user.addHouse(house);
         house.setOwner(user);
         user = userRepository.save(user);
+        userRenting = userRepository.save(userRenting);
     }
 
     @Test
     void askToRentWithRightValues() throws Exception{
-        RentDTO rentDTO = new RentDTO(((House) user.getOwnedHouses().toArray()[0]).getId(),user.getId(),"10-10-2019","10-10-2019");
+        RentDTO rentDTO = new RentDTO(((House) user.getOwnedHouses().toArray()[0]).getId(),userRenting.getId(),"10-10-2019","10-10-2019");
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.house.description",is("Incredible House near Ria de Aveiro")))
                 .andExpect(jsonPath("$.house.pricePerNight",is(50.0)))
                 .andExpect(jsonPath("$.house.numberOfBeds",is(2)))
-                .andExpect(jsonPath("$.user.username",is("Fonsequini")))
+                .andExpect(jsonPath("$.user.username",is("Mota")))
                 .andExpect(jsonPath("$.pending",is(true)));
     }
 
@@ -96,6 +99,15 @@ class RentControllerIT {
         mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
                 .andExpect(status().is4xxClientError());
     }
+
+
+    @Test
+    void askToRentWithOwner() throws Exception{
+        RentDTO rentDTO = new RentDTO(((House) user.getOwnedHouses().toArray()[0]).getId(),user.getId(),"10-10-2019","10-10-2019");
+        mvc.perform(post("/askToRent").contentType(MediaType.APPLICATION_JSON).content(objectToJson(rentDTO)))
+                .andExpect(status().is4xxClientError());
+    }
+
 
     @Test
     void askToRentWithInvalidID() throws Exception{

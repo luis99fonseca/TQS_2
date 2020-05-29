@@ -14,6 +14,7 @@ import tqs.justlikehome.entities.User;
 import static org.assertj.core.api.Assertions.assertThat;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
+import tqs.justlikehome.exceptions.NoPermissionException;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.RentRepository;
 import tqs.justlikehome.repositories.UserRepository;
@@ -21,6 +22,7 @@ import tqs.justlikehome.repositories.UserRepository;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ExtendWith(MockitoExtension.class)
 class RentServiceTest {
@@ -38,6 +40,7 @@ class RentServiceTest {
     private RentService rentService;
 
     private User user;
+    private User userRenting;
     private House house;
     private Rent rentPending;
     private Rent rentOnGoing;
@@ -46,6 +49,9 @@ class RentServiceTest {
     @BeforeEach
     void setup(){
         user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
+        user.setId(0);
+        userRenting = new User("Mota","Mota","Mota",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
+        userRenting.setId(1);
         house = new House(
                 "Aveiro",
                 "Incredible House near Ria de Aveiro",
@@ -55,6 +61,7 @@ class RentServiceTest {
                 5,
                 "house2"
         );
+        house.setOwner(user);
         Date start = Date.from(new GregorianCalendar(2019, Calendar.JULY,20).toZonedDateTime().toInstant());
         Date end = Date.from(new GregorianCalendar(2019, Calendar.JULY,22).toZonedDateTime().toInstant());
         rentPending = new Rent(house,user,start,end);
@@ -69,6 +76,7 @@ class RentServiceTest {
         Mockito.when(userRepository.findById((long) 50)).thenReturn(null);
         Mockito.when(houseRepository.findById((long) 50)).thenReturn(null);
         Mockito.when(userRepository.findById((long) 0)).thenReturn(user);
+        Mockito.when(userRepository.findById((long) 1)).thenReturn(userRenting);
         Mockito.when(houseRepository.findById((long) 0)).thenReturn(house);
         Mockito.when(rentRepository.findById((long) 0)).thenReturn(rentPending);
         Mockito.when(rentRepository.findById((long) 50)).thenReturn(null);
@@ -78,7 +86,7 @@ class RentServiceTest {
 
     @Test
     void addRentToValidHouseUser(){
-        RentDTO rentDTO = new RentDTO(0,0,"10-10-2019","11-10-2019");
+        RentDTO rentDTO = new RentDTO(0,1,"10-10-2019","11-10-2019");
         Rent newRent = rentService.askToRent(rentDTO);
         assertThat(newRent.getHouse().getId()).isEqualTo(rentDTO.getHouseID());
         assertThat(newRent.getHouse().getId()).isEqualTo(rentDTO.getHouseID());
@@ -94,8 +102,16 @@ class RentServiceTest {
 
     @Test
     void addRentWithInvalidDate(){
-        RentDTO rentDTO = new RentDTO(50,50,"2019-10-20","2019-11-10");
+        RentDTO rentDTO = new RentDTO(0,1,"2019-10-20","2019-11-10");
         assertThrows(InvalidDateInputException.class,
+                ()->rentService.askToRent(rentDTO));
+    }
+
+
+    @Test
+    void askToRentWithOwner(){
+        RentDTO rentDTO = new RentDTO(0,0,"10-10-2019","11-10-2019");
+        assertThrows(NoPermissionException.class,
                 ()->rentService.askToRent(rentDTO));
     }
 
