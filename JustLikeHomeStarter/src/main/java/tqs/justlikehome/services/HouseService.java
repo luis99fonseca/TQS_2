@@ -1,6 +1,7 @@
 package tqs.justlikehome.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
@@ -21,6 +22,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -111,6 +113,18 @@ public class HouseService {
         }catch(NullPointerException e){
             throw new InvalidIdException();
         }
+    }
+
+    public List<HouseSearchDTO> getTopHouses(){
+        List<Object[]> objs = houseRepository.getTopHouses(PageRequest.of(0,5));
+        List<HouseSearchDTO> houses = new ArrayList<>();
+        for(Object[] obj:objs){
+            HouseSearchDTO houseSearch = new HouseSearchDTO((House) obj[0],((House) obj[0]).getOwner(),obj[1]==null?0:Double.parseDouble(obj[1].toString()));
+            Double ratingOwner = userRepository.getUserAvgRating(((House) obj[0]).getOwner().getId());
+            houseSearch.setUserRating(ratingOwner==null?0:ratingOwner);
+            houses.add(houseSearch);
+        }
+        return houses;
     }
 
 }
