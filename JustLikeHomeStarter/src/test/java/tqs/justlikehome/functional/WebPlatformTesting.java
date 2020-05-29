@@ -2,11 +2,11 @@ package tqs.justlikehome.functional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import java.util.concurrent.TimeUnit;
-
+import static org.hamcrest.CoreMatchers.is;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
+import org.openqa.selenium.WebElement;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -49,6 +50,17 @@ public class WebPlatformTesting {
     driver.get("http://localhost:3000/");
     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     wait = new WebDriverWait(driver,12);
+
+    // login
+    driver.findElement(By.cssSelector(".avatar")).click();
+    driver.findElement(By.linkText("Login")).click();
+    driver.findElement(By.name("username")).click();
+    driver.findElement(By.name("username")).sendKeys("andrex");
+    driver.findElement(By.name("password")).click();
+    driver.findElement(By.name("password")).click();
+    driver.findElement(By.name("password")).sendKeys("123");
+    driver.findElement(By.cssSelector(".btn")).click();
+    assertEquals("andrex", driver.findElement(By.cssSelector(".text-default")).getText());
   }
 
   @Test
@@ -222,6 +234,13 @@ public class WebPlatformTesting {
 
   @AfterEach
   void tearDown() throws Exception {
+    driver.findElement(By.cssSelector(".text-default")).click();
+    driver.findElement(By.linkText("Sign out")).click();
+    {
+      List<WebElement> elements = driver.findElements(By.cssSelector(".card-title"));
+      assert(elements.size() > 0);
+    }
+
     driver.quit();
     String verificationErrorString = verificationErrors.toString();
     if (!"".equals(verificationErrorString)) {
