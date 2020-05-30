@@ -40,7 +40,7 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
