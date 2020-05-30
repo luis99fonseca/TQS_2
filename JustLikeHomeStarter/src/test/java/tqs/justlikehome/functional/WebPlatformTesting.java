@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -40,7 +41,7 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
@@ -194,7 +195,8 @@ public class WebPlatformTesting {
     void lastExperiences() throws Exception {
         driver.findElement(By.linkText("Profile")).click();
         assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
-        driver.findElement(By.cssSelector(".fa-eye")).click();
+        driver.findElement(By.xpath("//*[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button")).click();
+        //
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("h1")
         ));
@@ -205,6 +207,9 @@ public class WebPlatformTesting {
     void createUser() throws Exception {
         driver.findElement(By.cssSelector(".text-default")).click();
         driver.findElement(By.linkText("Sign out")).click();
+        driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+        driver.findElement(By.cssSelector(".avatar")).click();
+        driver.findElement(By.linkText("Login")).click();
         driver.findElement(By.linkText("Não tem conta?")).click();
         driver.findElement(By.name("username")).click();
         driver.findElement(By.name("username")).sendKeys("joaotavares");
@@ -215,7 +220,7 @@ public class WebPlatformTesting {
         driver.findElement(By.name("birthDate")).click();
         driver.findElement(By.cssSelector(".react-datepicker__day--selected")).click();
         driver.findElement(By.name("password")).click();
-        driver.findElement(By.name("password")).sendKeys("142");
+        driver.findElement(By.name("password")).sendKeys("14235");
         driver.findElement(By.cssSelector(".btn")).click();
         assertEquals("joaotavares", driver.findElement(By.cssSelector(".text-default")).getText());
     }
