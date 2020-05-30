@@ -244,6 +244,51 @@ public class WebPlatformTesting {
         assertEquals("Nunca esteve em nenhum dos seus bens imóveis", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/span")).getText());
     }
 
+    @Test
+    public void makeInvalidUserReview() throws Exception {
+        driver.findElement(By.linkText("Imóveis")).click();
+        driver.findElement(By.name("city")).click();
+        driver.findElement(By.name("city")).clear();
+        driver.findElement(By.name("city")).sendKeys("minho");
+        driver.findElement(By.name("guests")).click();
+        driver.findElement(By.name("guests")).clear();
+        driver.findElement(By.name("guests")).sendKeys("1");
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div[3]/button/i")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+        TimeUnit.SECONDS.sleep(2);
+        js.executeScript("window.scrollBy(0,1000)");
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/form/div/div/div/div")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/button/i")).click();
+        driver.findElement(By.name("description")).click();
+        driver.findElement(By.name("description")).clear();
+        driver.findElement(By.name("description")).sendKeys("spam comment :(");
+        driver.findElement(By.xpath("//span[@id='stars2']/span[2]")).click();
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        assertEquals("Nunca esteve em nenhum dos seus bens imóveis", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/span")).getText());
+    }
+
+    @Test
+    public void checkAnotherUserReviews() throws Exception {
+        driver.findElement(By.linkText("Imóveis")).click();
+        driver.findElement(By.name("city")).click();
+        driver.findElement(By.name("city")).clear();
+        driver.findElement(By.name("city")).sendKeys("minho");
+        driver.findElement(By.name("guests")).click();
+        driver.findElement(By.name("guests")).clear();
+        driver.findElement(By.name("guests")).sendKeys("1");
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div/form/div/div[3]/button/i")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+        TimeUnit.SECONDS.sleep(2);
+        js.executeScript("window.scrollBy(0,1000)");
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/form/div/div/div/div")).click();
+        TimeUnit.SECONDS.sleep(2);
+        assertEquals("muito boa pessoa", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div/div[2]/a/div/div[2]/div[2]")).getText());
+        assertEquals("otimo dono de casa", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div/div[2]/a[2]/div/div[2]/div[2]")).getText());
+    }
+
     private Callable<Boolean> awaitTTL(LocalDateTime ldt, int waitTime) {
         return new Callable<Boolean>() {
             public Boolean call() throws Exception {
