@@ -1,8 +1,10 @@
 package tqs.justlikehome.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
 import tqs.justlikehome.dtos.UserDTO;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +22,8 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
+    @Column(nullable = false)
+    @Length(min=5)
     private String password;
 
     @Temporal(TemporalType.DATE)

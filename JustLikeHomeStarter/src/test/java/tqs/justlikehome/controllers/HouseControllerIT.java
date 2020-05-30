@@ -11,14 +11,17 @@ import tqs.justlikehome.JustlikehomeApplication;
 import tqs.justlikehome.dtos.BookMarkDTO;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
+import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.House;
+import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.repositories.HouseRepository;
 import tqs.justlikehome.repositories.UserRepository;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.GregorianCalendar;
+
+import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -41,8 +44,9 @@ class HouseControllerIT {
     private UserRepository userRepository;
 
     private User user;
+    private User user2;
     private House house;
-
+    private House house2;
     @BeforeEach
     void resetDb(){
         userRepository.deleteAll();
@@ -57,8 +61,27 @@ class HouseControllerIT {
                 5,
                 "house2"
         );
+        HouseReviews review = new HouseReviews(user2,house,5,"BERY GOOD HOUSE");
+        HouseReviews review2 = new HouseReviews(user2,house,4,"BERY GOOD HOUSE");
+        house.addReview(review);
+        house.addReview(review2);
         user.addHouse(house);
         house.setOwner(user);
+        house2 = new House(
+                "aveiro",
+                "boa casa",
+                2.0,
+                30.5,
+                4,
+                6,
+                "Casa de Tabua"
+        );
+        review = new HouseReviews(user2,house2,3,"BERY GOOD HOUSE");
+        review2 = new HouseReviews(user2,house2,3,"BERY GOOD HOUSE");
+        house2.addReview(review);
+        house2.addReview(review2);
+        user.addHouse(house2);
+        house2.setOwner(user);
         user = userRepository.save(user);
     }
 
@@ -106,13 +129,7 @@ class HouseControllerIT {
         mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
                 .andExpect(jsonPath("$.userRating").value(0))
-                .andExpect(jsonPath("$.rating").value(0))
-                .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
-
-        mockMvc.perform(get("/specificHouse/houseId="+house.getId())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.ownerName").value("Fonsequini"))
-                .andExpect(jsonPath("$.userRating").value(0))
-                .andExpect(jsonPath("$.rating").value(0))
+                .andExpect(jsonPath("$.rating").value(4.5))
                 .andExpect(jsonPath("$.houseName").value(house.getHouseName()));
     }
 
@@ -189,5 +206,17 @@ class HouseControllerIT {
         mockMvc.perform(put("/updateHouse").contentType(MediaType.APPLICATION_JSON)
                 .content(objectToJson(housedto)))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void searchForTopHouses() throws Exception {
+        // Checks the order and the names of the houses
+        mockMvc.perform(get("/topHouses"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$.[0].rating").value(4.5))
+                .andExpect(jsonPath("$.[0].houseName").value(house.getHouseName()))
+                .andExpect(jsonPath("$.[1].rating").value(3))
+                .andExpect(jsonPath("$.[1].houseName").value(house2.getHouseName()));
     }
 }

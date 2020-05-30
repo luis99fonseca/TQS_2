@@ -16,6 +16,7 @@ import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
+import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
@@ -43,13 +44,33 @@ class HouseControllerTest {
     private MockMvc mockMvc;
 
     private House house;
+    private House house2;
+    private User user;
     private ComoditiesDTO comoditiesDto;
 
     @BeforeEach
     private void setUp() {
         house = new House("aveiro", "boa casa", 2.0, 30.5, 4, 6, "Casa de Tabua");
         comoditiesDto = new ComoditiesDTO("pool", "pool to swim around", 0);
+        user = new User("Fonsequini","Luis","Fonseca",new GregorianCalendar(1999, Calendar.JULY,20),"dummie");
         house.addComoditieToHouse(new Comodities(comoditiesDto));
+        HouseReviews review = new HouseReviews(user,house,5,"BERY GOOD HOUSE");
+        HouseReviews review2 = new HouseReviews(user,house,4,"BERY GOOD HOUSE");
+        house.addReview(review);
+        house.addReview(review2);
+        house2=new House(
+                "Aveiro",
+                "Incredible House near Ria de Aveiro V2",
+                4.0,
+                75.0,
+                2,
+                3,
+                "house3"
+        );
+        review = new HouseReviews(user,house2,3,"BERY GOOD HOUSE");
+        review2 = new HouseReviews(user,house2,3,"BERY GOOD HOUSE");
+        house2.addReview(review);
+        house2.addReview(review2);
     }
 
     @Test
@@ -189,6 +210,22 @@ class HouseControllerTest {
 
         mockMvc.perform(delete("/deleteBookmark/userId=" + (-1) +"&houseId=" + (-1)))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void searchForTopHouses() throws Exception {
+        List<HouseSearchDTO> houses = new ArrayList<>();
+        houses.add(new HouseSearchDTO(house,user,4.5));
+        houses.add(new HouseSearchDTO(house2,user,3));
+        given(houseService.getTopHouses()).willReturn(houses);
+        // Checks the order and the names of the houses
+        mockMvc.perform(get("/topHouses"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$.[0].rating").value(4.5))
+                .andExpect(jsonPath("$.[0].houseName").value(house.getHouseName()))
+                .andExpect(jsonPath("$.[1].rating").value(3))
+                .andExpect(jsonPath("$.[1].houseName").value(house2.getHouseName()));
     }
 
 }
