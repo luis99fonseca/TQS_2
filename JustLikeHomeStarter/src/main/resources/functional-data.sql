@@ -15,3 +15,8 @@ insert into rent (house_id, user_id, rentStart, rentEnd, pending) values (3, 1, 
 
 insert into userReviews (from_user_id, to_user_id, rating, description) values (1 , 2, 4, 'muito boa pessoa');
 insert into userReviews (from_user_id, to_user_id, rating, description) values (3 , 2, 2, 'otimo dono de casa');
+
+insert into userReviews (from_user_id, to_user_id, rating, description) values (2 , 1, 5, 'este baiao é de confiança. LIKE');
+
+insert into Bookmarked_Houses(user_id, house_id) values (1, 4);
+insert into Bookmarked_Houses(user_id, house_id) values (1, 3);
