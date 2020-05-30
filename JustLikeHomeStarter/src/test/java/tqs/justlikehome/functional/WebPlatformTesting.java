@@ -205,7 +205,7 @@ public class WebPlatformTesting {
         driver.findElement(By.linkText("Profile")).click();
         assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
         driver.findElement(By.cssSelector(".fa-eye")).click();
-        TimeUnit.SECONDS.sleep(1);
+        TimeUnit.SECONDS.sleep(20);
         assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the cloud");
     }
 
@@ -233,10 +233,6 @@ public class WebPlatformTesting {
     void logoutAndLogin() throws Exception {
         driver.findElement(By.cssSelector(".text-default")).click();
         driver.findElement(By.linkText("Sign out")).click();
-//        {
-//            List<WebElement> elements = driver.findElements(By.cssSelector(".card-title"));
-//            assert (elements.size() > 0);
-//        }
         TimeUnit.SECONDS.sleep(2);
         driver.findElement(By.cssSelector(".avatar")).click();
         driver.findElement(By.linkText("Login")).click();
