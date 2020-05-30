@@ -11,6 +11,7 @@ insert into house (city, description, houseName, kmFromCityCenter, pricePerNight
 
 insert into rent (house_id, user_id, rentStart, rentEnd, pending) values (2, 3, TO_DATE('02/02/2010', 'DD/MM/YYYY'), TO_DATE('02/02/2010', 'DD/MM/YYYY'), FALSE);
 insert into rent (house_id, user_id, rentStart, rentEnd, pending) values (2, 2, TO_DATE('04/02/2010', 'DD/MM/YYYY'), TO_DATE('04/02/2010', 'DD/MM/YYYY'), TRUE);
+insert into rent (house_id, user_id, rentStart, rentEnd, pending) values (1, 2, TO_DATE('10/02/2010', 'DD/MM/YYYY'), TO_DATE('11/02/2010', 'DD/MM/YYYY'), TRUE);
 insert into rent (house_id, user_id, rentStart, rentEnd, pending) values (3, 1, TO_DATE('03/02/2010', 'DD/MM/YYYY'), TO_DATE('03/02/2010', 'DD/MM/YYYY'), FALSE);
 
 insert into userReviews (from_user_id, to_user_id, rating, description) values (1 , 2, 4, 'muito boa pessoa');
