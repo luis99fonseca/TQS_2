@@ -1,4 +1,5 @@
 insert into user (username, password, firstName, lastName, birthDate) values ('andrex','123', 'Andre', 'Baiao', TO_DATE('04/02/2010', 'DD/MM/YYYY'));
+
 insert into user (username, password, firstName, lastName, birthDate) values ('lius', '123', 'Luis', 'Fonseca', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
 insert into user (username, password, firstName, lastName, birthDate) values ('Silva', '123', 'Joao', '', TO_DATE('17/02/1999', 'DD/MM/YYYY'));
 insert into user (username, password, firstName, lastName, birthDate) values ('MandM', '123', 'Miguel', 'Mota', TO_DATE('13/06/1930', 'DD/MM/YYYY'));

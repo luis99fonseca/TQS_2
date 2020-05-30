@@ -11,6 +11,7 @@ import Property from "./Rest/Property";
 import DatePicker from "react-datepicker";
  
 import "react-datepicker/dist/react-datepicker.css";
+import House from "./Rest/House";
 
 
 export default class GalleryPage extends Component {
@@ -30,8 +31,20 @@ export default class GalleryPage extends Component {
       this.property_info = this.property_info.bind(this);
       this.query_searchProperty = this.query_searchProperty.bind(this);
       this.property_obj = new Property();
+      this.house_obj = new House();
+      this.topHouses()
   }
 
+  async topHouses(){
+    let response = await this.house_obj.get_topHouses();
+    
+    let dataHouses = response[1]
+
+    this.setState({
+      houses : dataHouses
+    })
+ 
+  }
 
   property_info(id) {
     localStorage.setItem('house_id', id);

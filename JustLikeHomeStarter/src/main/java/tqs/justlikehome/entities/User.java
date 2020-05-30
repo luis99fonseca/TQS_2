@@ -39,6 +39,7 @@ public class User {
             joinColumns = {@JoinColumn(name="user_id")},
             inverseJoinColumns = {@JoinColumn(name="house_id")}
     )
+    @OrderBy("id ASC")
     private Set<House> bookmarkedHouses = new HashSet<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
