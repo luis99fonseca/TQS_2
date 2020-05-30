@@ -69,4 +69,11 @@ public class HouseController {
         return houseService.deleteBookmark(userId, houseId);
     }
 
+    @GetMapping(value="/topHouses")
+    @ApiOperation(value="Get top rated houses")
+    public List<HouseSearchDTO> getTopHouses(){
+        return houseService.getTopHouses();
+    }
+
+
 }

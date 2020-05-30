@@ -7,11 +7,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import tqs.justlikehome.dtos.ComoditiesDTO;
 import tqs.justlikehome.dtos.HouseDTO;
 import tqs.justlikehome.dtos.HouseSearchDTO;
 import tqs.justlikehome.entities.Comodities;
 import tqs.justlikehome.entities.House;
+import tqs.justlikehome.entities.HouseReviews;
 import tqs.justlikehome.entities.User;
 import tqs.justlikehome.exceptions.InvalidDateInputException;
 import tqs.justlikehome.exceptions.InvalidIdException;
@@ -37,6 +39,7 @@ class HouseServiceTest {
     private HouseService houseService;
 
     private House house;
+    private House house2;
     private User user;
     private Set<Comodities> comodities = new HashSet<>();
 
@@ -54,13 +57,43 @@ class HouseServiceTest {
                 5,
                 "house3"
         );
+        HouseReviews review = new HouseReviews(user,house,5,"BERY GOOD HOUSE");
+        HouseReviews review2 = new HouseReviews(user,house,4,"BERY GOOD HOUSE");
+        house.addReview(review);
+        house.addReview(review2);
         house.setOwner(user);
+
+        house2=new House(
+                "Aveiro",
+                "Incredible House near Ria de Aveiro V2",
+                4.0,
+                75.0,
+                2,
+                3,
+                "house3"
+        );
+        house2.setOwner(user);
+        review = new HouseReviews(user,house2,3,"BERY GOOD HOUSE");
+        review2 = new HouseReviews(user,house2,3,"BERY GOOD HOUSE");
+        house2.addReview(review);
+        house2.addReview(review2);
+
         List<House> houses = new ArrayList<>();
         houses.add(house);
         Mockito.when(houseRepository.searchHouse(any(Integer.class),any(String.class),any(Date.class),any(Date.class))).thenReturn(houses);
         Mockito.when(houseRepository.findById(house.getId())).thenReturn(house);
         Mockito.when(houseRepository.getRating(house.getId())).thenReturn(4.5);
         Mockito.when(userRepository.getUserAvgRating(user.getId())).thenReturn(10.0);
+        List<Object[]> objs = new ArrayList<>();
+        Object[] objlist1 = new Object[2];
+        objlist1[0]=house;
+        objlist1[1]=4.5;
+        objs.add(objlist1);
+        Object[] objlist2 = new Object[2];
+        objlist2[0]=house2;
+        objlist2[1]=3;
+        objs.add(objlist2);
+        Mockito.when(houseRepository.getTopHouses(PageRequest.of(0,5))).thenReturn(objs);
     }
 
     @Test
@@ -146,5 +179,14 @@ class HouseServiceTest {
         assertThat(houseSearchDTO.getOwnerName()).isEqualTo(user.getUsername());
         assertThat(houseSearchDTO.getRating()).isEqualTo(0);
         assertThat(houseSearchDTO.getUserRating()).isEqualTo(0);
+    }
+
+    @Test
+    void searchForTopHouses(){
+        List<HouseSearchDTO> houses = houseService.getTopHouses();
+        assertThat(houses.get(0).getHouseId()).isEqualTo(house.getId());
+        assertThat(houses.get(1).getHouseId()).isEqualTo(house2.getId());
+        assertThat(houses.get(0).getRating()).isEqualTo(4.5);
+        assertThat(houses.get(1).getRating()).isEqualTo(3);
     }
 }
