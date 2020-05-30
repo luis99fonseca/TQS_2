@@ -289,6 +289,15 @@ public class WebPlatformTesting {
         assertEquals("otimo dono de casa", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div/div[2]/a[2]/div/div[2]/div[2]")).getText());
     }
 
+    @Test
+    public void checkDeclineRequest(){
+        driver.get("http://localhost:3000/");
+        driver.findElement(By.linkText("Arrendamentos")).click();
+        assertEquals("house by the desert", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).getText());
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button[2]/i")).click();
+        assertThat(driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).size() < 1);
+    }
+
     private Callable<Boolean> awaitTTL(LocalDateTime ldt, int waitTime) {
         return new Callable<Boolean>() {
             public Boolean call() throws Exception {
