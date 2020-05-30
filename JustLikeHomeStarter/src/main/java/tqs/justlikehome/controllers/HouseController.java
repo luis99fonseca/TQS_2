@@ -74,6 +74,4 @@ public class HouseController {
     public List<HouseSearchDTO> getTopHouses(){
         return houseService.getTopHouses();
     }
-
-
 }
