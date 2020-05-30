@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -40,7 +41,7 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
@@ -195,9 +196,12 @@ public class WebPlatformTesting {
         driver.findElement(By.linkText("Profile")).click();
         TimeUnit.SECONDS.sleep(8);
         assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
+
         js.executeScript("window.scrollBy(0,1000)");
         TimeUnit.SECONDS.sleep(8);
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button/i")).click();
+
+        driver.findElement(By.xpath("//*[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("h1")
         ));
@@ -209,7 +213,6 @@ public class WebPlatformTesting {
     void createUser() throws Exception {
         driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).click();
         driver.findElement(By.linkText("Sign out")).click();
-
         driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).click();
         driver.findElement(By.linkText("Login")).click();
         driver.findElement(By.linkText("Não tem conta?")).click();
