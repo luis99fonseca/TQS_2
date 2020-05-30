@@ -15,7 +15,7 @@ export default  class Logout extends Component {
     logout_action(){
         localStorage.setItem("user_id","")
         localStorage.setItem("username", "")
-        window.location.href = '/login'  
+        window.location.href = '/'  
     }
 
     render(){
