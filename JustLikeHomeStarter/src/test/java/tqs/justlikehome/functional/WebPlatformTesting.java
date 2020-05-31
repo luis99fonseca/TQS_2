@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,10 +52,10 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--window-size=1920,1080");
-        options.addArguments("--headless","--disable-gpu");
+        //options.addArguments("--headless","--disable-gpu");
         driver = new ChromeDriver(options);
         driver.get("http://localhost:3000/");
         driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
@@ -176,7 +177,13 @@ public class WebPlatformTesting {
         driver.findElement(By.cssSelector("form > .row")).click();
         driver.findElement(By.cssSelector(".fe-search")).click();
         {
-            driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
+            wait.until(new ExpectedCondition<Object>() {
+                        public Boolean apply(WebDriver driver){
+                            int elementCount =  driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div")).size();
+                            return elementCount==0?true:false;
+                        }
+
+            });
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
             assertThat(elements.size()).isEqualTo(0);
         }
@@ -208,7 +215,14 @@ public class WebPlatformTesting {
         driver.findElement(By.name("guests")).sendKeys("10");
         driver.findElement(By.cssSelector(".fe-search")).click();
         {
-            driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
+            wait.until(new ExpectedCondition<Object>() {
+                           public Boolean apply(WebDriver driver){
+                               int elementCount =  driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div")).size();
+                               return elementCount==0?true:false;
+                           }
+
+                       }
+            );
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
             assertThat(elements.size()).isEqualTo(0);
         }
