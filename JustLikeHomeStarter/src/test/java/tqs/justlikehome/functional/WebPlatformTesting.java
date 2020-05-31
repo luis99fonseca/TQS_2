@@ -39,10 +39,10 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--window-size=1920,1080");
-        //options.addArguments("--headless","--disable-gpu");
+        options.addArguments("--headless","--disable-gpu");
         driver = new ChromeDriver(options);
         driver.get("http://localhost:3000/");
         driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
