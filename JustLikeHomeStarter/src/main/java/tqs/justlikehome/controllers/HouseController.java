@@ -1,8 +1,6 @@
 package tqs.justlikehome.controllers;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Extension;
-import io.swagger.annotations.ExtensionProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tqs.justlikehome.dtos.BookMarkDTO;

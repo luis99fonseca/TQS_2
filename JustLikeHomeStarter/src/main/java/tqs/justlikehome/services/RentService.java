@@ -34,8 +34,6 @@ public class RentService {
         try{
             User user = userRepository.findById(rentDTO.getUserID());
             House house = houseRepository.findById(rentDTO.getHouseID());
-            System.out.println(user.getId());
-            System.out.println(house.getOwner().getId());
             if(user.getId()==house.getOwner().getId()){
                 throw new NoPermissionException();
             }

@@ -28,7 +28,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("functional")
-public class WebPlatformTesting {
+class WebPlatformTesting {
     private WebDriver driver;
     private String baseUrl;
     private boolean acceptNextAlert = true;
@@ -116,12 +116,12 @@ public class WebPlatformTesting {
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector(".card:nth-child(2) td:nth-child(2)")
         ));
-        assertEquals(driver.findElement(By.cssSelector(".card:nth-child(2) td:nth-child(2)")).getText(), "house by the beach");
+        assertEquals("house by the beach",driver.findElement(By.cssSelector(".card:nth-child(2) td:nth-child(2)")).getText());
         driver.findElement(By.cssSelector("td:nth-child(5) .fa")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("h1")
         ));
-        assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the beach");
+        assertEquals("house by the beach",driver.findElement(By.cssSelector("h1")).getText());
         driver.findElement(By.linkText("Profile")).click();
         driver.findElement(By.cssSelector(".fe-trash")).click();
         {
@@ -225,7 +225,7 @@ public class WebPlatformTesting {
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
                 By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")
         ));
-        assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
+        assertEquals("house by the cloud",driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText());
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("h1")
@@ -233,7 +233,7 @@ public class WebPlatformTesting {
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
                 By.cssSelector("h1")
         ));
-        assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the cloud");
+        assertEquals("house by the cloud",driver.findElement(By.cssSelector("h1")).getText());
     }
 
     @Test
@@ -282,7 +282,7 @@ public class WebPlatformTesting {
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//*[@id=\"root\"]/div/div/div/div/div/form/div/span[2]")
         ));
-        assertEquals(driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div/form/div/span[2]")).getText(), "Tem que ter no mínimo 5 caracteres" );
+        assertEquals("Tem que ter no mínimo 5 caracteres",driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div/form/div/span[2]")).getText());
     }
 
     @Test
@@ -308,7 +308,7 @@ public class WebPlatformTesting {
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")
         ));
-        assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")).getText(), "Já existe!" );
+        assertEquals("Já existe!",driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")).getText());
     }
 
     @Test
@@ -557,12 +557,20 @@ public class WebPlatformTesting {
     void checkDeclineRequest() throws Exception{
         driver.findElement(By.linkText("Arrendamentos")).click();
         driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
-        int existing_requests = driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr")).size();
+        int existing_requests = driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div[2]/div/div[1]/table/tbody/tr")).size();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button[2]/i")
         ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button[2]/i")).click();
-        assertThat(driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).size() < existing_requests);
+        wait.until(new ExpectedCondition<Object>() {
+                       public Boolean apply(WebDriver driver){
+                           int elementCount =  driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div[2]/div/div[1]/table/tbody/tr")).size();
+                           return elementCount==existing_requests-1;
+                       }
+
+                   }
+        );
+        assertThat(driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div[2]/div/div[1]/table/tbody/tr")).size()).isLessThan(existing_requests);
     }
 
     @Test
