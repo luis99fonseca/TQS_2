@@ -446,6 +446,8 @@ public class WebPlatformTesting {
         driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
         js.executeScript("window.scrollBy(0,1000)");
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button/i")).click();
+        driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
+        js.executeScript("window.scrollBy(0,1000)");
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.name("description")
         ));
