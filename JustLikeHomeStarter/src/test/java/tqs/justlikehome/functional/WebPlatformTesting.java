@@ -125,11 +125,15 @@ class WebPlatformTesting {
         driver.findElement(By.linkText("Profile")).click();
         driver.findElement(By.cssSelector(".fe-trash")).click();
         {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr/td[4]")
-            ));
-            List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr/td[4]"));
-            assert (elements.size() == 2);
+            wait.until(new ExpectedCondition<Object>() {
+                           public Boolean apply(WebDriver driver){
+                               int elementCount =  driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr")).size();
+                               return elementCount==2;
+                           }
+
+                       }
+            );
+            assertThat(2).isEqualTo(driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr")).size());
         }
     }
 
