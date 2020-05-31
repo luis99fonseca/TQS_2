@@ -257,6 +257,53 @@ public class WebPlatformTesting {
         assertEquals("migalhas", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).getText());
     }
 
+    @Test
+    void passwordLess5Characters_invalidCreateUser() throws Exception {
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+        driver.findElement(By.cssSelector(".avatar")).click();
+        driver.findElement(By.linkText("Login")).click();
+        driver.findElement(By.linkText("Não tem conta?")).click();
+        driver.findElement(By.name("username")).click();
+        driver.findElement(By.name("username")).clear();
+        driver.findElement(By.name("username")).sendKeys("migalhas");
+        driver.findElement(By.name("firstName")).click();
+        driver.findElement(By.name("firstName")).clear();
+        driver.findElement(By.name("firstName")).sendKeys("miguel");
+        driver.findElement(By.name("lastName")).click();
+        driver.findElement(By.name("lastName")).clear();
+        driver.findElement(By.name("lastName")).sendKeys("mota");
+        driver.findElement(By.name("password")).click();
+        driver.findElement(By.name("password")).clear();
+        driver.findElement(By.name("password")).sendKeys("123");
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        TimeUnit.SECONDS.sleep(2);
+        assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")).getText(), "Tem que ter no mínimo 5 caracteres" );
+    }
+
+    @Test
+    void userAlreadyExist_invalidCreateUser() throws Exception{
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+        driver.findElement(By.cssSelector(".avatar")).click();
+        driver.findElement(By.linkText("Login")).click();
+        driver.findElement(By.linkText("Não tem conta?")).click();
+        driver.findElement(By.name("username")).click();
+        driver.findElement(By.name("username")).clear();
+        driver.findElement(By.name("username")).sendKeys("andrex");
+        driver.findElement(By.name("firstName")).click();
+        driver.findElement(By.name("firstName")).clear();
+        driver.findElement(By.name("firstName")).sendKeys("miguel");
+        driver.findElement(By.name("lastName")).click();
+        driver.findElement(By.name("lastName")).clear();
+        driver.findElement(By.name("lastName")).sendKeys("mota");
+        driver.findElement(By.name("password")).click();
+        driver.findElement(By.name("password")).clear();
+        driver.findElement(By.name("password")).sendKeys("123");
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        TimeUnit.SECONDS.sleep(2);
+        assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")).getText(), "Já existe!" );
+    }
 
     @Test
     void logoutAndLogin() throws Exception {
