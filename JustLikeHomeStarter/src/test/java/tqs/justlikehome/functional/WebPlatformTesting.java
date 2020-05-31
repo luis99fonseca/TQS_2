@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.CoreMatchers.is;
-
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -16,23 +13,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.openqa.selenium.interactions.Actions;
 import org.springframework.test.context.ActiveProfiles;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import tqs.justlikehome.dtos.HouseSearchDTO;
-import tqs.justlikehome.entities.House;
-import tqs.justlikehome.repositories.HouseRepository;
-import tqs.justlikehome.services.HouseService;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -44,10 +35,6 @@ public class WebPlatformTesting {
     private StringBuffer verificationErrors = new StringBuffer();
     private WebDriverWait wait;
     private JavascriptExecutor js;
-
-
-    @Autowired
-    private HouseRepository houseRepository;
 
 
     @BeforeEach
@@ -131,6 +118,9 @@ public class WebPlatformTesting {
         ));
         assertEquals(driver.findElement(By.cssSelector(".card:nth-child(2) td:nth-child(2)")).getText(), "house by the beach");
         driver.findElement(By.cssSelector("td:nth-child(5) .fa")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("h1")
+        ));
         assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the beach");
         driver.findElement(By.linkText("Profile")).click();
         driver.findElement(By.cssSelector(".fe-trash")).click();
@@ -231,9 +221,6 @@ public class WebPlatformTesting {
 
     @Test
     void lastExperiences() throws Exception {
-        for(House house:houseRepository.findAll()){
-            System.out.println(house.getHouseName());
-        }
         driver.findElement(By.linkText("Profile")).click();
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
                 By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")
