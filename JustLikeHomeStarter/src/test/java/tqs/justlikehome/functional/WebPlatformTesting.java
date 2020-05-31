@@ -52,7 +52,7 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--headless","--disable-gpu");
@@ -546,6 +546,9 @@ public class WebPlatformTesting {
         driver.findElement(By.name("description")).sendKeys("some bot review");
         driver.findElement(By.xpath("//span[@id='stars2']/span[3]")).click();
         driver.findElement(By.xpath("//button[@type='submit']")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")
+        ));
         assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
     }
 
