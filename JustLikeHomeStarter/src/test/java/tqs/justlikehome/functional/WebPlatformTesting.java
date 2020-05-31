@@ -51,7 +51,7 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-//        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
@@ -91,9 +91,13 @@ public class WebPlatformTesting {
         driver.findElement(By.name("guests")).click();
         driver.findElement(By.name("guests")).sendKeys("1");
         driver.findElement(By.cssSelector(".btn-secondary")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".rounded")
+        ));
         driver.findElement(By.cssSelector(".rounded")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".btn-warning")
+        ));
         driver.findElement(By.cssSelector(".btn-warning")).click();
         assertEquals("Adicionado aos favoritos", driver.findElement(By.cssSelector(".col-lg-4 > span:nth-child(5)")).getText());
         driver.findElement(By.linkText("Profile")).click();
@@ -108,22 +112,30 @@ public class WebPlatformTesting {
         driver.findElement(By.name("guests")).click();
         driver.findElement(By.name("guests")).sendKeys("1");
         driver.findElement(By.cssSelector(".btn-secondary")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".rounded")
+        ));
         driver.findElement(By.cssSelector(".rounded")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".btn-warning")
+        ));
         driver.findElement(By.cssSelector(".btn-warning")).click();
         assertEquals("Adicionado aos favoritos", driver.findElement(By.cssSelector(".col-lg-4 > span:nth-child(5)")).getText());
         driver.findElement(By.linkText("Profile")).click();
         assertEquals("house by the beach", driver.findElement(By.cssSelector(".card:nth-child(2) td:nth-child(2)")).getText());
         driver.findElement(By.linkText("Profile")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector(".card:nth-child(2) td:nth-child(2)")
+        ));
         assertEquals(driver.findElement(By.cssSelector(".card:nth-child(2) td:nth-child(2)")).getText(), "house by the beach");
         driver.findElement(By.cssSelector("td:nth-child(5) .fa")).click();
         assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the beach");
         driver.findElement(By.linkText("Profile")).click();
         driver.findElement(By.cssSelector(".fe-trash")).click();
         {
-            TimeUnit.SECONDS.sleep(1);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr/td[4]")
+            ));
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr/td[4]"));
             assert (elements.size() == 2);
         }
@@ -162,7 +174,6 @@ public class WebPlatformTesting {
         driver.findElement(By.cssSelector(".form-label:nth-child(1)")).click();
         driver.findElement(By.cssSelector("form > .row")).click();
         driver.findElement(By.cssSelector(".fe-search")).click();
-        TimeUnit.SECONDS.sleep(2);
         {
             driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
@@ -188,7 +199,6 @@ public class WebPlatformTesting {
         driver.findElement(By.cssSelector(".form-label:nth-child(1)")).click();
 
         driver.findElement(By.cssSelector(".fe-search")).click();
-        TimeUnit.SECONDS.sleep(2);
         {
             wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div")));
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
@@ -196,7 +206,6 @@ public class WebPlatformTesting {
         }
         driver.findElement(By.name("guests")).sendKeys("10");
         driver.findElement(By.cssSelector(".fe-search")).click();
-        TimeUnit.SECONDS.sleep(2);
         {
             driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
@@ -211,13 +220,17 @@ public class WebPlatformTesting {
             System.out.println(house.getHouseName());
         }
         driver.findElement(By.linkText("Profile")).click();
-        TimeUnit.SECONDS.sleep(8);
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+                By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")
+        ));
         assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("h1")
         ));
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+                By.cssSelector("h1")
+        ));
         assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the cloud");
     }
 
@@ -303,7 +316,7 @@ public class WebPlatformTesting {
 
 
     @Test
-    public void acceptRentRequest() throws Exception {
+    void acceptRentRequest() throws Exception {
         driver.findElement(By.linkText("Arrendamentos")).click();
         assertEquals("house by the desert", driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).getText());
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button/i")).click();
@@ -312,7 +325,7 @@ public class WebPlatformTesting {
 
 
     @Test
-    public void makeRentRequest() throws Exception {
+    void makeRentRequest() throws Exception {
         driver.findElement(By.linkText("Imóveis")).click();
         driver.findElement(By.name("city")).click();
         driver.findElement(By.name("city")).clear();
@@ -335,7 +348,7 @@ public class WebPlatformTesting {
     }
 
     @Test
-    public void makeHouseReview() throws Exception {
+    void makeHouseReview() throws Exception {
         driver.findElement(By.linkText("Imóveis")).click();
         driver.findElement(By.name("city")).click();
         driver.findElement(By.name("city")).clear();
@@ -378,7 +391,7 @@ public class WebPlatformTesting {
     }
 
     @Test
-    public void makeUserReview() throws Exception {
+    void makeUserReview() throws Exception {
         driver.findElement(By.linkText("Arrendamentos")).click();
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div[2]/table/tbody/tr/td/span")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
@@ -402,7 +415,7 @@ public class WebPlatformTesting {
     }
 
     @Test
-    public void makeInvalidHouseReview() throws Exception {
+    void makeInvalidHouseReview() throws Exception {
         driver.findElement(By.linkText("Imóveis")).click();
         driver.findElement(By.name("city")).click();
         driver.findElement(By.name("city")).clear();
@@ -433,7 +446,7 @@ public class WebPlatformTesting {
     }
 
     @Test
-    public void makeInvalidUserReview() throws Exception {
+    void makeInvalidUserReview() throws Exception {
         driver.findElement(By.linkText("Imóveis")).click();
         driver.findElement(By.name("city")).click();
         driver.findElement(By.name("city")).clear();
@@ -462,7 +475,7 @@ public class WebPlatformTesting {
     }
 
     @Test
-    public void checkAnotherUserReviews() throws Exception {
+    void checkAnotherUserReviews() throws Exception {
         driver.findElement(By.linkText("Imóveis")).click();
         driver.findElement(By.name("city")).click();
         driver.findElement(By.name("city")).clear();
@@ -486,7 +499,7 @@ public class WebPlatformTesting {
     }
 
     @Test
-    public void checkDeclineRequest() throws Exception{
+    void checkDeclineRequest() throws Exception{
         driver.findElement(By.linkText("Arrendamentos")).click();
         driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
         int existing_requests = driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr")).size();
@@ -498,7 +511,7 @@ public class WebPlatformTesting {
     }
 
     @Test
-    public void checkLoggedOutUserReview() throws Exception{
+    void checkLoggedOutUserReview() throws Exception{
         wait.until(ExpectedConditions.elementToBeClickable(
                 By.cssSelector(".text-default")
         ));
@@ -506,9 +519,11 @@ public class WebPlatformTesting {
         driver.findElement(By.linkText("Sign out")).click();
 
         driver.findElement(By.linkText("Imóveis")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")
+        ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
-        TimeUnit.SECONDS.sleep(2);
+        driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
         js.executeScript("window.scrollBy(0,1000)");
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button")).click();
         driver.findElement(By.name("description")).click();
@@ -520,7 +535,7 @@ public class WebPlatformTesting {
     }
 
     @Test
-    public void checkLoggedOutRentRequest() throws Exception{
+    void checkLoggedOutRentRequest() throws Exception{
         wait.until(ExpectedConditions.elementToBeClickable(
                 By.cssSelector(".text-default")
         ));
@@ -529,16 +544,18 @@ public class WebPlatformTesting {
 
 
         driver.findElement(By.linkText("Imóveis")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")
+        ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
-        TimeUnit.SECONDS.sleep(2);
+        driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
         js.executeScript("window.scrollBy(0,1000)");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
     }
 
     @Test
-    public void checkLoggedOutBookmark() throws Exception{
+    void checkLoggedOutBookmark() throws Exception{
         wait.until(ExpectedConditions.elementToBeClickable(
                 By.cssSelector(".text-default")
         ));
@@ -546,9 +563,11 @@ public class WebPlatformTesting {
         driver.findElement(By.linkText("Sign out")).click();
 
         driver.findElement(By.linkText("Imóveis")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")
+        ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
-        TimeUnit.SECONDS.sleep(2);
+        driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
         js.executeScript("window.scrollBy(0,1000)");
         driver.findElement(By.xpath("(//button[@type='button'])[5]")).click();
         assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
