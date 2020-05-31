@@ -41,7 +41,7 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+//        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
@@ -475,7 +475,6 @@ public class WebPlatformTesting {
 
     @Test
     public void checkDeclineRequest() throws Exception{
-        driver.get("http://localhost:3000/");
         driver.findElement(By.linkText("Arrendamentos")).click();
         driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
         int existing_requests = driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr")).size();
@@ -484,6 +483,63 @@ public class WebPlatformTesting {
         ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button[2]/i")).click();
         assertThat(driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).size() < existing_requests);
+    }
+
+    @Test
+    public void checkLoggedOutUserReview() throws Exception{
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".text-default")
+        ));
+        driver.findElement(By.cssSelector(".text-default")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+
+        driver.findElement(By.linkText("Imóveis")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+        TimeUnit.SECONDS.sleep(2);
+        js.executeScript("window.scrollBy(0,1000)");
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button")).click();
+        driver.findElement(By.name("description")).click();
+        driver.findElement(By.name("description")).clear();
+        driver.findElement(By.name("description")).sendKeys("some bot review");
+        driver.findElement(By.xpath("//span[@id='stars2']/span[3]")).click();
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
+    }
+
+    @Test
+    public void checkLoggedOutRentRequest() throws Exception{
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".text-default")
+        ));
+        driver.findElement(By.cssSelector(".text-default")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+
+
+        driver.findElement(By.linkText("Imóveis")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+        TimeUnit.SECONDS.sleep(2);
+        js.executeScript("window.scrollBy(0,1000)");
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
+    }
+
+    @Test
+    public void checkLoggedOutBookmark() throws Exception{
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".text-default")
+        ));
+        driver.findElement(By.cssSelector(".text-default")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+
+        driver.findElement(By.linkText("Imóveis")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+        TimeUnit.SECONDS.sleep(2);
+        js.executeScript("window.scrollBy(0,1000)");
+        driver.findElement(By.xpath("(//button[@type='button'])[5]")).click();
+        assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
     }
 
     private Callable<Boolean> awaitTTL(LocalDateTime ldt, int waitTime) {
