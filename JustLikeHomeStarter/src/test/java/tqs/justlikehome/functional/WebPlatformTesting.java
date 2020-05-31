@@ -22,11 +22,14 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.openqa.selenium.interactions.Actions;
 import org.springframework.test.context.ActiveProfiles;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import tqs.justlikehome.entities.House;
+import tqs.justlikehome.repositories.HouseRepository;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -38,6 +41,11 @@ public class WebPlatformTesting {
     private StringBuffer verificationErrors = new StringBuffer();
     private WebDriverWait wait;
     private JavascriptExecutor js;
+
+
+    @Autowired
+    private HouseRepository houseRepository;
+
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -193,10 +201,15 @@ public class WebPlatformTesting {
 
     @Test
     void lastExperiences() throws Exception {
+        for(House house:houseRepository.findAll()){
+            System.out.println(house.getHouseName());
+        }
         driver.findElement(By.linkText("Profile")).click();
+        Thread.sleep(100000);
         assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
         driver.findElement(By.xpath("//*[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button")).click();
         //
+        Thread.sleep(100000);
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("h1")
         ));
