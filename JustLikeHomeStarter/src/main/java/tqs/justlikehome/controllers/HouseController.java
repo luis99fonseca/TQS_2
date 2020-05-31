@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins={"http://localhost:3000","http://192.168.160.52"})
 public class HouseController {
     @Autowired
     private HouseService houseService;
