@@ -9,7 +9,6 @@ name: Continuous Deployment
 jobs:
   Tests:
     name: Running unit,integration and web tests
-    runs-on: [self-hosted]
     steps:
       - uses: actions/checkout@v2
       - name: Setup node
