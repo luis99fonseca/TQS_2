@@ -21,11 +21,16 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.openqa.selenium.interactions.Actions;
 import org.springframework.test.context.ActiveProfiles;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import tqs.justlikehome.dtos.HouseSearchDTO;
+import tqs.justlikehome.entities.House;
+import tqs.justlikehome.repositories.HouseRepository;
+import tqs.justlikehome.services.HouseService;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -40,7 +45,7 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
@@ -48,6 +53,7 @@ public class WebPlatformTesting {
         driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 15);
         js = (JavascriptExecutor) driver;
+
 
         // login
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
@@ -150,6 +156,7 @@ public class WebPlatformTesting {
         driver.findElement(By.cssSelector(".form-label:nth-child(1)")).click();
         driver.findElement(By.cssSelector("form > .row")).click();
         driver.findElement(By.cssSelector(".fe-search")).click();
+        TimeUnit.SECONDS.sleep(2);
         {
             driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
@@ -175,6 +182,7 @@ public class WebPlatformTesting {
         driver.findElement(By.cssSelector(".form-label:nth-child(1)")).click();
 
         driver.findElement(By.cssSelector(".fe-search")).click();
+        TimeUnit.SECONDS.sleep(2);
         {
             wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div")));
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
@@ -182,6 +190,7 @@ public class WebPlatformTesting {
         }
         driver.findElement(By.name("guests")).sendKeys("10");
         driver.findElement(By.cssSelector(".fe-search")).click();
+        TimeUnit.SECONDS.sleep(2);
         {
             driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
@@ -194,10 +203,11 @@ public class WebPlatformTesting {
     void lastExperiences() throws Exception {
         driver.findElement(By.linkText("Profile")).click();
         assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
-        driver.findElement(By.cssSelector(".fa-eye")).click();
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("h1")
         ));
+        TimeUnit.SECONDS.sleep(2);
         assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the cloud");
     }
 
@@ -205,6 +215,8 @@ public class WebPlatformTesting {
     void createUser() throws Exception {
         driver.findElement(By.cssSelector(".text-default")).click();
         driver.findElement(By.linkText("Sign out")).click();
+        driver.findElement(By.cssSelector(".avatar")).click();
+        driver.findElement(By.linkText("Login")).click();
         driver.findElement(By.linkText("Não tem conta?")).click();
         driver.findElement(By.name("username")).click();
         driver.findElement(By.name("username")).sendKeys("joaotavares");
@@ -215,7 +227,7 @@ public class WebPlatformTesting {
         driver.findElement(By.name("birthDate")).click();
         driver.findElement(By.cssSelector(".react-datepicker__day--selected")).click();
         driver.findElement(By.name("password")).click();
-        driver.findElement(By.name("password")).sendKeys("142");
+        driver.findElement(By.name("password")).sendKeys("1421231");
         driver.findElement(By.cssSelector(".btn")).click();
         assertEquals("joaotavares", driver.findElement(By.cssSelector(".text-default")).getText());
     }
