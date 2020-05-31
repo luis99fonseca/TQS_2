@@ -52,10 +52,10 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--window-size=1920,1080");
-        options.addArguments("--headless","--disable-gpu");
+        //options.addArguments("--headless","--disable-gpu");
         driver = new ChromeDriver(options);
         driver.get("http://localhost:3000/");
         driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
@@ -448,9 +448,12 @@ public class WebPlatformTesting {
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button/i")).click();
         driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
         js.executeScript("window.scrollBy(0,500)");
-        driver.findElement(By.name("description")).click();
-        driver.findElement(By.name("description")).clear();
-        driver.findElement(By.name("description")).sendKeys("casa que nem vi...");
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")
+        ));
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")).click();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")).clear();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")).sendKeys("casa que nem vi...");
         driver.findElement(By.xpath("//span[@id='stars2']/span[4]")).click();
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
