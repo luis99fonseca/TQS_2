@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -45,7 +46,7 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+//        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
@@ -158,7 +159,7 @@ public class WebPlatformTesting {
         driver.findElement(By.cssSelector(".fe-search")).click();
         TimeUnit.SECONDS.sleep(2);
         {
-            driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
             assertThat(elements.size()).isEqualTo(0);
         }
@@ -192,7 +193,7 @@ public class WebPlatformTesting {
         driver.findElement(By.cssSelector(".fe-search")).click();
         TimeUnit.SECONDS.sleep(2);
         {
-            driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
             List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div[2]/div/div"));
             assertThat(elements.size()).isEqualTo(0);
         }
@@ -202,6 +203,7 @@ public class WebPlatformTesting {
     @Test
     void lastExperiences() throws Exception {
         driver.findElement(By.linkText("Profile")).click();
+        TimeUnit.SECONDS.sleep(8);
         assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
@@ -213,23 +215,25 @@ public class WebPlatformTesting {
 
     @Test
     void createUser() throws Exception {
-        driver.findElement(By.cssSelector(".text-default")).click();
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).click();
         driver.findElement(By.linkText("Sign out")).click();
         driver.findElement(By.cssSelector(".avatar")).click();
         driver.findElement(By.linkText("Login")).click();
         driver.findElement(By.linkText("Não tem conta?")).click();
         driver.findElement(By.name("username")).click();
-        driver.findElement(By.name("username")).sendKeys("joaotavares");
+        driver.findElement(By.name("username")).clear();
+        driver.findElement(By.name("username")).sendKeys("migalhas");
         driver.findElement(By.name("firstName")).click();
-        driver.findElement(By.name("firstName")).sendKeys("joao");
+        driver.findElement(By.name("firstName")).clear();
+        driver.findElement(By.name("firstName")).sendKeys("miguel");
         driver.findElement(By.name("lastName")).click();
-        driver.findElement(By.name("lastName")).sendKeys("tavares");
-        driver.findElement(By.name("birthDate")).click();
-        driver.findElement(By.cssSelector(".react-datepicker__day--selected")).click();
+        driver.findElement(By.name("lastName")).clear();
+        driver.findElement(By.name("lastName")).sendKeys("mota");
         driver.findElement(By.name("password")).click();
-        driver.findElement(By.name("password")).sendKeys("1421231");
-        driver.findElement(By.cssSelector(".btn")).click();
-        assertEquals("joaotavares", driver.findElement(By.cssSelector(".text-default")).getText());
+        driver.findElement(By.name("password")).clear();
+        driver.findElement(By.name("password")).sendKeys("12345");
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        assertEquals("migalhas", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).getText());
     }
 
 
@@ -475,7 +479,6 @@ public class WebPlatformTesting {
 
     @Test
     public void checkDeclineRequest() throws Exception{
-        driver.get("http://localhost:3000/");
         driver.findElement(By.linkText("Arrendamentos")).click();
         driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
         int existing_requests = driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr")).size();
@@ -484,6 +487,63 @@ public class WebPlatformTesting {
         ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button[2]/i")).click();
         assertThat(driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).size() < existing_requests);
+    }
+
+    @Test
+    public void checkLoggedOutUserReview() throws Exception{
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".text-default")
+        ));
+        driver.findElement(By.cssSelector(".text-default")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+
+        driver.findElement(By.linkText("Imóveis")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+        TimeUnit.SECONDS.sleep(2);
+        js.executeScript("window.scrollBy(0,1000)");
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button")).click();
+        driver.findElement(By.name("description")).click();
+        driver.findElement(By.name("description")).clear();
+        driver.findElement(By.name("description")).sendKeys("some bot review");
+        driver.findElement(By.xpath("//span[@id='stars2']/span[3]")).click();
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
+    }
+
+    @Test
+    public void checkLoggedOutRentRequest() throws Exception{
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".text-default")
+        ));
+        driver.findElement(By.cssSelector(".text-default")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+
+
+        driver.findElement(By.linkText("Imóveis")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+        TimeUnit.SECONDS.sleep(2);
+        js.executeScript("window.scrollBy(0,1000)");
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
+    }
+
+    @Test
+    public void checkLoggedOutBookmark() throws Exception{
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector(".text-default")
+        ));
+        driver.findElement(By.cssSelector(".text-default")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+
+        driver.findElement(By.linkText("Imóveis")).click();
+        TimeUnit.SECONDS.sleep(2);
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
+        TimeUnit.SECONDS.sleep(2);
+        js.executeScript("window.scrollBy(0,1000)");
+        driver.findElement(By.xpath("(//button[@type='button'])[5]")).click();
+        assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
     }
 
     private Callable<Boolean> awaitTTL(LocalDateTime ldt, int waitTime) {
