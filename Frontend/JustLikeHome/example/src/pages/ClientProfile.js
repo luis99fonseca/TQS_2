@@ -42,7 +42,7 @@ export default class ClientProfile extends Component {
       this.get_info = this.get_info.bind(this)
       this.my_button = this.my_button.bind(this)
       
-      this.check_login()
+      this.check_login = this.check_login.bind(this)
       this.get_userReviews()
       this.get_info()
   }
@@ -78,6 +78,7 @@ export default class ClientProfile extends Component {
   }
 
   async review_user(event){
+    this.check_login()
     event.preventDefault();
     let data = getDataForm(event.target);
     data['reviewerId'] = localStorage.getItem('user_id')

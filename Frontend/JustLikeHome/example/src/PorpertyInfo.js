@@ -56,20 +56,23 @@ export default class Property extends Component {
         this.renderFeedbackBookmarker = this.renderFeedbackBookmarker.bind(this)
         this.add_house_to_bookmarker = this.add_house_to_bookmarker.bind(this)
         this.go_profileUser = this.go_profileUser.bind(this)
-
-        this.check_login()
+        this.check_login = this.check_login.bind(this)
+        
         this.get_house()
     }
 
     check_login(){
         if (localStorage.getItem("user_id") === null || localStorage.getItem("user_id") === "" ){
           window.location.href = '/login'
+          return true
         }
-    
+        return false
       }
 
 
     async ask_rent(event){
+        this.check_login()
+          
         event.preventDefault();
         let data = getDataForm(event.target);
         data["userID"] = localStorage.getItem('user_id')
@@ -103,6 +106,7 @@ export default class Property extends Component {
     }
 
     async review_house(event){
+        this.check_login()
         event.preventDefault();
         let data = getDataForm(event.target);
         
@@ -200,7 +204,8 @@ export default class Property extends Component {
     }
 
     async add_house_to_bookmarker(){
-       
+        this.check_login()
+
         let data = {
             "userId": localStorage.getItem('user_id'),
             "houseId": localStorage.getItem('house_id')

@@ -47,6 +47,7 @@ public class UserController {
         return userService.getUserInfo(userId);
     }
 
+    // TODO: remove, here for debugging porpuses
     @GetMapping(value = "/getAll")
     @ApiOperation(value="Returns all users")
     public List<User> getAll() { return userService.getAll();}

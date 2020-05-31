@@ -5,6 +5,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
 import tqs.justlikehome.entities.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -188,5 +189,29 @@ class HouseRepositoryTest {
     @Test
     void searchForRatingWithHouseWithNoReviews(){
         assertThat(houseRepository.getRating(50)).isNull();
+    }
+
+    @Test
+    void searchForTopHouses(){
+        house2=new House(
+                "Aveiro",
+                "Incredible House near Ria de Aveiro V2",
+                4.0,
+                75.0,
+                2,
+                3,
+                "house3"
+        );
+
+        HouseReviews review = new HouseReviews(user,house2,3,"BERY GOOD HOUSE");
+        HouseReviews review2 = new HouseReviews(user,house2,3,"BERY GOOD HOUSE");
+        house2.addReview(review);
+        house2.addReview(review2);
+        testEntityManager.persistAndFlush(house2);
+        List<Object[]> houses = houseRepository.getTopHouses(PageRequest.of(0,5));
+        assertThat((House) houses.get(0)[0]).isEqualToComparingFieldByField(house);
+        assertThat((House) houses.get(1)[0]).isEqualToComparingFieldByField(house2);
+        assertThat((double) houses.get(0)[1]).isEqualTo(4.5);
+        assertThat((double) houses.get(1)[1]).isEqualTo(3);
     }
 }

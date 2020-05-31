@@ -11,6 +11,7 @@ import Property from "./Rest/Property";
 import DatePicker from "react-datepicker";
  
 import "react-datepicker/dist/react-datepicker.css";
+import House from "./Rest/House";
 
 
 export default class GalleryPage extends Component {
@@ -26,18 +27,23 @@ export default class GalleryPage extends Component {
           {id: -4,  rating:5 ,ownerName:"arturmns" , city:"Lisboa", description:"Casa muito humilde com tudo o que precisa!", kmFromCityCenter:3, pricePerNight:500.0, numberOfBeds: 3, maxNumberOfUsers:1, comodities: []}
         ]
       }
-      this.check_login()
+  
       this.property_info = this.property_info.bind(this);
       this.query_searchProperty = this.query_searchProperty.bind(this);
       this.property_obj = new Property();
+      this.house_obj = new House();
+      this.topHouses()
   }
 
-  check_login(){
-   
-    if (localStorage.getItem("user_id") === null || localStorage.getItem("user_id") === "" ){
-      window.location.href = '/login'
-    }
+  async topHouses(){
+    let response = await this.house_obj.get_topHouses();
+    
+    let dataHouses = response[1]
 
+    this.setState({
+      houses : dataHouses
+    })
+ 
   }
 
   property_info(id) {

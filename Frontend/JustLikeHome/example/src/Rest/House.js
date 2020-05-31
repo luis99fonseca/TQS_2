@@ -68,6 +68,23 @@ export default class House extends Component{
         return [status, json]
     }
 
+    async get_topHouses() {
+        const response = await fetch(url + '/topHouses' , {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+                //'Authorization': 'Token ' + localStorage.getItem('token')
+            },
+        })
+
+        const status = await response.status
+        const json = await response.json()
+        return [status, json]
+    }
+
+    
+    
+
     async get_reviews() {
         const response = await fetch(url + '/houseReviews/house=' + localStorage.getItem('house_id'), {
             method: 'GET',

@@ -40,7 +40,23 @@ type navItem = {|
   +useExact?: boolean,
 |};
 
-const navBarItems: Array<navItem> = [
+const navBarItems: Array<navItem> = (localStorage.getItem("username")=== "" || localStorage.getItem('username') === null) ? 
+  [
+    {
+      value: "Página Inicial",
+      to: "/",
+      icon: "square",
+      LinkComponent: withRouter(NavLink),
+      useExact: true,
+    },
+    {
+      value: "Imóveis",
+      to: "/imoveis",
+      icon: "home",
+      LinkComponent: withRouter(NavLink),
+    },
+  ] 
+  : [
   {
     value: "Página Inicial",
     to: "/",
@@ -77,11 +93,10 @@ const navBarItems: Array<navItem> = [
 
 const accountDropdownProps = {
   avatarURL: "/demo/faces/female/25.jpg",
-  name: localStorage.getItem('username'),
-  options: [
+  name: (localStorage.getItem('username') === "" || localStorage.getItem('username') === null) ? "Visitante" : localStorage.getItem('username'),
+  options: (localStorage.getItem('username') === "" || localStorage.getItem('username') === null) ? [{ icon: "log-in", value: "Login", to: "/login" }] :[
     { icon: "user", value: "Profile", to: "/profile" },
-    { icon: "log-out", value: "Sign out", to: "/logout"},
-  ],
+    { icon: "log-out", value: "Sign out", to: "/logout"},] ,
 };
 
 class SiteWrapper extends React.Component<Props, State> {

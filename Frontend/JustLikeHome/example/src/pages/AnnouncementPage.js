@@ -188,9 +188,9 @@ export default class AnnoucementPage extends Component{
                                 label="Preço por noite (€)"
                               >
                                 <Form.Input required type="number" min="0" name="pricePerNight"  value={this.state.pricePerNight} onChange={(e) => this.setState({pricePerNight: e.target.value})}/>
-                              </Form.Group>
+                              </Form.Group>  
                               <div style={{paddingTop:"20px"}}></div>
-                              <Button color="primary">Criar</Button> <span style={{marginRight:"5px"}}></span>
+                              <Button color="primary" type="submit">Criar</Button> <span style={{marginRight:"5px"}}></span>
                               {this.state.update === true && this.render_update()}
                           </Form>
                         </Grid.Col>
