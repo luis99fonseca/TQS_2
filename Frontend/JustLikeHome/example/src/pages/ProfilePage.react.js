@@ -189,7 +189,7 @@ export default class ProfilePage extends Component {
                         </Table.Col>
             
                         <Table.Col>
-                          <Button color="secondary"  onClick={() => this.property_info(rent.id)}><Icon prefix="fa" name="eye" /></Button>
+                          <Button color="secondary"  onClick={() => this.property_info(rent.house.id)}><Icon prefix="fa" name="eye" /></Button>
                         </Table.Col>
                       </Table.Row>
                     ))}
