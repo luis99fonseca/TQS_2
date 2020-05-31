@@ -39,10 +39,10 @@ public class WebPlatformTesting {
 
     @BeforeEach
     public void setUp() throws Exception {
-        //System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--window-size=1920,1080");
-        options.addArguments("--headless","--disable-gpu");
+        //options.addArguments("--headless","--disable-gpu");
         driver = new ChromeDriver(options);
         driver.get("http://localhost:3000/");
         driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
@@ -268,7 +268,7 @@ public class WebPlatformTesting {
         driver.findElement(By.linkText("Não tem conta?")).click();
         driver.findElement(By.name("username")).click();
         driver.findElement(By.name("username")).clear();
-        driver.findElement(By.name("username")).sendKeys("migalhas");
+        driver.findElement(By.name("username")).sendKeys("migalhas2");
         driver.findElement(By.name("firstName")).click();
         driver.findElement(By.name("firstName")).clear();
         driver.findElement(By.name("firstName")).sendKeys("miguel");
@@ -279,8 +279,10 @@ public class WebPlatformTesting {
         driver.findElement(By.name("password")).clear();
         driver.findElement(By.name("password")).sendKeys("123");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        TimeUnit.SECONDS.sleep(2);
-        assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")).getText(), "Tem que ter no mínimo 5 caracteres" );
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[@id=\"root\"]/div/div/div/div/div/form/div/span[2]")
+        ));
+        assertEquals(driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div/form/div/span[2]")).getText(), "Tem que ter no mínimo 5 caracteres" );
     }
 
     @Test
@@ -303,7 +305,9 @@ public class WebPlatformTesting {
         driver.findElement(By.name("password")).clear();
         driver.findElement(By.name("password")).sendKeys("123");
         driver.findElement(By.xpath("//button[@type='submit']")).click();
-        TimeUnit.SECONDS.sleep(2);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")
+        ));
         assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")).getText(), "Já existe!" );
     }
 
