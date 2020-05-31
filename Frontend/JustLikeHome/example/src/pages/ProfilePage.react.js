@@ -168,7 +168,7 @@ export default class ProfilePage extends Component {
               </Card>
 
               <Card
-                title="Suas ultímas experiências"
+                title="Suas últimas experiências"
               >
                 <Table className="card-table table-vcenter">
                   <Table.Body>
