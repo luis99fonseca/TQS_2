@@ -485,12 +485,12 @@ class WebPlatformTesting {
                 By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")
         ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
-        driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
         js.executeScript("window.scrollBy(0,1000)");
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button/i")).click();
-        driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
-        js.executeScript("window.scrollBy(0,500)");
-        wait.until(ExpectedConditions.elementToBeClickable(
+        driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+        js.executeScript("window.scrollBy(0,750)");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")
         ));
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")).click();
