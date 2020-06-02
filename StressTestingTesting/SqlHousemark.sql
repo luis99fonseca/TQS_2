@@ -55,7 +55,6 @@ insert into Bookmarked_Houses (user_id,house_id) values (23, 30);
 insert into Bookmarked_Houses (user_id,house_id) values (31, 38);
 insert into Bookmarked_Houses (user_id,house_id) values (15, 20);
 insert into Bookmarked_Houses (user_id,house_id) values (39, 23);
-insert into Bookmarked_Houses (user_id,house_id) values (43, 65);
 insert into Bookmarked_Houses (user_id,house_id) values (7, 67);
 insert into Bookmarked_Houses (user_id,house_id) values (14, 59);
 insert into Bookmarked_Houses (user_id,house_id) values (21, 37);
