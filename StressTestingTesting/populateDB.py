@@ -3,6 +3,7 @@ from datetime import date
 import random
 import time
 import datetime
+import re
 
 def insert(table_name, parameters, values):
     if table_name != "rent":
@@ -84,7 +85,7 @@ while index_user < user_no:
     temp_birth = random_date('1975-04-18 00:04', '1999-09-11 00:04')
     birthDate.append(temp_birth.split(" ")[0])
 
-    temp_username = name01[0 : random.randint(1, len(name01))] + name02[0 : random.randint(1, len(name02))]
+    temp_username = re.sub('[^A-Za-z0-9]+', '', name01[0 : random.randint(1, len(name01))]) + re.sub('[^A-Za-z0-9]+', '', name02[0 : random.randint(1, len(name02))]) + str(random.randint(0, 9))
     username.append(temp_username)
 
     password.append(''.join(random.choice(string.digits) for i in range(6)))
@@ -97,6 +98,9 @@ with open("SqlUser.sql", "w") as file01:
         row = (insert("user", ("username", "password", "firstName", "lastName", "birthDate"), (username[i], password[i], firstName[i], lastName[i], birthDate[i]) ))
         print(row)
 print()
+with open("login-data.csv", "w") as file02:
+    for i in range(user_no):
+        file02.write(username[i] +"," + password[i] + ";\n")
 
 ######## HOUSE
 house_f_name = ["Casa de", "Mansão de", "Prédio de", "Casarão de", "Casota de", "Palácio de"]
