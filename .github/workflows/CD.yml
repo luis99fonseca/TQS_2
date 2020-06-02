@@ -16,9 +16,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Server pull repository
-        run: |
-          git -C /home/tqs/TQS_2/ pull;
       - name: Setup node
         uses: actions/setup-node@v1
         with:
