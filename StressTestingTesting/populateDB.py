@@ -52,6 +52,11 @@ house_no = 70
 rent_no = 80
 reviews_no = 47  #not realli editable
 bookmark_no = 90
+# user_no = 4
+# house_no = 4
+# rent_no = 4
+# reviews_no = 4  #not realli editable
+# bookmark_no = 4
 
 user_f_name = ["João", "José", "Maria", "Luís", "Miguel", "Rafael", "Rafaela", "Pedro", "Rita", "Inês", "Marta",
                   "Margarida", "Francisca", "Leonor", "Ana", "Lara", "Alice", "Mafalda", "Helena", "Teresa", "Carla", "Filipa",
@@ -205,7 +210,6 @@ reviews_description = []
 
 descriptions = ["muito", "pessoa", "fixe", "boa", "inteligente", "smart", "simpatico", "cidadao", "compatriota", "camarada", "companheiro", "individuo", "lindo"]
 
-looping = True
 if True:
 
     # print("ownsers: ", house_user)
@@ -223,12 +227,36 @@ if True:
             reviews_description.append(random.choice(descriptions)+ " "+random.choice(descriptions)+ " " +random.choice(descriptions))
             index_reviews += 1
 
+index_hreviews = 0
+hreviews_userId = []
+hreviews_houseId = []
+hreviews_rate = []
+hreviews_description = []
 
-with open("SqlUserReview.sql", "w") as file01:
-    for i in range(index_reviews):
+descriptions = ["muito", "casa", "fixe", "boa", "inteligente", "smart", "simpatico", "edificio", "construçao", "infrasestrutura", "local", "sitio", "lindo"]
+
+if True:
+
+    # print("ownsers: ", house_user)
+    # print("dict: ", house_dict)
+    # print("rents user:houses", rent_user_house_dict)
+    for user in rent_user_house_dict:
+        # print("-----USER: ", user)
+        # print(">>len: ", len(rent_user_house_dict[user]))
+        for h in range(len(rent_user_house_dict[user])):
+            # print("H: ", h, " ;", rent_user_house_dict[user][h])
+            # print("---HOUSE: ", rent_user_house_dict[user][h], " -> ", rent_user_house_dict[user], " -- ", house_user[rent_user_house_dict[user][h] - 1])
+            hreviews_houseId.append(rent_user_house_dict[user][h])
+            hreviews_userId.append(user)
+            hreviews_rate.append(random.randint(0, 5))
+            hreviews_description.append(random.choice(descriptions)+ " "+random.choice(descriptions)+ " " +random.choice(descriptions))
+            index_hreviews += 1
+
+with open("SqlHouseReview.sql", "w") as file01:
+    for i in range(index_hreviews):
         # print(compareDatas(rent_End[i].split(" ")[0], rent_Start[i].split(" ")[0] ))
-        file01.write((insert("userReviews", ("from_user_id", "to_user_id", "rating", "description"), (reviews_userFrom[i], reviews_userTo[i], reviews_rate[i], reviews_description[i]))) + ";\n")
-        row = (insert("userReviews", ("from_user_id", "to_user_id", "rating", "description"), (reviews_userFrom[i], reviews_userTo[i], reviews_rate[i], reviews_description[i])))
+        file01.write((insert("houseReviews", ("user_id", "house_id", "rating", "description"), (hreviews_userId[i], hreviews_houseId[i], hreviews_rate[i], hreviews_description[i]))) + ";\n")
+        row = (insert("houseReviews", ("user_id", "house_id", "rating", "description"), (hreviews_userId[i], hreviews_houseId[i], hreviews_rate[i], hreviews_description[i])))
         print(row)
 
 index_bookmark = 0
