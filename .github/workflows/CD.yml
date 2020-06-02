@@ -45,10 +45,9 @@ jobs:
         docker rmi $(docker image ls | grep -v 'mysql\|maven\|openjdk') || true;
     - name: CD for Spring-Boot Backend  
       run: |
-        ls -la;
-        docker build --tag "backend" ./TQS_2/JustLikeHomeStarter;
+        docker build --tag "backend" ./JustLikeHomeStarter;
         docker run -p 8080:8080 -d backend;
     - name: CD for React Frontend
       run: |
-        docker build --tag "frontend" ./TQS_2/Frontend;
+        docker build --tag "frontend" ./Frontend;
         docker run -p 80:3000 -d frontend;
