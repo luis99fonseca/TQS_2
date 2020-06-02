@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.CoreMatchers.is;
-
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -16,38 +13,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.openqa.selenium.interactions.Actions;
 import org.springframework.test.context.ActiveProfiles;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import tqs.justlikehome.dtos.HouseSearchDTO;
-import tqs.justlikehome.entities.House;
-import tqs.justlikehome.repositories.HouseRepository;
-import tqs.justlikehome.services.HouseService;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("functional")
-public class WebPlatformTesting {
+class WebPlatformTesting {
     private WebDriver driver;
     private String baseUrl;
     private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
     private WebDriverWait wait;
     private JavascriptExecutor js;
-
-
-    @Autowired
-    private HouseRepository houseRepository;
 
 
     @BeforeEach
@@ -129,17 +116,24 @@ public class WebPlatformTesting {
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector(".card:nth-child(2) td:nth-child(2)")
         ));
-        assertEquals(driver.findElement(By.cssSelector(".card:nth-child(2) td:nth-child(2)")).getText(), "house by the beach");
+        assertEquals("house by the beach",driver.findElement(By.cssSelector(".card:nth-child(2) td:nth-child(2)")).getText());
         driver.findElement(By.cssSelector("td:nth-child(5) .fa")).click();
-        assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the beach");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("h1")
+        ));
+        assertEquals("house by the beach",driver.findElement(By.cssSelector("h1")).getText());
         driver.findElement(By.linkText("Profile")).click();
         driver.findElement(By.cssSelector(".fe-trash")).click();
         {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr/td[4]")
-            ));
-            List<WebElement> elements = driver.findElements(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr/td[4]"));
-            assert (elements.size() == 2);
+            wait.until(new ExpectedCondition<Object>() {
+                           public Boolean apply(WebDriver driver){
+                               int elementCount =  driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr")).size();
+                               return elementCount==2;
+                           }
+
+                       }
+            );
+            assertThat(2).isEqualTo(driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div/div[2]/div[2]/table/tbody/tr")).size());
         }
     }
 
@@ -231,14 +225,11 @@ public class WebPlatformTesting {
 
     @Test
     void lastExperiences() throws Exception {
-        for(House house:houseRepository.findAll()){
-            System.out.println(house.getHouseName());
-        }
         driver.findElement(By.linkText("Profile")).click();
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
                 By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")
         ));
-        assertEquals(driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText(), "house by the cloud");
+        assertEquals("house by the cloud",driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[2]")).getText());
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div/div[2]/div[3]/table/tbody/tr/td[4]/button")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("h1")
@@ -246,7 +237,7 @@ public class WebPlatformTesting {
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
                 By.cssSelector("h1")
         ));
-        assertEquals(driver.findElement(By.cssSelector("h1")).getText(), "house by the cloud");
+        assertEquals("house by the cloud",driver.findElement(By.cssSelector("h1")).getText());
     }
 
     @Test
@@ -272,6 +263,57 @@ public class WebPlatformTesting {
         assertEquals("migalhas", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).getText());
     }
 
+    @Test
+    void passwordLess5Characters_invalidCreateUser() throws Exception {
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+        driver.findElement(By.cssSelector(".avatar")).click();
+        driver.findElement(By.linkText("Login")).click();
+        driver.findElement(By.linkText("Não tem conta?")).click();
+        driver.findElement(By.name("username")).click();
+        driver.findElement(By.name("username")).clear();
+        driver.findElement(By.name("username")).sendKeys("migalhas2");
+        driver.findElement(By.name("firstName")).click();
+        driver.findElement(By.name("firstName")).clear();
+        driver.findElement(By.name("firstName")).sendKeys("miguel");
+        driver.findElement(By.name("lastName")).click();
+        driver.findElement(By.name("lastName")).clear();
+        driver.findElement(By.name("lastName")).sendKeys("mota");
+        driver.findElement(By.name("password")).click();
+        driver.findElement(By.name("password")).clear();
+        driver.findElement(By.name("password")).sendKeys("123");
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[@id=\"root\"]/div/div/div/div/div/form/div/span[2]")
+        ));
+        assertEquals("Tem que ter no mínimo 5 caracteres",driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div/form/div/span[2]")).getText());
+    }
+
+    @Test
+    void userAlreadyExist_invalidCreateUser() throws Exception{
+        driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/div/div/a/span[2]/span")).click();
+        driver.findElement(By.linkText("Sign out")).click();
+        driver.findElement(By.cssSelector(".avatar")).click();
+        driver.findElement(By.linkText("Login")).click();
+        driver.findElement(By.linkText("Não tem conta?")).click();
+        driver.findElement(By.name("username")).click();
+        driver.findElement(By.name("username")).clear();
+        driver.findElement(By.name("username")).sendKeys("andrex");
+        driver.findElement(By.name("firstName")).click();
+        driver.findElement(By.name("firstName")).clear();
+        driver.findElement(By.name("firstName")).sendKeys("miguel");
+        driver.findElement(By.name("lastName")).click();
+        driver.findElement(By.name("lastName")).clear();
+        driver.findElement(By.name("lastName")).sendKeys("mota");
+        driver.findElement(By.name("password")).click();
+        driver.findElement(By.name("password")).clear();
+        driver.findElement(By.name("password")).sendKeys("123");
+        driver.findElement(By.xpath("//button[@type='submit']")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")
+        ));
+        assertEquals("Já existe!",driver.findElement(By.xpath("//span[@id=\'root\']/div/div/div/div/div/form/div/span")).getText());
+    }
 
     @Test
     void logoutAndLogin() throws Exception {
@@ -443,15 +485,17 @@ public class WebPlatformTesting {
                 By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")
         ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/a/img")).click();
-        driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
         js.executeScript("window.scrollBy(0,1000)");
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div[5]/div[2]/button/i")).click();
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.name("description")
+        driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+        js.executeScript("window.scrollBy(0,750)");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")
         ));
-        driver.findElement(By.name("description")).click();
-        driver.findElement(By.name("description")).clear();
-        driver.findElement(By.name("description")).sendKeys("casa que nem vi...");
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")).click();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")).clear();
+        driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div[5]/form/div[1]/textarea")).sendKeys("casa que nem vi...");
         driver.findElement(By.xpath("//span[@id='stars2']/span[4]")).click();
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
@@ -517,12 +561,20 @@ public class WebPlatformTesting {
     void checkDeclineRequest() throws Exception{
         driver.findElement(By.linkText("Arrendamentos")).click();
         driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
-        int existing_requests = driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr")).size();
+        int existing_requests = driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div[2]/div/div[1]/table/tbody/tr")).size();
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button[2]/i")
         ));
         driver.findElement(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[5]/button[2]/i")).click();
-        assertThat(driver.findElements(By.xpath("//span[@id='root']/div/div/div[3]/div/div[2]/div/div/table/tbody/tr/td[3]")).size() < existing_requests);
+        wait.until(new ExpectedCondition<Object>() {
+                       public Boolean apply(WebDriver driver){
+                           int elementCount =  driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div[2]/div/div[1]/table/tbody/tr")).size();
+                           return elementCount==existing_requests-1;
+                       }
+
+                   }
+        );
+        assertThat(driver.findElements(By.xpath("//*[@id=\"root\"]/div/div/div[3]/div/div[2]/div/div[1]/table/tbody/tr")).size()).isLessThan(existing_requests);
     }
 
     @Test
@@ -546,6 +598,9 @@ public class WebPlatformTesting {
         driver.findElement(By.name("description")).sendKeys("some bot review");
         driver.findElement(By.xpath("//span[@id='stars2']/span[3]")).click();
         driver.findElement(By.xpath("//button[@type='submit']")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")
+        ));
         assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
     }
 

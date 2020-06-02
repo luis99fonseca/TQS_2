@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Home_Searcher</string>
+    <string name="title_search">Search</string>
+    <string name="title_bookmark">Book Mark</string>
+    <string name="apiAddr">http://192.168.160.52:8080</string>
+</resources>
