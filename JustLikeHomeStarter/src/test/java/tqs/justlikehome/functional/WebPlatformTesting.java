@@ -640,6 +640,9 @@ class WebPlatformTesting {
         driver.manage().timeouts().implicitlyWait(5,TimeUnit.SECONDS);
         js.executeScript("window.scrollBy(0,1000)");
         driver.findElement(By.xpath("(//button[@type='button'])[5]")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")
+        ));
         assertEquals("Login", driver.findElement(By.xpath("//span[@id='root']/div/div/div/div/div/form/div/div")).getText());
     }
 
