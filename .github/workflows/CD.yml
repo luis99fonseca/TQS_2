@@ -36,6 +36,7 @@ jobs:
     name: Continuous Deployment for React and Java Project
     runs-on: [self-hosted]
     steps:
+    - uses: actions/checkout@v2
     - name: Docker clean, leaving mysql instact
       run: |
         docker kill $(docker ps -a | grep -v mysql/mysql-server | awk '{print $1}') || true;
