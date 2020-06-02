@@ -36,22 +36,19 @@ jobs:
     name: Continuous Deployment for React and Java Project
     runs-on: [self-hosted]
     steps:
-    - name: Docker clean
+    - uses: actions/checkout@v2
+    - name: Docker clean, leaving mysql instact
       run: |
-        docker ps -aq;
-        docker kill $(docker ps -aq) || true;
-        docker rm $(docker ps -aq) || true;
+        docker kill $(docker ps -a | grep -v mysql/mysql-server | awk '{print $1}') || true;
+        docker rm $(docker ps -a | grep -v mysql/mysql-server | awk '{print $1}') || true;
         docker volume ls -qf dangling=true;
         docker volume rm $(docker volume ls -qf dangling=true) || true;
-        docker rmi $(docker image ls) || true;
-    - name: Server pull repository
-      run: |
-        git -C ~/TQS_2/ pull;
+        docker rmi $(docker image ls | grep -v 'mysql\|maven\|openjdk') || true;
     - name: CD for Spring-Boot Backend  
       run: |
-        docker build --tag "backend" ~/TQS_2/JustLikeHomeStarter;
+        docker build --tag "backend" ./JustLikeHomeStarter;
         docker run -p 8080:8080 -d backend;
     - name: CD for React Frontend
       run: |
-        docker build --tag "frontend" ~/TQS_2/Frontend;
+        docker build --tag "frontend" ./Frontend;
         docker run -p 80:3000 -d frontend;
