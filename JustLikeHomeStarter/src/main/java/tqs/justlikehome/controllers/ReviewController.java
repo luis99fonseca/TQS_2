@@ -15,7 +15,7 @@ import tqs.justlikehome.services.ReviewService;
 import javax.validation.Valid;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins={"http://localhost:3000","http://192.168.160.52"})
 public class ReviewController {
 
     @Autowired

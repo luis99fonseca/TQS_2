@@ -1,8 +1,6 @@
 package tqs.justlikehome.controllers;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Extension;
-import io.swagger.annotations.ExtensionProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tqs.justlikehome.dtos.BookMarkDTO;
@@ -16,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins={"http://localhost:3000","http://192.168.160.52"})
 public class HouseController {
     @Autowired
     private HouseService houseService;

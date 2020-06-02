@@ -20,7 +20,11 @@ export default class RegisterPage extends Component{
     super(props);
 
     this.state = {
-      startDate : new Date()
+      startDate : new Date(),
+      error : false,
+      error_user: false,
+      msg_error: "Tem que ter no mínimo 5 caracteres",
+      msg_error_user: "Já existe!"
     }
 
     this.user_obj = new User()
@@ -41,10 +45,26 @@ async create_user(event){
   let status = response[0]
   let user = response[1]
 
-  localStorage.setItem('user_id', user.id);
-  localStorage.setItem("username", user.username);
-  this.initial_page()
-}
+  console.log(status)
+  console.log(user)
+  if (status === 500){
+    this.setState({
+      error : true,
+      error_user: false,
+    })
+  } else if (status === 404) {
+    console.log("ola")
+    this.setState({
+      error_user : true,
+      error: false,
+    })
+  } else {
+    localStorage.setItem('user_id', user.id);
+    localStorage.setItem("username", user.username);
+    this.initial_page()
+  }
+} 
+  
 
 
 handleChange = date => {
@@ -70,6 +90,7 @@ render(){
           }
           required
         />
+        <span style={{color: 'red', marginBottom:"35px"}}>{this.state.error_user && this.state.msg_error_user}</span>
         <FormTextInput
           name="firstName"
           label={"Primeiro Nome:"}
@@ -106,6 +127,7 @@ render(){
             "Insira a sua password"
           }
         />
+        <span style={{color: 'red'}}>{this.state.error && this.state.msg_error}</span>
       </FormCard>
     </StandaloneFormPage>
   )
