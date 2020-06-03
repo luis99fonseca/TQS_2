@@ -100,7 +100,7 @@ with open("SqlUser.sql", "w") as file01:
 print()
 with open("login-data.csv", "w") as file02:
     for i in range(user_no):
-        file02.write(username[i] +"," + password[i] + ";\n")
+        file02.write(username[i] +"," + password[i] + "\n")
 
 ######## HOUSE
 house_f_name = ["Casa de", "Mansão de", "Prédio de", "Casarão de", "Casota de", "Palácio de"]
