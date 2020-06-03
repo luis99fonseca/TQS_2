@@ -47,7 +47,7 @@ jobs:
     - name: CD for Spring-Boot Backend  
       run: |
         docker build --tag "backend" ./JustLikeHomeStarter;
-        docker run -p 8080:8080 -d backend;
+        docker run -d --network host backend;
     - name: CD for React Frontend
       run: |
         docker build --tag "frontend" ./Frontend;
