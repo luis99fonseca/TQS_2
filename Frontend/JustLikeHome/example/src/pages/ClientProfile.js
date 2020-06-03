@@ -73,7 +73,8 @@ export default class ClientProfile extends Component {
     let data = response[1]
 
     this.setState({
-        user: data
+        user: data,
+        rating: data['rating']
     })
   }
 
@@ -96,7 +97,8 @@ export default class ClientProfile extends Component {
             msg_error: [true, "Nunca esteve em nenhum dos seus bens imóveis"]
         })
     }else{
-        this.get_userReviews()
+      this.get_info()
+      this.get_userReviews()
     }
     
   }
