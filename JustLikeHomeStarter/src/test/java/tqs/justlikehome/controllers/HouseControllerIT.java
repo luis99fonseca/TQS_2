@@ -87,8 +87,6 @@ class HouseControllerIT {
 
     @Test
     void whenAddValidComoditiesToHouse_thenReturnHouse() throws Exception {
-        // TODO: check here, as ID starts at 1, which i'm not sure if its intended as its the first house saved ever
-        // the way to make the ID dinamic was getting it directly, which i'm not sure if its good practice
         ComoditiesDTO comoditiesDto = new ComoditiesDTO("pool", "pool to swim", houseRepository.findAll().get(0).getId());
 
         mockMvc.perform(post("/addComoditie").contentType(MediaType.APPLICATION_JSON)
@@ -148,7 +146,6 @@ class HouseControllerIT {
                 .andExpect(jsonPath("$.houseId").value(house.getId()))
         .andExpect(jsonPath("$.userId").value(user.getId()));
 
-        //TODO: check this, cause now there ain't a way to verify if the add was actually done;
     }
 
     @Test
@@ -174,7 +171,6 @@ class HouseControllerIT {
                 .andExpect(jsonPath("$.houseId").value(house.getId()))
                 .andExpect(jsonPath("$.userId").value(user.getId()));
 
-        //TODO: check this, cause now there ain't a way to verify if the delete was actually done;
     }
 
     @Test

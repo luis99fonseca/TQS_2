@@ -45,7 +45,6 @@ public class House {
     @OneToMany(mappedBy = "house",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Comodities> comodities = new HashSet<>();
 
-    // TODO: for debugging, remove later
     public Set<User> getBookmarkedBy() {
         return bookmarkedBy;
     }
